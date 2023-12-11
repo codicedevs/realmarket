@@ -8,13 +8,14 @@ import { UsersController } from './users.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
-  providers: [UsersService],
+  providers: [UsersService ],
   controllers: [UsersController],
-  exports: [UsersService],
+  exports: [UsersService]
 })
 export class UserModule {}
 
-//ANTES ESTABA ASI
+
+//ANTES ESTABA ASI 
 
 //@Module({
 //   imports: [DatabaseModule],

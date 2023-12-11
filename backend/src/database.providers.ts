@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 
+
 export const databaseProviders = [
   {
     provide: 'DATA_SOURCE',
@@ -11,7 +12,9 @@ export const databaseProviders = [
         username: 'admin',
         password: 'Codice1925',
         database: 'RealMarketTest',
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+        entities: [
+            __dirname + '/../**/*.entity{.ts,.js}',
+        ],
         synchronize: true,
       });
 
