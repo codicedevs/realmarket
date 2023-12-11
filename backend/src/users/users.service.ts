@@ -13,6 +13,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorManager } from 'src/utils/error.manager';
 import { error } from 'console';
 import { ObjectId } from 'mongodb';
+import {hash} from 'bcrypt'
 
 @Injectable()
 export class UsersService {
@@ -40,7 +41,22 @@ export class UsersService {
       const user: User = await this.userRepository.findOneBy({
         _id: new ObjectId(id),
       });
-      console.log(user);
+
+      if (!user) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No hay usuarios',
+        });
+      }
+      return user;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+  async findUserByUsername(username: string): Promise<User> {
+    try {
+      const user: User = await this.userRepository.findOneBy({username: username});
+
       if (!user) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
@@ -54,6 +70,8 @@ export class UsersService {
   }
   public async createUser(body: CreateUserDto): Promise<User> {
     try {
+      const hashedPass = await hash(body?.pass, 10)
+      body.pass = hashedPass;
       return await this.userRepository.save(body);
     } catch (error) {
       throw new Error(error);
@@ -64,10 +82,7 @@ export class UsersService {
     body: UpdateUserDto,
   ): Promise<User | undefined> {
     try {
-      const user: UpdateResult = await this.userRepository.update(
-        new ObjectId(id),
-        body,
-      );
+      const user: UpdateResult = await this.userRepository.update( new ObjectId(id) , body);
       if (user.affected === 0) {
         throw new ErrorManager({
           type: 'NOT_MODIFIED',
@@ -82,11 +97,11 @@ export class UsersService {
   async deleteUser(id: string): Promise<DeleteResult | undefined> {
     try {
       const user: DeleteResult = await this.userRepository.delete(id);
-      if (user.affected === 0) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se pudo borrar',
-        });
+      if (user.affected === 0) {      
+          throw new ErrorManager({
+            type: 'BAD_REQUEST',
+            message: 'No se pudo borrar',
+          });
       }
       return user;
     } catch (error) {
@@ -102,5 +117,6 @@ export class UsersService {
 //         return
 
 //   }
+
 
 // }

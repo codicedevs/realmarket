@@ -1,4 +1,5 @@
 export interface IUser {
-  nombre: string;
-  documento: string;
+    nombre: string;
+    documento: string;
+
 }
