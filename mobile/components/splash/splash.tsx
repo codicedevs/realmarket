@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 
-import SplashGradient from './linear-gradient'
+import SplashGradient from '../linear-gradient/linear-gradient'
 
 export default function Splash() {
 	return (
