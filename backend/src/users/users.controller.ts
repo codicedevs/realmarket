@@ -14,7 +14,7 @@ import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { User } from './user.entity';
 import { ObjectId, UpdateResult } from 'typeorm';
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Public } from 'src/auth/SkipAuth';
 
 @ApiTags('users')
@@ -23,7 +23,6 @@ import { Public } from 'src/auth/SkipAuth';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Public()
   @Get('all')
   public async findAll(): Promise<User[]> {
     return this.usersService.findAll();

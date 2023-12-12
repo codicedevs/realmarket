@@ -5,37 +5,37 @@ import {
     UnauthorizedException,
   } from '@nestjs/common';
   import { JwtService } from '@nestjs/jwt';
-  import { jwtConstants } from './constants';
+  import { jwtConstants } from '../constants';
   import { Request } from 'express';
-import { IS_PUBLIC_KEY } from './SkipAuth';
-import { Reflector } from '@nestjs/core';
+  import { IS_PUBLIC_KEY } from '../SkipAuth';
+  import { Reflector } from '@nestjs/core';
   
   @Injectable()
-  export class AuthGuard implements CanActivate {
-    constructor(private jwtService: JwtService, private reflector: Reflector) {}
+  export class RefreshAuthGuard implements CanActivate {
+    constructor(
+      private jwtService: JwtService,
+      private reflector: Reflector,
+    ) {}
   
     async canActivate(context: ExecutionContext): Promise<boolean> {
-
       const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
         context.getHandler(),
-        context.getClass()
+        context.getClass(),
       ]);
-      if(isPublic) {
+      if (isPublic) {
         return true;
       }
-      
+  
       const request = context.switchToHttp().getRequest();
-      const token = this.extractTokenFromHeader(request);
+      const token = RefreshAuthGuard.extractTokenFromHeader(request);
+      console.log(token)
       if (!token) {
         throw new UnauthorizedException();
       }
       try {
-        const payload = await this.jwtService.verifyAsync(
-          token,
-          {
-            secret: jwtConstants.secret
-          }
-        );
+        const payload = await this.jwtService.verifyAsync(token, {
+          secret: jwtConstants.refreshKey,
+        });
         // 💡 We're assigning the payload to the request object here
         // so that we can access it in our route handlers
         request['user'] = payload;
@@ -45,8 +45,9 @@ import { Reflector } from '@nestjs/core';
       return true;
     }
   
-    private extractTokenFromHeader(request: Request): string | undefined {
+  static   extractTokenFromHeader(request: Request): string | undefined {
       const [type, token] = request.headers.authorization?.split(' ') ?? [];
-      return type === 'Bearer' ? token : undefined;
+      return type === 'Refresh' ? token : undefined;
     }
   }
+  

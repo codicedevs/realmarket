@@ -15,6 +15,9 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
     pass: string
+    @IsString()
+    @IsNotEmpty()
+    accountId: string
 }
 
 export class UpdateUserDto {
@@ -26,4 +29,7 @@ export class UpdateUserDto {
     @IsOptional()
     @IsString() 
     nombre?: string
+    @IsOptional()
+    @IsString()
+    accountId: string
 }

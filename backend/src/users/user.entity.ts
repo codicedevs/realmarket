@@ -13,6 +13,8 @@ export class User {
   username: string;
   @Column()
   pass: string; 
+  @Column()
+  accountId: string;
   
 //   tipoDocumento: string;
 // cuit?: string;
