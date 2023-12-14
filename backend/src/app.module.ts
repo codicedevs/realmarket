@@ -8,6 +8,10 @@ import {join} from 'path'
 import { UserModule } from './users/user.module';
 import {ConfigModule} from '@nestjs/config'
 import { AuthModule } from './auth/auth.module';
+import { InitialDataModule } from './initial-data/initial-data.module';
+import { MovimientosModule } from './movimientos/movimientos.module';
+import { PosicionesModule } from './posiciones/posiciones.module';
+
 
 
 @Module({
@@ -23,7 +27,7 @@ import { AuthModule } from './auth/auth.module';
     autoLoadEntities: true,
     useUnifiedTopology: true,
     entities: [join(__dirname, '**/**.entity{.ts, .js}')]
-  }), UserModule, AuthModule],
+  }), UserModule, AuthModule, MovimientosModule, PosicionesModule, InitialDataModule],
   controllers: [AppController, UsersController],
   providers: [AppService],
 })

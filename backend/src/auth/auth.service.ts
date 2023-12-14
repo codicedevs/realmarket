@@ -1,5 +1,6 @@
 import {
   HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -17,10 +18,11 @@ export class AuthService {
   ) {}
 
   async signIn(username: string, password: string): Promise<any> {
+    if(!username && !password ) throw new HttpException('No hay usuario ni password', HttpStatus.BAD_REQUEST);
     const user = await this.usersService.findUserByUsername(username);
     const checkpass = await compare(password, user.pass);
     if (!checkpass) {
-      console.log(user?.pass, password, 'contrasena');
+      
       throw new HttpException('Passwords do not match', 403);
     }
     const payload = {
