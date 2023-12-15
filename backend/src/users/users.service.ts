@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorManager } from 'src/utils/error.manager';
+import { error } from 'console';
 import { ObjectId } from 'mongodb';
 import { hash } from 'bcrypt';
 
@@ -18,14 +19,11 @@ export class UsersService {
     try {
       const users: User[] = await this.userRepository.find();
       if (users.length === 0) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No hay usuarios',
-        });
+        throw new HttpException('No users found', HttpStatus.NOT_FOUND);
       }
       return users;
     } catch (error) {
-      throw new ErrorManager.createSignatureError(error.message);
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     }
   }
   async findUserById(id: ObjectId): Promise<User> {
@@ -35,14 +33,11 @@ export class UsersService {
       });
 
       if (!user) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No hay usuarios',
-        });
+        throw new HttpException('No users found', HttpStatus.NOT_FOUND)
       }
       return user;
     } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     }
   }
   async findUserByUsername(username: string): Promise<User> {
@@ -52,14 +47,11 @@ export class UsersService {
       });
 
       if (!user) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No hay usuarios',
-        });
+        throw new HttpException('No users found', HttpStatus.NOT_FOUND)
       }
       return user;
     } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     }
   }
   public async createUser(body: CreateUserDto): Promise<User> {
@@ -81,28 +73,22 @@ export class UsersService {
         body,
       );
       if (user.affected === 0) {
-        throw new ErrorManager({
-          type: 'NOT_MODIFIED',
-          message: 'No hay nada que modificar',
-        });
+        throw new HttpException('Theres no modifications', HttpStatus.NOT_MODIFIED)
       }
       return this.findUserById(new ObjectId(id));
     } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     }
   }
   async deleteUser(id: string): Promise<DeleteResult | undefined> {
     try {
       const user: DeleteResult = await this.userRepository.delete(id);
-      if (user.affected === 0) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se pudo borrar',
-        });
+      if (user.affected === 0) {      
+        throw new HttpException('No users found', HttpStatus.NOT_FOUND)
       }
       return user;
     } catch (error) {
-      throw ErrorManager.createSignatureError(error.message);
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     }
   }
 }
@@ -114,5 +100,6 @@ export class UsersService {
 //         return
 
 //   }
+
 
 // }
