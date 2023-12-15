@@ -8,6 +8,8 @@ export class MovimientosService {
   async findByDate(from: string, to: string): Promise<Movimiento[]> {
     try {
       const response = await axios.get<Movimiento[]>(
+        `${baseURL}cuentas/423000005/movimientos?fechaDesde=${from}&fechaHasta=${to}`);
+      return response.data
         `${baseURL}cuentas/423000005/movimientos?fechaDesde=${from}&fechaHasta=${to}`,
         { headers: { Authorization: tokenRosval } },
       );

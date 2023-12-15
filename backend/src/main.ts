@@ -79,13 +79,8 @@ const handleErrorInterceptor = async (error: any) => {
  * @param {*} config
  * @returns
  */
-async function setAuthHeaderToConfig(config: AxiosRequestConfig) {
-  if (tokenRosval) {
-    config.headers = {
-      ...config.headers,
-      Authorization: `Bearer ${tokenRosval}`,
-    } as AxiosRequestHeaders;
-  }
+const setAuthHeaderToConfig = async (config: InternalAxiosRequestConfig<any>)=> {
+  axios.defaults.headers.common['Authorization'] =`Bearer ${tokenRosval}`
   return config;
 }
 

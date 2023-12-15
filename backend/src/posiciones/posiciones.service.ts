@@ -8,10 +8,8 @@ export class PosicionesService {
   async findByDate(from: string): Promise<Posicion[]> {
     try {
       const response = await axios.get<Posicion[]>(
-        `${baseURL}cuentas/423000005/posiciones?fecha=${from}&especie=ARS`,
-        { headers: { Authorization: tokenRosval } },
-      );
-      return response.data;
+        `${baseURL}cuentas/423000005/posiciones?fecha=${from}&especie=ARS`      );
+      return response.data
     } catch (error) {
       console.error(error);
       throw new HttpException('Invalid response', HttpStatus.CONFLICT);
