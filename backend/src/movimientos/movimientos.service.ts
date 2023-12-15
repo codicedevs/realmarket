@@ -10,10 +10,6 @@ export class MovimientosService {
       const response = await axios.get<Movimiento[]>(
         `${baseURL}cuentas/423000005/movimientos?fechaDesde=${from}&fechaHasta=${to}`);
       return response.data
-        `${baseURL}cuentas/423000005/movimientos?fechaDesde=${from}&fechaHasta=${to}`,
-        { headers: { Authorization: tokenRosval } },
-      );
-      return response.data;
     } catch (error) {
       console.error(error);
       throw new HttpException('Invalid response', HttpStatus.CONFLICT);
