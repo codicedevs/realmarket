@@ -1,16 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as morgan from 'morgan';
 import { CORS } from './constants';
-import axios, {
-  AxiosError,
-  AxiosRequestHeaders,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from 'axios';
+import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 
 export const baseURL = 'https://agentes.rosval.com.ar/Irmo/api/';
 
@@ -19,7 +14,7 @@ export let tokenRosval: string | undefined;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-/** En las siguientes lineas cargo y seteo Swagger para mostrar la documentacion de los Endpoints */
+  /** En las siguientes lineas cargo y seteo Swagger para mostrar la documentacion de los Endpoints */
 
   const config = new DocumentBuilder()
     .setTitle('Real Market API')
@@ -41,7 +36,6 @@ async function bootstrap() {
     }),
   );
 
-
   app.use(morgan('dev'));
 
   const configService = app.get(ConfigService);
@@ -57,10 +51,11 @@ async function bootstrap() {
   console.log(`Application running on:${await app.getUrl()}`);
 }
 bootstrap();
-
+/* TODO: Mover esto  a un servicio por ejemplo RosvalHttpService dónde maneje una instancia de axios singleton 
+con los interceptores, base URL y el manejo de token. Podemos después extender este servicio en los servicios de posiciones,
+movimientos y demás servicios que dependan de Rosval
+*/
 /**Logica para el Interceptor de la response en Axios  */
-
-
 const handleErrorInterceptor = async (error: any) => {
   const originalRequest = error.config;
   //Si el status no es de no authorizado (401) el handler no se ocupa del error
@@ -84,7 +79,7 @@ const handleErrorInterceptor = async (error: any) => {
  * @param {*} config
  * @returns
  */
-async function setAuthHeaderToConfig(config: InternalAxiosRequestConfig<any>) {
+async function setAuthHeaderToConfig(config: AxiosRequestConfig) {
   if (tokenRosval) {
     config.headers = {
       ...config.headers,
@@ -100,6 +95,6 @@ async function getBearerToken(): Promise<string> {
     username: 'API_Resumen',
     password: 'API_Resumen',
   });
-  
+
   return response.data.token;
 }

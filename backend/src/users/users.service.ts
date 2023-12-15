@@ -1,19 +1,11 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import {
-  BSON,
-  DeleteResult,
-  MongoClient,
-  Repository,
-  UpdateResult,
-} from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { User } from './user.entity';
-import { v4 } from 'uuid';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ErrorManager } from 'src/utils/error.manager';
-import { error } from 'console';
 import { ObjectId } from 'mongodb';
-import {hash} from 'bcrypt'
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -55,7 +47,9 @@ export class UsersService {
   }
   async findUserByUsername(username: string): Promise<User> {
     try {
-      const user: User = await this.userRepository.findOneBy({username: username});
+      const user: User = await this.userRepository.findOneBy({
+        username: username,
+      });
 
       if (!user) {
         throw new ErrorManager({
@@ -70,7 +64,7 @@ export class UsersService {
   }
   public async createUser(body: CreateUserDto): Promise<User> {
     try {
-      const hashedPass = await hash(body?.pass, 10)
+      const hashedPass = await hash(body?.pass, 10);
       body.pass = hashedPass;
       return await this.userRepository.save(body);
     } catch (error) {
@@ -82,7 +76,10 @@ export class UsersService {
     body: UpdateUserDto,
   ): Promise<User | undefined> {
     try {
-      const user: UpdateResult = await this.userRepository.update( new ObjectId(id) , body);
+      const user: UpdateResult = await this.userRepository.update(
+        new ObjectId(id),
+        body,
+      );
       if (user.affected === 0) {
         throw new ErrorManager({
           type: 'NOT_MODIFIED',
@@ -97,11 +94,11 @@ export class UsersService {
   async deleteUser(id: string): Promise<DeleteResult | undefined> {
     try {
       const user: DeleteResult = await this.userRepository.delete(id);
-      if (user.affected === 0) {      
-          throw new ErrorManager({
-            type: 'BAD_REQUEST',
-            message: 'No se pudo borrar',
-          });
+      if (user.affected === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se pudo borrar',
+        });
       }
       return user;
     } catch (error) {
@@ -117,6 +114,5 @@ export class UsersService {
 //         return
 
 //   }
-
 
 // }

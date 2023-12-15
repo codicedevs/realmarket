@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { PosicionesService } from './posiciones.service';
 import { CreatePosicioneDto } from './dto/create-posicione.dto';
 import { UpdatePosicioneDto } from './dto/update-posicione.dto';
@@ -9,8 +18,10 @@ export class PosicionesController {
   constructor(private readonly posicionesService: PosicionesService) {}
 
   @Get('byDate')
-  public async getMovimientos(@Query('from') from: string): Promise<Array<Posicion>>{
-    return this.posicionesService.findByDate(from)
+  public async getMovimientos(
+    @Query('from') from: string,
+  ): Promise<Array<Posicion>> {
+    return this.posicionesService.findByDate(from);
   }
   @Post()
   create(@Body() createPosicioneDto: CreatePosicioneDto) {
@@ -28,7 +39,10 @@ export class PosicionesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePosicioneDto: UpdatePosicioneDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updatePosicioneDto: UpdatePosicioneDto,
+  ) {
     return this.posicionesService.update(+id, updatePosicioneDto);
   }
 

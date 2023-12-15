@@ -1,7 +1,6 @@
-import { Column, Entity, ObjectId, ObjectIdColumn } from "typeorm";
+import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
 
-@Entity({name:"users"})
-
+@Entity({ name: 'users' })
 export class User {
   @ObjectIdColumn()
   _id: ObjectId;
@@ -12,20 +11,20 @@ export class User {
   @Column()
   username: string;
   @Column()
-  pass: string; 
+  pass: string;
   @Column()
   accountId: string;
-  
-//   tipoDocumento: string;
-// cuit?: string;
-//   tipoPersona: 'FISICA';
-//   relacion: string;
-//   residencia: {
-//     codigoPais: string;
-//     autorizadoOperar: string;
-//     motivo: string;
-//   };
-//   sectorEconomia: string;
-//   esGobierno: string;
-//   inversorCalificado: string;
+
+  //   tipoDocumento: string;
+  // cuit?: string;
+  //   tipoPersona: 'FISICA';
+  //   relacion: string;
+  //   residencia: {
+  //     codigoPais: string;
+  //     autorizadoOperar: string;
+  //     motivo: string;
+  //   };
+  //   sectorEconomia: string;
+  //   esGobierno: string;
+  //   inversorCalificado: string;
 }

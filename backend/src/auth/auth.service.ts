@@ -1,15 +1,8 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import { jwtConstants } from './constants';
-import { RefreshAuthGuard } from './guards/refresh.guards';
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -17,14 +10,18 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signIn(username: string, password: string): Promise<any> {
-    if(!username && !password ) throw new HttpException('No hay usuario ni password', HttpStatus.BAD_REQUEST);
+  async signIn(username: string, password: string) {
+    if (!username && !password)
+      throw new HttpException(
+        'No hay usuario ni password',
+        HttpStatus.BAD_REQUEST,
+      );
     const user = await this.usersService.findUserByUsername(username);
     const checkpass = await compare(password, user.pass);
     if (!checkpass) {
-      
       throw new HttpException('Passwords do not match', 403);
     }
+    //TODO: Podríamos tipar el payload de jwt para saber en todas las partes del código que está recibiendo
     const payload = {
       sub: user._id,
       username: user.username,
@@ -46,6 +43,7 @@ export class AuthService {
   }
 
   async refreshToken(token: string) {
+    //TODO: verifyAsync se puede tipar para que el payload lo devuelva tipado
     const payload = await this.jwtService.verifyAsync(token, {
       secret: jwtConstants.refreshKey,
     });
