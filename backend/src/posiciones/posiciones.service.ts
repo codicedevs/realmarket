@@ -13,9 +13,7 @@ export class PosicionesService {
 
     try {
       const response = await axios.get<Posicion[]>(
-        `${baseURL}cuentas/423000005/posiciones?fecha=${from}&especie=ARS`,
-        { headers: { Authorization: tokenRosval} },
-      );
+        `${baseURL}cuentas/423000005/posiciones?fecha=${from}&especie=ARS`      );
       return response.data
     } catch (error) {
       console.error(error);

@@ -13,9 +13,7 @@ export class MovimientosService {
 
     try {
       const response = await axios.get<Movimiento[]>(
-        `${baseURL}cuentas/423000005/movimientos?fechaDesde=${from}&fechaHasta=${to}`,
-        { headers: { Authorization: tokenRosval } },
-      );
+        `${baseURL}cuentas/423000005/movimientos?fechaDesde=${from}&fechaHasta=${to}`);
       return response.data
     } catch (error) {
       console.error(error);
