@@ -1,22 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-<<<<<<< HEAD
-import { CreatePosicioneDto } from './dto/create-posicione.dto';
-import { UpdatePosicioneDto } from './dto/update-posicione.dto';
 
-=======
-import { baseURL, tokenRosval } from 'src/main';
->>>>>>> 305a0ee844eb48586f091ce17d167e2e49f359ae
 import axios from 'axios';
 import { Posicion } from 'src/types/posicion';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 
 @Injectable()
-<<<<<<< HEAD
 export class PosicionesService extends RosvalHttpService{
   
-=======
-export class PosicionesService {
->>>>>>> 305a0ee844eb48586f091ce17d167e2e49f359ae
   async findByDate(from: string): Promise<Posicion[]> {
     try {
       const response = await this.http.get<Posicion[]>(

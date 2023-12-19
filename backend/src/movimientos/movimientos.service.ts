@@ -6,7 +6,7 @@ import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 
 
 @Injectable()
-export class MovimientosService {
+export class MovimientosService extends RosvalHttpService {
   async findByDate(from: string, to: string): Promise<Movimiento[]> {
     try {
       const response = await this.http.get<Movimiento[]>(
