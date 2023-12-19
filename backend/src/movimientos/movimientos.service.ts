@@ -2,18 +2,20 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateMovimientoDto } from './dto/create-movimiento.dto';
 import { UpdateMovimientoDto } from './dto/update-movimiento.dto';
 import { Movimiento } from './entities/movimiento.entity';
-import { baseURL, tokenRosval } from 'src/main';
 import axios from 'axios';
+import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
+
+
 
 @Injectable()
-export class MovimientosService {
+export class MovimientosService extends RosvalHttpService{
 
   async findByDate(from: string, to: string): Promise<Movimiento[]> {
     
 
     try {
-      const response = await axios.get<Movimiento[]>(
-        `${baseURL}cuentas/423000005/movimientos?fechaDesde=${from}&fechaHasta=${to}`);
+      const response = await this.http.get<Movimiento[]>(
+        `cuentas/423000005/movimientos?fechaDesde=${from}&fechaHasta=${to}`);
       return response.data
     } catch (error) {
       console.error(error);

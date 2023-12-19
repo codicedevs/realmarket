@@ -11,10 +11,8 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
+import { RosvalHttpController } from './rosval-http/rosval-http.controller';
 
-export const baseURL = 'https://agentes.rosval.com.ar/Irmo/api/';
-
-export let tokenRosval: string | undefined;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -48,53 +46,12 @@ async function bootstrap() {
 
   app.enableCors(CORS);
 
-  /**Aca declaro el interceptor de AXIOS para actualizar el access token */
-
-  axios.interceptors.response.use(null, handleErrorInterceptor);
-
   await app.listen(configService.get('PORT'));
 
   console.log(`Application running on:${await app.getUrl()}`);
 }
 bootstrap();
 
-/**Logica para el Interceptor de la response en Axios  */
 
 
-const handleErrorInterceptor = async (error: any) => {
-  const originalRequest = error.config;
-  //Si el status no es de no authorizado (401) el handler no se ocupa del error
-  if (error.response?.status !== 401) throw error;
-  // Condiciones para el reintento
-  const retryCondition = originalRequest && !originalRequest._retry; //No se reintenta si viene de un reintento(Es decir si es un segundo reintento).
-  //Si no se cumplen con las condiciones de reintento se termina emitiendo un evento de no autorizado.
-  if (!retryCondition) throw error;
-  //Obtenemos y almacenamos el NUEVO access Token
-  tokenRosval = await getBearerToken();
-  //Se setea campo custom para identificar el reintento.
-  originalRequest._retry = true;
-  // Se setea la cabecera de authenticación con el nuevo accesToken guardado
-  const newRequest = await setAuthHeaderToConfig(originalRequest);
-  //Se reintenta la request
-  return axios(newRequest);
-};
 
-/**
- * Asigna cabecera de authenticación a una `requestConfig` de `axios`. Toma el accesToken del `asyncStorage`
- * @param {*} config
- * @returns
- */
-const setAuthHeaderToConfig = async (config: InternalAxiosRequestConfig<any>)=> {
-  axios.defaults.headers.common['Authorization'] =`Bearer ${tokenRosval}`
-  return config;
-}
-
-async function getBearerToken(): Promise<string> {
-  const response = await axios.post(`${baseURL}login`, {
-    clientId: '423000005',
-    username: 'API_Resumen',
-    password: 'API_Resumen',
-  });
-  
-  return response.data.token;
-}

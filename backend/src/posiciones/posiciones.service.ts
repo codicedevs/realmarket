@@ -1,19 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePosicioneDto } from './dto/create-posicione.dto';
 import { UpdatePosicioneDto } from './dto/update-posicione.dto';
-import { baseURL, tokenRosval } from 'src/main';
+
 import axios from 'axios';
 import { Posicion } from 'src/types/posicion';
+import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 
 @Injectable()
-export class PosicionesService {
+export class PosicionesService extends RosvalHttpService{
   
   async findByDate(from: string): Promise<Posicion[]> {
     
 
     try {
-      const response = await axios.get<Posicion[]>(
-        `${baseURL}cuentas/423000005/posiciones?fecha=${from}&especie=ARS`      );
+      const response = await this.http.get<Posicion[]>(
+        `cuentas/423000005/posiciones?fecha=${from}&especie=ARS`      );
       return response.data
     } catch (error) {
       console.error(error);
