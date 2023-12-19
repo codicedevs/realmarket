@@ -1,3 +1,4 @@
+<<<<<<< HEAD
   import { Injectable, Inject, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import {
   BSON,
@@ -6,13 +7,17 @@ import {
   Repository,
   UpdateResult,
 } from 'typeorm';
+=======
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+>>>>>>> 305a0ee844eb48586f091ce17d167e2e49f359ae
 import { User } from './user.entity';
-import { v4 } from 'uuid';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ErrorManager } from 'src/utils/error.manager';
 import { error } from 'console';
 import { ObjectId } from 'mongodb';
-import {hash} from 'bcrypt'
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -48,7 +53,9 @@ export class UsersService {
   }
   async findUserByUsername(username: string): Promise<User> {
     try {
-      const user: User = await this.userRepository.findOneBy({username: username});
+      const user: User = await this.userRepository.findOneBy({
+        username: username,
+      });
 
       if (!user) {
         throw new HttpException('No users found', HttpStatus.NOT_FOUND)
@@ -60,7 +67,7 @@ export class UsersService {
   }
   public async createUser(body: CreateUserDto): Promise<User> {
     try {
-      const hashedPass = await hash(body?.pass, 10)
+      const hashedPass = await hash(body?.pass, 10);
       body.pass = hashedPass;
       return await this.userRepository.save(body);
     } catch (error) {
@@ -72,7 +79,10 @@ export class UsersService {
     body: UpdateUserDto,
   ): Promise<User | undefined> {
     try {
-      const user: UpdateResult = await this.userRepository.update( new ObjectId(id) , body);
+      const user: UpdateResult = await this.userRepository.update(
+        new ObjectId(id),
+        body,
+      );
       if (user.affected === 0) {
         throw new HttpException('Theres no modifications', HttpStatus.NOT_MODIFIED)
       }
@@ -94,3 +104,13 @@ export class UsersService {
   }
 }
 
+//   async updateUser(updateUserDto: UpdateUserDto, id: string):Promise<User[]> {
+//     // const userQuery = await this.findById(id);
+//     //     const userAct = Object.assign(userQuery, updateUserDto)
+//     //     this.users = this.users.map(u=>u.id === id ? userAct : u)
+//         return
+
+//   }
+
+
+// }
