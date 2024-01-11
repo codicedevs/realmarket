@@ -5,10 +5,16 @@ import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as morgan from 'morgan';
 import { CORS } from './constants';
-
+import * as fs from 'fs';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  
+  const httpOptions = {
+    key: fs.readFileSync('root/privkey.pem'),
+    cert: fs.readFileSync('root/csr.pem'),
+  }
+  const app = await NestFactory.create(AppModule, {httpsOptions: httpOptions});
+
 
   /** En las siguientes lineas cargo y seteo Swagger para mostrar la documentacion de los Endpoints */
 
