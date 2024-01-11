@@ -1,16 +1,5 @@
-<<<<<<< HEAD
-  import { Injectable, Inject, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
-import {
-  BSON,
-  DeleteResult,
-  MongoClient,
-  Repository,
-  UpdateResult,
-} from 'typeorm';
-=======
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
->>>>>>> 305a0ee844eb48586f091ce17d167e2e49f359ae
 import { User } from './user.entity';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
