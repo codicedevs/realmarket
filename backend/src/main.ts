@@ -6,14 +6,12 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as morgan from 'morgan';
 import { CORS } from './constants';
 import * as fs from 'fs';
+import {getProtocolConfig} from './utils/ssl';
 
 async function bootstrap() {
   
-  const httpOptions = {
-    key: fs.readFileSync('/etc/letsencrypt/live/www.codice.dev/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/www.codice.dev/fullchain.pem'),
-  }
-  const app = await NestFactory.create(AppModule, {httpsOptions: httpOptions});
+  const {key, cert, protocol} = getProtocolConfig()
+  const app = await NestFactory.create(AppModule, protocol=='https'? {httpsOptions: {key, cert}} : undefined);
 
 
   /** En las siguientes lineas cargo y seteo Swagger para mostrar la documentacion de los Endpoints */
@@ -47,5 +45,6 @@ async function bootstrap() {
   await app.listen(configService.get('PORT'));
 
   console.log(`Application running on:${await app.getUrl()}`);
+  console.log(protocol)
 }
 bootstrap();
