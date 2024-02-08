@@ -17,6 +17,7 @@ import { Images } from "assets/images";
 // ----------------------------- Components && Elements -----------------------
 
 import { Container, Content, LayoutCustom, Text } from "components";
+import theme from "theme";
 
 interface IButtonProps {
   icon: string;
@@ -31,11 +32,11 @@ const IButton = React.memo(({ icon, title, onPress }: IButtonProps) => {
   const { height, width, top, bottom } = useLayout();
 
   return (
-    <LayoutCustom itemsCenter onPress={onPress} style={styles.button} level="2">
+    <LayoutCustom itemsCenter onPress={onPress} style={styles.button}>
       <LayoutCustom style={styles.layoutIcon} >
         <Icon pack="assets" name={icon} />
       </LayoutCustom>
-      <Text center numberOfLines={2} opacity={0.6}>
+      <Text fontSize={12} center numberOfLines={2} >
         {title}
       </Text>
     </LayoutCustom>
@@ -46,15 +47,16 @@ export default IButton;
 
 const themedStyles = StyleService.create({
   button: {
-    width: '35%',
-    borderColor: "background-basic-color-3",
-    borderRadius: 8,
-    borderWidth: 1,
-    padding: 5
+    width: '30%',
+    height:'100%',
+    backgroundColor: theme.colors.darkBlue,
+    borderRadius: 15,
+    paddingTop: theme.paddings.small,
+    paddingBottom: theme.paddings.small
   },
   layoutIcon: {
-    width: 60,
-    height: 60,
+    width: theme.image.medium,
+    height: theme.image.small,
     alignItems: "center",
     justifyContent: "center",
   },
