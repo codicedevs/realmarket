@@ -31,8 +31,8 @@ const IButton = React.memo(({ icon, title, onPress }: IButtonProps) => {
   const { height, width, top, bottom } = useLayout();
 
   return (
-    <LayoutCustom itemsCenter onPress={onPress} style={styles.button}>
-      <LayoutCustom style={styles.layoutIcon} level="2">
+    <LayoutCustom itemsCenter onPress={onPress} style={styles.button} level="2">
+      <LayoutCustom style={styles.layoutIcon} >
         <Icon pack="assets" name={icon} />
       </LayoutCustom>
       <Text center numberOfLines={2} opacity={0.6}>
@@ -46,15 +46,15 @@ export default IButton;
 
 const themedStyles = StyleService.create({
   button: {
-    width: 60,
-    gap: 10,
+    width: '35%',
+    borderColor: "background-basic-color-3",
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 5
   },
   layoutIcon: {
     width: 60,
     height: 60,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "background-basic-color-3",
     alignItems: "center",
     justifyContent: "center",
   },
