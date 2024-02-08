@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { compare } from 'bcrypt';
+import * as bcrypt from 'bcrypt';
+import { UsersService } from 'src/users/users.service';
 import { jwtConstants } from './constants';
 
 @Injectable()
@@ -12,17 +12,31 @@ export class AuthService {
   ) {}
 
   async signIn(username: string, password: string) {
-    if (!username && !password)
+    if (!username || !password)
       throw new HttpException(
-        'No hay usuario ni password',
+        'Faltan credenciales: usuario o password',
         HttpStatus.BAD_REQUEST,
       );
+
+    // console.log(username, password, 'para ver que onda');
+
     const user = await this.usersService.findUserByUsername(username);
-    const checkpass = await compare(password, user.pass);
+
+    // Controla que el usuario exista
+
+    if (!user) {
+      throw new HttpException('El usuario no existe', 403);
+    }
+
+    //Controla la contrasena
+    //await bcrypt.compare(password, user.pass);
+    const checkpass = await bcrypt.compare(password, user.pass);
     if (!checkpass) {
       throw new HttpException('Passwords do not match', 403);
     }
+
     //TODO: Podríamos tipar el payload de jwt para saber en todas las partes del código que está recibiendo
+
     const payload = {
       sub: user._id,
       username: user.username,
@@ -43,9 +57,9 @@ export class AuthService {
     return data;
   }
 
-  async refreshToken(token: string) {
+  async refreshToken(refreshToken: string) {
     //TODO: verifyAsync se puede tipar para que el payload lo devuelva tipado
-    const payload = await this.jwtService.verifyAsync(token, {
+    const payload = await this.jwtService.verifyAsync(refreshToken, {
       secret: jwtConstants.refreshKey,
     });
     delete payload.iat;

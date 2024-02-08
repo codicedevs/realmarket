@@ -10,11 +10,14 @@ import { AuthModule } from './auth/auth.module';
 import { InitialDataModule } from './initial-data/initial-data.module';
 import { MovimientosModule } from './movimientos/movimientos.module';
 import { PosicionesModule } from './posiciones/posiciones.module';
+import { DirectionsModule } from './directions/directions.module';
+import { AuthGuard } from './auth/guards/auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.develop.env',
+      envFilePath: '.env',
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
@@ -32,8 +35,15 @@ import { PosicionesModule } from './posiciones/posiciones.module';
     MovimientosModule,
     PosicionesModule,
     InitialDataModule,
+    DirectionsModule,
   ],
   controllers: [AppController, UsersController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    //Esto Bindea a Nivel Global el AUTHGUARD para todos los endpoints a menos que se decoren con @Public()],
+  ]
 })
 export class AppModule {}

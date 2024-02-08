@@ -12,7 +12,9 @@ import { MovimientosService } from './movimientos.service';
 import { CreateMovimientoDto } from './dto/create-movimiento.dto';
 import { UpdateMovimientoDto } from './dto/update-movimiento.dto';
 import { Movimiento } from './entities/movimiento.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('movimientos')
 @Controller('movimientos')
 export class MovimientosController {
   constructor(private readonly movimientosService: MovimientosService) {}
