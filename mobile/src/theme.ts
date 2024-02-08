@@ -1,4 +1,4 @@
-import {Dimensions} from 'react-native'
+import { Dimensions } from 'react-native'
 
 const dimensions = Dimensions.get('window')
 const windowWidth = dimensions.width
@@ -31,7 +31,11 @@ const theme = {
         /** Gris (ejemplo: la fecha del detalle de la noticia) */
         label: '#757575',
         /** Blanco */
-        white: '#FFFFFF'
+        white: '#FFFFFF',
+        // un azul cielo para algunos textos
+        skyBlue: '#009F9F',
+        // azul oscuro para boton en home,
+        darkBlue: '#252362'
     },
     fonts: {
     },
@@ -63,7 +67,9 @@ const theme = {
     },
     borderRadius: em(0.25), // 4px
     image: {
-        big: em(3.00) // 48px
+        big: em(3.00),// 48px
+        small: em(1.00),
+        medium: em(2.00)
     }
 }
 
