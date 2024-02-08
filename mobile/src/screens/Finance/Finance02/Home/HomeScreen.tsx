@@ -56,11 +56,14 @@ const HomeScreen = React.memo(() => {
         accessoryRight={() => <RoundedButton icon="bell" />}
       />
       <Content contentContainerStyle={styles.content}>
+        <LayoutCustom itemsCenter mt={10} mb={10}>
+        <Text style={{fontSize:20}}>Disponibilidad</Text>
+        </LayoutCustom>
         <Carousel
           data={CARDS}
-          width={width * 0.9}
+          width={width * 0.7}
           height={212 * (height / 812)}
-          loop={true}
+          loop={false}
           style={{
             width: width,
             alignItems: "center",
@@ -92,6 +95,13 @@ const HomeScreen = React.memo(() => {
             );
           })}
         </LayoutCustom>
+        <LayoutCustom horizontal itemsCenter justify="center"  mt={20}>
+          <Image style={{ width: 65, height: 65, }} source={require("../../../../assets/images/icons/moneyStat.png")} />
+          <LayoutCustom ml={20}>
+            <Text style={{ fontSize: 20, marginBottom: 7 }}>Posiciones</Text>
+            <Text style={{ fontSize: 20 }}>$2.455.342,88</Text>
+          </LayoutCustom>
+        </LayoutCustom>
         <LayoutCustom
           horizontal
           itemsCenter
@@ -100,11 +110,11 @@ const HomeScreen = React.memo(() => {
           mt={32}
           mb={40}
         >
-          <IButton icon="wallet_send" title="Send money" />
-          <IButton icon="qr" title="QR Actions" />
-          <IButton icon="document" title={`Pay\nbill`} />
+          <IButton icon="wallet_send" title="Informar orden" />
+          {/* <IButton icon="qr" title="QR Actions" /> */}
+          <IButton icon="document" title={`Solicitar\ntransferencia`} />
         </LayoutCustom>
-        <LayoutCustom horizontal itemsCenter justify="space-between" mh={24}>
+        {/* <LayoutCustom horizontal itemsCenter justify="space-between" mh={24}>
           <Text>Recent Activities</Text>
           <LayoutCustom horizontal itemsCenter gap={4}>
             <Text category="c1" status="primary">
@@ -116,12 +126,12 @@ const HomeScreen = React.memo(() => {
               fill={theme["text-primary-color"]}
             />
           </LayoutCustom>
-        </LayoutCustom>
-        <LayoutCustom gap={16} mt={24}>
+        </LayoutCustom> */}
+        {/* <LayoutCustom gap={16} mt={24}>
           {Activities.map((item, index) => {
             return <ActivityItem item={item} key={index} />;
           })}
-        </LayoutCustom>
+        </LayoutCustom> */}
       </Content>
     </Container>
   );
@@ -136,8 +146,6 @@ const themedStyles = StyleService.create({
   },
   content: {
     flexGrow: 1,
-    paddingTop: 24,
-    paddingBottom: 120,
   },
   topNavigation: {
     paddingHorizontal: 24,
