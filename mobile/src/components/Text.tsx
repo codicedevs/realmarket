@@ -30,6 +30,7 @@ export default memo(
     maxWidth,
     style,
     fontWeight,
+    fontSize,
     ...rest
   }: MyTextProps) => {
     let textAlign: 'left' | 'center' | 'right' | 'auto' | 'justify' | 'left';
@@ -91,6 +92,7 @@ export default memo(
               textDecorationLine: textDecorationLine,
               fontStyle: fontStyle,
               fontWeight: fontWeight,
+              fontSize: fontSize
             },
             style,
           ]}
