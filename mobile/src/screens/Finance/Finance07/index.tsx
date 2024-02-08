@@ -19,6 +19,7 @@ import {
   Content,
   LayoutCustom,
   NavigationAction,
+  RoundedButton,
   Text,
 } from "components";
 import CreditCard from "./CreditCard";
@@ -31,7 +32,9 @@ import EvaIcons from "types/eva-icon-enum";
 import Carousel from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 // ----------------------------- Navigation -----------------------
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { FinanceStackParamList } from "types/navigation-types";
+import BalanceCard from "./BalanceCard";
 
 const Finance07 = React.memo(() => {
   const {goBack}=useNavigation()
@@ -52,81 +55,42 @@ const Finance07 = React.memo(() => {
   };
   const notification = 5;
 
+  const { navigate } = useNavigation<NavigationProp<FinanceStackParamList>>();
+
   const progressValue = useSharedValue(0);
 
   return (
     <Container style={styles.container}>
-      <TopNavigation
+       <TopNavigation
+        alignment="center"
+        title="Disponibilidad"
         style={styles.topNavigation}
         accessoryLeft={() => (
-          <LayoutCustom horizontal itemsCenter gap={12} onPress={goBack}>
-            <Avatar source={Images.avatar.avatar_06} shape="square" />
-            <LayoutCustom>
-              <Text category="subhead" status="grey">
-                {_intro()}
-              </Text>
-              <Text>{faker.name.fullName()}</Text>
-            </LayoutCustom>
-          </LayoutCustom>
+          <RoundedButton
+            icon="arrow-left"
+            onPress={() => navigate("FinanceIntro")}
+          />
         )}
-        accessoryRight={() => (
-          <LayoutCustom>
-            <NavigationAction icon={EvaIcons.BellOutline} />
-            {notification > 0 && (
-              <LayoutCustom style={styles.notification}>
-                <Text status="white" category="c1">
-                  {notification}
-                </Text>
-              </LayoutCustom>
-            )}
-          </LayoutCustom>
-        )}
+        accessoryRight={() => <RoundedButton icon="bell" />}
       />
       <Content contentContainerStyle={styles.content}>
-        <LayoutCustom gap={16} mh={24}>
-          <Text category="t5">Services</Text>
-          <LayoutCustom horizontal gap={12}>
-            {SAMPLE_SERVICE.map((service, index) => {
-              return <ServiceItem item={service} key={index} />;
-            })}
+        <LayoutCustom mt={40}>
+          <LayoutCustom alignSelfCenter>
+        <Text fontSize={26} marginBottom={15} category="t1" >Movimientos</Text>
           </LayoutCustom>
+        <BalanceCard balance={233004.91} grow={12.2} />
         </LayoutCustom>
-        <Carousel
-          data={SAMPLE_CARD}
-          width={width * 0.86}
-          height={width * 0.5}
-          style={styles.carousel}
-          loop
-          pagingEnabled={true}
-          snapEnabled={true}
-          autoPlay={false}
-          onProgressChange={(_, absoluteProgress) =>
-            (progressValue.value = absoluteProgress)
-          }
-          mode="parallax"
-          modeConfig={{
-            parallaxScrollingScale: 0.98,
-            parallaxScrollingOffset: 24,
-          }}
-          renderItem={({ item, index, animationValue }) => (
-            <CreditCard
-              data={item}
-              key={index}
-              animationValue={animationValue}
-            />
-          )}
-        />
-        <LayoutCustom mt={32} gap={24} mh={24}>
-          <LayoutCustom horizontal justify="space-between" itemsCenter mb={12}>
-            <Text category="t5">Recent Transactions</Text>
+        <LayoutCustom  gap={24} mh={24}>
+          <LayoutCustom horizontal justify="space-between" itemsCenter>
+            {/* <Text category="t5">Recent Transactions</Text> */}
             <LayoutCustom horizontal itemsCenter>
-              <Text category="body" status="primary">
+              {/* <Text category="body" status="primary">
                 See All
               </Text>
               <AppIcon
                 name={EvaIcons.ChevronRight}
                 fill={theme["text-primary-color"]}
-              />
+              /> */}
             </LayoutCustom>
           </LayoutCustom>
           {SAMPLE_TRANSACTION.map((transaction, index) => {
@@ -160,13 +124,11 @@ const themedStyles = StyleService.create({
     justifyContent: "center",
   },
   content: {
-    paddingTop: 24,
-    paddingBottom: 60,
   },
   carousel: {
     width: "100%",
     justifyContent: "center",
-    marginTop: 40,
+    marginTop: 15,
     alignItems: "center",
   },
 });
@@ -210,16 +172,16 @@ const SAMPLE_CARD = [
     balance: 123223,
     exp_time: "09/25",
   },
-  {
-    image: Images.finance.creditcard_02,
-    number: "1234",
-    balance: 123223,
-    exp_time: "09/25",
-  },
-  {
-    image: Images.finance.creditcard_03,
-    number: "1234",
-    balance: 123223,
-    exp_time: "09/25",
-  },
+  // {
+  //   image: Images.finance.creditcard_02,
+  //   number: "1234",
+  //   balance: 123223,
+  //   exp_time: "09/25",
+  // },
+  // {
+  //   image: Images.finance.creditcard_03,
+  //   number: "1234",
+  //   balance: 123223,
+  //   exp_time: "09/25",
+  // },
 ];
