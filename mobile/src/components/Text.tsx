@@ -1,7 +1,7 @@
-import React, {memo} from 'react';
-import {TouchableOpacity} from 'react-native';
-import {Text} from '@ui-kitten/components';
-import {MyTextProps, TextSizeCategory} from 'types/component-types';
+import React, { memo } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { Text } from '@ui-kitten/components';
+import { MyTextProps, TextSizeCategory } from 'types/component-types';
 
 export default memo(
   ({
@@ -37,22 +37,22 @@ export default memo(
     left
       ? (textAlign = 'left')
       : right
-      ? (textAlign = 'right')
-      : center
-      ? (textAlign = 'center')
-      : (textAlign = 'left');
+        ? (textAlign = 'right')
+        : center
+          ? (textAlign = 'center')
+          : (textAlign = 'left');
 
     let textTransform: 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
     uppercase
       ? (textTransform = 'uppercase')
       : lowercase
-      ? (textTransform = 'lowercase')
-      : capitalize
-      ? (textTransform = 'capitalize')
-      : none
-      ? (textTransform = 'none')
-      : (textTransform = 'none');
+        ? (textTransform = 'lowercase')
+        : capitalize
+          ? (textTransform = 'capitalize')
+          : none
+            ? (textTransform = 'none')
+            : (textTransform = 'none');
 
     let textDecorationLine:
       | 'none'
@@ -116,6 +116,8 @@ const getLineHeight = (category: TextSizeCategory): number => {
       return 28;
     case 't5':
       return 24;
+    case 't6':
+      return 20;
     case 'body':
       return 20;
     case 'subhead':
