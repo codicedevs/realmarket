@@ -57,9 +57,9 @@ const HomeScreen = React.memo(() => {
         )}
         accessoryRight={() => <RoundedButton icon="person_fill" />}
       />
-      <Content contentContainerStyle={styles.content}>
+      <Content>
         <LayoutCustom itemsCenter mt={10} mb={10}>
-        <Text fontSize={20} marginBottom={10} marginTop={10}>Disponibilidad</Text>
+          <Text fontSize={20} marginBottom={10} marginTop={10}>Disponibilidad</Text>
         </LayoutCustom>
         <Carousel
           data={CARDS}
@@ -81,7 +81,7 @@ const HomeScreen = React.memo(() => {
             parallaxScrollingOffset: 10,
           }}
           renderItem={({ item, index }) => {
-            return  <TimeCard item={item} />
+            return <TimeCard item={item} />
             //  <CreditCard item={item} key={index} />;
           }}
         />
@@ -98,9 +98,9 @@ const HomeScreen = React.memo(() => {
             );
           })}
         </LayoutCustom> */}
-        <LayoutCustom horizontal itemsCenter justify="center"  mt={20}>
-          <Image style={{ width: 70, height: 70, }} source={require("../../../../assets/images/icons/moneyStat.png")} />
-          <LayoutCustom ml={20} style={{alignItems:"flex-start"}}>
+        <LayoutCustom horizontal itemsCenter justify="center" mt={20}>
+          <Image style={themedStyles.img} source={require("../../../../assets/images/icons/moneyStat.png")} />
+          <LayoutCustom ml={20} style={{ alignItems: "flex-start" }}>
             <Text style={{ fontSize: 20, marginBottom: 3 }}>Posiciones</Text>
             <Text style={themedStyles.moneyText} fontSize={20} category="t5">$20.455.342,88</Text>
           </LayoutCustom>
@@ -109,12 +109,16 @@ const HomeScreen = React.memo(() => {
           horizontal
           itemsCenter
           justify="center"
-          gap={30}
           mt={50}
           mb={35}
+          style={{ backgroundColor: 'red' }}
         >
-          <IButton icon="wallet_send" title={`Informar\norden`} />
-          <IButton icon="document" title={`Solicitar transferencia`} />
+          <LayoutCustom alignSelfCenter style={styles.buttonContainer}>
+            <IButton name='ordenIcon' icon="wallet_send" title={`Informar\norden`} />
+          </LayoutCustom>
+          <LayoutCustom style={styles.buttonContainer}>
+            <IButton name='ordenIcon' icon="document" title={`Solicitar\ntransferencia`} />
+          </LayoutCustom>
         </LayoutCustom>
         {/* <LayoutCustom horizontal itemsCenter justify="space-between" mh={24}>
           <Text>Recent Activities</Text>
@@ -145,14 +149,19 @@ const themedStyles = StyleService.create({
   container: {
     flex: 1
   },
-  content: {
-    // flexGrow: 1,
+  img: {
+    width: theme.image.big,
+    height:theme.image.big
   },
   topNavigation: {
-    paddingHorizontal: 24,
+    paddingHorizontal: theme.paddings.medium,
   },
   moneyText: {
     color: theme.colors.skyBlue
+  },
+  buttonContainer: {
+    width: '50%',
+    padding: theme.paddings.medium
   }
 });
 
