@@ -44,12 +44,12 @@ export interface NavigationActionProps {
   style?: StyleProp<ViewStyle>;
   center?: boolean;
   status?:
-    | "basic"
-    | "white"
-    | "primary"
-    | "warning"
-    | "placeholder"
-    | "warning-fill";
+  | "basic"
+  | "white"
+  | "primary"
+  | "warning"
+  | "placeholder"
+  | "warning-fill";
 }
 
 // -------------------------------- CustomLayout --------------------------------
@@ -86,13 +86,13 @@ export interface ILayoutCustomProps extends LayoutProps {
   onLongPress?: (event: GestureResponderEvent) => void;
   level?: "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | string;
   justify?:
-    | "center"
-    | "space-between"
-    | "flex-start"
-    | "flex-end"
-    | "space-around"
-    | "space-evenly"
-    | undefined;
+  | "center"
+  | "space-between"
+  | "flex-start"
+  | "flex-end"
+  | "space-around"
+  | "space-evenly"
+  | undefined;
 }
 
 // -------------------------------- ProgressBar --------------------------------
@@ -112,6 +112,7 @@ export type TextSizeCategory =
   | "t3"
   | "t4"
   | "t5"
+  | "t6"
   | "body"
   | "subhead"
   | "callout"
@@ -166,17 +167,17 @@ export interface MyTextProps extends TextProps {
   italic?: boolean;
   onPress?: () => void;
   fontWeight?:
-    | "bold"
-    | "normal"
-    | "100"
-    | "200"
-    | "300"
-    | "400"
-    | "500"
-    | "600"
-    | "700"
-    | "800"
-    | "900";
+  | "bold"
+  | "normal"
+  | "100"
+  | "200"
+  | "300"
+  | "400"
+  | "500"
+  | "600"
+  | "700"
+  | "800"
+  | "900";
 }
 
 // -------------------------------- RoundedButton --------------------------------

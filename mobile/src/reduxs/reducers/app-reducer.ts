@@ -20,7 +20,7 @@ export interface IAppState {
 export const initialState: IAppState = {
   appLoading: false,
   alert: null,
-  theme: ThemeMode.LIGHT,
+  theme: ThemeMode.DARK,
 };
 
 export const appSlice = createSlice({
