@@ -15,6 +15,8 @@ import {
 import EvaIcons from "types/eva-icon-enum";
 import { globalStyle } from "styles/globalStyle";
 import HomeScreen from "./Home/HomeScreen";
+import Finance07 from "../Finance07";
+import Finance08 from "../Finance08";
 
 const Tab = createBottomTabNavigator();
 
@@ -104,8 +106,8 @@ const Finance02 = () => {
         tabBar={(props) => <MyTabBar {...props} />}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="MyCard" component={Screen} />
-        <Tab.Screen name="Statistic" component={Screen} />
+        <Tab.Screen name="MyCard" component={Finance07} />
+        <Tab.Screen name="Statistic" component={Finance08} />
         <Tab.Screen name="Profile" component={Screen} />
       </Tab.Navigator>
     </LayoutCustom>

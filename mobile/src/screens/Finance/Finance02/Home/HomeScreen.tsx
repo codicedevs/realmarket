@@ -33,6 +33,8 @@ import IButton from "./IButton";
 import EvaIcons from "types/eva-icon-enum";
 import { Icons } from "assets/icons";
 import ActivityItem from "./ActivityItem";
+import TimeCard from "./TimeCard";
+import theme from "theme";
 
 const HomeScreen = React.memo(() => {
   const theme = useTheme();
@@ -53,14 +55,17 @@ const HomeScreen = React.memo(() => {
             onPress={() => navigate("FinanceIntro")}
           />
         )}
-        accessoryRight={() => <RoundedButton icon="bell" />}
+        accessoryRight={() => <RoundedButton icon="person_fill" />}
       />
       <Content contentContainerStyle={styles.content}>
+        <LayoutCustom itemsCenter mt={10} mb={10}>
+        <Text fontSize={20} marginBottom={10} marginTop={10}>Disponibilidad</Text>
+        </LayoutCustom>
         <Carousel
           data={CARDS}
-          width={width * 0.9}
+          width={width * 0.7}
           height={212 * (height / 812)}
-          loop={true}
+          loop={false}
           style={{
             width: width,
             alignItems: "center",
@@ -76,10 +81,11 @@ const HomeScreen = React.memo(() => {
             parallaxScrollingOffset: 10,
           }}
           renderItem={({ item, index }) => {
-            return <CreditCard item={item} key={index} />;
+            return  <TimeCard item={item} />
+            //  <CreditCard item={item} key={index} />;
           }}
         />
-        <LayoutCustom horizontal itemsCenter justify="center" gap={8}>
+        {/* <LayoutCustom horizontal itemsCenter justify="center" gap={8}>
           {CARDS.map((item, index) => {
             return (
               <PaginationItem
@@ -91,20 +97,26 @@ const HomeScreen = React.memo(() => {
               />
             );
           })}
+        </LayoutCustom> */}
+        <LayoutCustom horizontal itemsCenter justify="center"  mt={20}>
+          <Image style={{ width: 70, height: 70, }} source={require("../../../../assets/images/icons/moneyStat.png")} />
+          <LayoutCustom ml={20} style={{alignItems:"flex-start"}}>
+            <Text style={{ fontSize: 20, marginBottom: 3 }}>Posiciones</Text>
+            <Text style={themedStyles.moneyText} fontSize={20} category="t5">$20.455.342,88</Text>
+          </LayoutCustom>
         </LayoutCustom>
         <LayoutCustom
           horizontal
           itemsCenter
           justify="center"
-          gap={48}
-          mt={32}
-          mb={40}
+          gap={30}
+          mt={50}
+          mb={35}
         >
-          <IButton icon="wallet_send" title="Send money" />
-          <IButton icon="qr" title="QR Actions" />
-          <IButton icon="document" title={`Pay\nbill`} />
+          <IButton icon="wallet_send" title={`Informar\norden`} />
+          <IButton icon="document" title={`Solicitar transferencia`} />
         </LayoutCustom>
-        <LayoutCustom horizontal itemsCenter justify="space-between" mh={24}>
+        {/* <LayoutCustom horizontal itemsCenter justify="space-between" mh={24}>
           <Text>Recent Activities</Text>
           <LayoutCustom horizontal itemsCenter gap={4}>
             <Text category="c1" status="primary">
@@ -116,12 +128,12 @@ const HomeScreen = React.memo(() => {
               fill={theme["text-primary-color"]}
             />
           </LayoutCustom>
-        </LayoutCustom>
-        <LayoutCustom gap={16} mt={24}>
+        </LayoutCustom> */}
+        {/* <LayoutCustom gap={16} mt={24}>
           {Activities.map((item, index) => {
             return <ActivityItem item={item} key={index} />;
           })}
-        </LayoutCustom>
+        </LayoutCustom> */}
       </Content>
     </Container>
   );
@@ -131,23 +143,23 @@ export default HomeScreen;
 
 const themedStyles = StyleService.create({
   container: {
-    flex: 1,
-    paddingBottom: 0,
+    flex: 1
   },
   content: {
-    flexGrow: 1,
-    paddingTop: 24,
-    paddingBottom: 120,
+    // flexGrow: 1,
   },
   topNavigation: {
     paddingHorizontal: 24,
   },
+  moneyText: {
+    color: theme.colors.skyBlue
+  }
 });
 
 const CARDS = [
-  { color: "#8438FF", balance: 15245.9, card_number: "5282300014453286" },
-  { color: "#38CFFF", balance: 24245.9, card_number: "5282300014453286" },
-  { color: "#FF7438", balance: 151245.9, card_number: "5282300014453286" },
+  { color: "#009F9F", balance: 15245.9, card_number: "5282300014453286", icon: require('../../../../assets/images/icons/today-clock.png') },
+  { color: "#D0682E", balance: 24245.9, card_number: "5282300014453286", icon: require('../../../../assets/images/icons/today-clock.png') },
+  { color: "#701BC4", balance: 151245.9, card_number: "5282300014453286", icon: require('../../../../assets/images/icons/today-clock.png') },
 ];
 
 const Activities = [
