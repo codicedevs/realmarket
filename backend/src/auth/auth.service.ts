@@ -29,7 +29,8 @@ export class AuthService {
     }
 
     //Controla la contrasena
-    //await bcrypt.compare(password, user.pass);
+    //La contrasena guardada tiene que estar hasheada
+
     const checkpass = await bcrypt.compare(password, user.pass);
     if (!checkpass) {
       throw new HttpException('Passwords do not match', 403);

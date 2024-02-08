@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersController } from './users/users.controller';
+import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { UserModule } from './users/user.module';
-import { ConfigModule } from '@nestjs/config';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './auth/guards/auth.guard';
 import { InitialDataModule } from './initial-data/initial-data.module';
 import { MovimientosModule } from './movimientos/movimientos.module';
 import { PosicionesModule } from './posiciones/posiciones.module';
-import { DirectionsModule } from './directions/directions.module';
-import { AuthGuard } from './auth/guards/auth.guard';
-import { APP_GUARD } from '@nestjs/core';
+import { UserModule } from './users/user.module';
+import { UsersController } from './users/users.controller';
 
 @Module({
   imports: [
@@ -35,15 +34,15 @@ import { APP_GUARD } from '@nestjs/core';
     MovimientosModule,
     PosicionesModule,
     InitialDataModule,
-    DirectionsModule,
   ],
   controllers: [AppController, UsersController],
-  providers: [AppService,
+  providers: [
+    AppService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
     //Esto Bindea a Nivel Global el AUTHGUARD para todos los endpoints a menos que se decoren con @Public()],
-  ]
+  ],
 })
 export class AppModule {}
