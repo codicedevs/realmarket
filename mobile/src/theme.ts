@@ -62,6 +62,9 @@ const theme = {
         xlarge: em(2), // 32px
     },
     borderRadius: em(0.25), // 4px
+    image: {
+        big: em(3.00) // 48px
+    }
 }
 
 export default theme
