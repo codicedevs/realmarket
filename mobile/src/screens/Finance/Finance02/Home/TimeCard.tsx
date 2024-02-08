@@ -20,7 +20,7 @@ const TimeCard = ({ item }: { item: CreditCardProps }) => {
       <ImageBackground style={{ height: '100%', backgroundColor: item.color, borderRadius: 10 }} source={require("../../../../assets/images/icons/colorful-background.png")}>
         <LayoutCustom alignSelfCenter itemsCenter padding={theme.paddings.medium} style={{marginTop: theme.margins.small}}>
           <Image style={{height: theme.image.big, width: theme.image.big}} source={item.icon} />
-          <Text marginTop={10} fontSize={18}>$1.323.434,00</Text>
+          <Text marginTop={10} fontSize={23} category='t5'>$1.323.434,00</Text>
         </LayoutCustom>
       </ImageBackground>
     </LayoutCustom>
@@ -31,7 +31,7 @@ export default TimeCard
 
 const themedStyles = StyleService.create({
   card: {
-    borderRadius: 16,
+    borderRadius: 25,
     marginVertical: 16,
     shadowOffset: {
       width: 8,
