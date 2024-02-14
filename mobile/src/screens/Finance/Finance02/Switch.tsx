@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, Dispatch, SetStateAction } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const CurrencyToggle = (changeCurrency: React.SetStateAction<string>) => {
+const CurrencyToggle = ({ changeCurrency }: { changeCurrency: React.Dispatch<React.SetStateAction<string>> }) => {
   const [currency, setCurrency] = useState('ARS');
 
   const toggleCurrency = () => {
-    setCurrency(currency === 'ARS' ? 'USD' : 'ARS');
-    changeCurrency
+    const newCurrency = currency === 'ARS' ? 'USD' : 'ARS'
+    setCurrency(newCurrency);
+    changeCurrency(newCurrency)
   };
 
   return (
@@ -32,13 +33,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#1C235D',
     borderRadius: 20,
-    width:'40%'
+    width: '40%'
   },
   button: {
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
-    width:'50%'
+    width: '50%'
   },
   buttonActive: {
     backgroundColor: '#009F9F'
