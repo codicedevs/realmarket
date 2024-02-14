@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 // ----------------------------- UI kitten -----------------------------------
 import {
-  TopNavigation,
   StyleService,
-  useStyleSheet,
-  useTheme,
-  Avatar,
+  TopNavigation,
+  useStyleSheet
 } from "@ui-kitten/components";
 // ----------------------------- Hooks ---------------------------------------
 import { useLayout } from "hooks";
@@ -13,35 +11,30 @@ import { useLayout } from "hooks";
 import { Images } from "assets/images";
 // ----------------------------- Components && Elements -----------------------
 
+import { faker } from "@faker-js/faker";
 import {
-  AppIcon,
   Container,
   Content,
   LayoutCustom,
-  NavigationAction,
-  RoundedButton,
-  Text,
+  RoundedButton
 } from "components";
-import CreditCard from "./CreditCard";
 import TransactionItem from "./TransactionItem";
-import { faker } from "@faker-js/faker";
-import ServiceItem from "./ServiceItem";
 // ----------------------------- Types ----------------------------------------
-import EvaIcons from "types/eva-icon-enum";
 // ----------------------------- Reanimated 2 -----------------------
-import Carousel from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 // ----------------------------- Navigation -----------------------
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import CurrencyToggle from "components/Switch";
+import theme from "theme";
 import { FinanceStackParamList } from "types/navigation-types";
 import BalanceCard from "./BalanceCard";
 
 const Finance07 = React.memo(() => {
-  const {goBack}=useNavigation()
-  const theme = useTheme();
+  const { goBack } = useNavigation()
   const styles = useStyleSheet(themedStyles);
   const { width } = useLayout();
   const time_now = new Date().getHours();
+  const [currency, setCurrency] = useState('ARS')
   const _intro = () => {
     if (time_now >= 0 && time_now < 12) {
       return "Good Morning!";
@@ -61,7 +54,7 @@ const Finance07 = React.memo(() => {
 
   return (
     <Container style={styles.container}>
-       <TopNavigation
+      <TopNavigation
         alignment="center"
         title="Disponibilidad"
         style={styles.topNavigation}
@@ -74,25 +67,14 @@ const Finance07 = React.memo(() => {
         accessoryRight={() => <RoundedButton icon="bell" />}
       />
       <Content contentContainerStyle={styles.content}>
-        <LayoutCustom mt={40}>
-          <LayoutCustom alignSelfCenter>
-        <Text fontSize={26} marginBottom={15} category="t1" >Movimientos</Text>
+        <LayoutCustom mt={theme.margins.large} mb={theme.margins.medium}>
+          <LayoutCustom alignSelfCenter mb={theme.margins.medium}>
+            {/* <Text fontSize={26} marginBottom={15} category="t1" >Movimientos</Text> */}
+            <CurrencyToggle changeCurrency={setCurrency} />
           </LayoutCustom>
-        <BalanceCard balance={233004.91} grow={12.2} />
+          <BalanceCard balance={233004.91} grow={12.2} />
         </LayoutCustom>
-        <LayoutCustom  gap={24} mh={24}>
-          <LayoutCustom horizontal justify="space-between" itemsCenter>
-            {/* <Text category="t5">Recent Transactions</Text> */}
-            <LayoutCustom horizontal itemsCenter>
-              {/* <Text category="body" status="primary">
-                See All
-              </Text>
-              <AppIcon
-                name={EvaIcons.ChevronRight}
-                fill={theme["text-primary-color"]}
-              /> */}
-            </LayoutCustom>
-          </LayoutCustom>
+        <LayoutCustom overflow="scroll" gap={15} mh={24}>
           {SAMPLE_TRANSACTION.map((transaction, index) => {
             return <TransactionItem data={transaction} key={index} />;
           })}
@@ -112,24 +94,8 @@ const themedStyles = StyleService.create({
   topNavigation: {
     paddingHorizontal: 24,
   },
-  notification: {
-    position: "absolute",
-    top: 2,
-    right: 4,
-    width: 17,
-    height: 17,
-    borderRadius: 99,
-    backgroundColor: "color-danger-active",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   content: {
-  },
-  carousel: {
-    width: "100%",
-    justifyContent: "center",
-    marginTop: 15,
-    alignItems: "center",
+    overflow: 'scroll'
   },
 });
 
@@ -155,7 +121,7 @@ const SAMPLE_TRANSACTION = [
     title: faker.name.firstName("female"),
     created_at: new Date(new Date().setHours(new Date().getHours()) - 4),
     amount: -5230,
-  },
+  }
 ];
 
 const SAMPLE_SERVICE = [
