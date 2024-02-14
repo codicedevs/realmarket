@@ -55,16 +55,16 @@ export interface NavigationActionProps {
 // -------------------------------- CustomLayout --------------------------------
 export interface ILayoutCustomProps extends LayoutProps {
   padder?: boolean;
-  mt?: number;
+  mt?: number | string;
   style?: StyleProp<ViewStyle>;
-  mb?: number;
+  mb?: number | string;
   mh?: number;
   mv?: number;
   ml?: number;
   mr?: number;
   ph?: number;
   pt?: number;
-  pl?: number;
+  pl?: number | string;
   pv?: number;
   pb?: number;
   maxWidth?: number;

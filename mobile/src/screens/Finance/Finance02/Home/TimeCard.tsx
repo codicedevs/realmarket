@@ -20,7 +20,7 @@ const TimeCard = ({ item }: { item: CreditCardProps }) => {
       <ImageBackground style={{ ...styles.imageBack, backgroundColor: item.color }} source={require("../../../../assets/images/icons/colorful-background.png")}>
         <LayoutCustom alignSelfCenter itemsCenter padding={theme.paddings.medium} style={styles.textContainer}>
           <Image style={themedStyles.image} source={item.icon} />
-          <Text marginTop={10} fontSize={23} category='t5'>$1.323.434,00</Text>
+          <Text marginTop={theme.margins.small} fontSize={23} category='t5'>$1.323.434,00</Text>
         </LayoutCustom>
       </ImageBackground>
     </LayoutCustom>
