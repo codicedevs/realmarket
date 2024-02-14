@@ -67,14 +67,14 @@ const Finance07 = React.memo(() => {
         accessoryRight={() => <RoundedButton icon="bell" />}
       />
       <Content contentContainerStyle={styles.content}>
-        <LayoutCustom mt={theme.margins.large} mb={theme.margins.medium}>
+        <LayoutCustom mt={theme.margins.large} mb={theme.margins.small}>
           <LayoutCustom alignSelfCenter mb={theme.margins.medium}>
             {/* <Text fontSize={26} marginBottom={15} category="t1" >Movimientos</Text> */}
             <CurrencyToggle changeCurrency={setCurrency} />
           </LayoutCustom>
           <BalanceCard balance={233004.91} grow={12.2} />
         </LayoutCustom>
-        <LayoutCustom overflow="scroll" gap={15} mh={24}>
+        <LayoutCustom overflow="scroll" gap={15} mh={theme.margins.medium}>
           {SAMPLE_TRANSACTION.map((transaction, index) => {
             return <TransactionItem data={transaction} key={index} />;
           })}
@@ -102,25 +102,31 @@ const themedStyles = StyleService.create({
 const SAMPLE_TRANSACTION = [
   {
     image: Images.finance.prime,
-    title: "Prime Membership",
+    title: "Venta",
     created_at: new Date(new Date().setHours(new Date().getHours())),
-    amount: 1230,
+    amount: "-$5000",
+    receivedBy: '[MRCAO]',
+    total: "$1.345.000,00"
   },
   {
     image: Images.finance.nike,
-    title: "Nike Store",
+    title: "Caución tomadora",
     created_at: new Date(new Date().setHours(new Date().getHours()) - 1),
-    amount: -4230,
+    amount: "-$50.000",
+    receivedBy: '2023065826',
+    total: "1.350.000,00"
   },
   {
     title: faker.name.firstName("male"),
     created_at: new Date(new Date().setHours(new Date().getHours()) - 2),
-    amount: 11230,
+    amount: "$50.000",
+    total: "$1.400.000,00"
   },
   {
-    title: faker.name.firstName("female"),
+    title: 'Ret. gcias. s/CL',
     created_at: new Date(new Date().setHours(new Date().getHours()) - 4),
-    amount: -5230,
+    amount: "$15000",
+    total: "1.350.000,00"
   }
 ];
 
