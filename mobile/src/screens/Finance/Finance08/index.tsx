@@ -1,64 +1,80 @@
-import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import React, { useState } from "react";
 // ----------------------------- UI kitten -----------------------------------
 import {
-  TopNavigation,
   StyleService,
-  useStyleSheet,
-  useTheme,
+  TopNavigation,
+  useStyleSheet
 } from "@ui-kitten/components";
 // ----------------------------- Navigation -----------------------------------
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 // ----------------------------- Hooks ---------------------------------------
 import { useLayout } from "hooks";
 // ----------------------------- Assets ---------------------------------------
-import { Images } from "assets/images";
 // ----------------------------- Components && Elements -----------------------
 
 import {
   Container,
   Content,
   LayoutCustom,
-  NavigationAction,
   RoundedButton,
-  Text,
+  Text
 } from "components";
-import BalanceCard from "./BalanceCard";
+import CurrencyToggle from "components/Switch";
+import { Switch } from "react-native";
+import theme from "theme";
+import { FinanceStackParamList } from "types/navigation-types";
+import ActionCard from "./ActionsCard";
 import { sample_coin } from "./data";
-import CoinItem from "./CoinItem";
 
 const Finance08 = React.memo(() => {
-  const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
   const { goBack } = useNavigation();
   const { height, width, top, bottom } = useLayout();
+  const { navigate } = useNavigation<NavigationProp<FinanceStackParamList>>();
+  const [currency, setCurrency] = useState('ARS')
 
   return (
     <Container style={styles.container}>
       <TopNavigation
-        title={() => <Text category="t5">{"Investment"}</Text>}
         alignment="center"
+        title="Posiciones"
         style={styles.topNavigation}
-        accessoryLeft={() => <RoundedButton icon={"menu"} onPress={goBack} />}
-        accessoryRight={() => <RoundedButton icon={"qr"} />}
+        accessoryLeft={() => (
+          <RoundedButton
+            icon="arrow-left"
+            onPress={() => navigate("FinanceIntro")}
+          />
+        )}
+        accessoryRight={() => <RoundedButton icon="bell" />}
       />
       <Content contentContainerStyle={styles.content}>
-        <BalanceCard balance={233004.91} grow={12.2} />
+        <LayoutCustom mt={theme.margins.large} mb={theme.margins.medium} alignSelfCenter>
+          <CurrencyToggle changeCurrency={setCurrency} />
+        </LayoutCustom>
         <LayoutCustom
           itemsCenter
           horizontal
           justify="space-between"
           margin={24}
         >
-          <Text>Trending Crypto</Text>
-          <LayoutCustom horizontal itemsCenter gap={12}>
-            <RoundedButton icon={"box"} />
-            <RoundedButton icon={"filter"} />
+          <Text>Total general</Text>
+          <Text>AR$1.456.789,000</Text>
+        </LayoutCustom>
+        <LayoutCustom
+          itemsCenter
+          horizontal
+          justify="space-between"
+          margin={24}
+        >
+          <Text>Mis instrumentos</Text>
+          <LayoutCustom horizontal alignSelfCenter itemsCenter>
+            <Text>Agrupar</Text>
+            <Switch />
           </LayoutCustom>
         </LayoutCustom>
         <LayoutCustom>
           {sample_coin.map((coin, index) => {
-            return <CoinItem data={coin} index={index} key={index} />;
+            return <ActionCard data={coin} index={index} key={index} />;
           })}
         </LayoutCustom>
       </Content>
@@ -77,7 +93,6 @@ const themedStyles = StyleService.create({
     paddingHorizontal: 16,
   },
   content: {
-    paddingTop: 24,
   },
 });
 
