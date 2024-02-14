@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Image, StyleSheet } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import {
@@ -35,12 +35,13 @@ import { Icons } from "assets/icons";
 import ActivityItem from "./ActivityItem";
 import TimeCard from "./TimeCard";
 import theme from "theme";
+import CurrencyToggle from "../Switch";
 
 const HomeScreen = React.memo(() => {
-  const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
   const { navigate } = useNavigation<NavigationProp<FinanceStackParamList>>();
   const { height, width, top, bottom } = useLayout();
+  // const [currency, setCurrency] = useState('ARS')
 
   const progressValue = useSharedValue<number>(0);
   return (
@@ -58,20 +59,17 @@ const HomeScreen = React.memo(() => {
         accessoryRight={() => <RoundedButton icon="person_fill" />}
       />
       <Content>
-        <LayoutCustom itemsCenter mt={10} mb={10}>
-          <Text fontSize={20} marginBottom={10} marginTop={10}>Disponibilidad</Text>
+        <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
+          {/* <CurrencyToggle /> */}
+        </LayoutCustom>
+        <LayoutCustom alignSelfCenter>
         </LayoutCustom>
         <Carousel
           data={CARDS}
-          width={width * 0.7}
+          width={width * 0.9}
           height={212 * (height / 812)}
           loop={false}
-          style={{
-            width: width,
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: 16,
-          }}
+          style={{ ...themedStyles.carouselStyle, width: width }}
           onProgressChange={(_, absoluteProgress) =>
             (progressValue.value = absoluteProgress)
           }
@@ -82,7 +80,6 @@ const HomeScreen = React.memo(() => {
           }}
           renderItem={({ item, index }) => {
             return <TimeCard item={item} />
-            //  <CreditCard item={item} key={index} />;
           }}
         />
         {/* <LayoutCustom horizontal itemsCenter justify="center" gap={8}>
@@ -98,7 +95,7 @@ const HomeScreen = React.memo(() => {
             );
           })}
         </LayoutCustom> */}
-        <LayoutCustom horizontal itemsCenter justify="center" mt={20}>
+        <LayoutCustom horizontal itemsCenter justify="flex-start" pl={theme.paddings.large} mt={theme.margins.medium}>
           <Image style={themedStyles.img} source={require("../../../../assets/images/icons/moneyStat.png")} />
           <LayoutCustom ml={20} style={{ alignItems: "flex-start" }}>
             <Text style={{ fontSize: 20, marginBottom: 3 }}>Posiciones</Text>
@@ -109,15 +106,13 @@ const HomeScreen = React.memo(() => {
           horizontal
           itemsCenter
           justify="center"
-          mt={50}
-          mb={35}
-          style={{ backgroundColor: 'red' }}
+          mt={theme.margins.large}
         >
           <LayoutCustom alignSelfCenter style={styles.buttonContainer}>
-            <IButton name='ordenIcon' icon="wallet_send" title={`Informar\norden`} />
+            <IButton name={require(`../../../../assets/images/icons/ordenIcon.png`)} icon="wallet_send" title={`Informar\norden`} />
           </LayoutCustom>
           <LayoutCustom style={styles.buttonContainer}>
-            <IButton name='ordenIcon' icon="document" title={`Solicitar\ntransferencia`} />
+            <IButton name={require(`../../../../assets/images/icons/transferIcon.png`)} icon="document" title={`Solicitar\ntransferencia`} />
           </LayoutCustom>
         </LayoutCustom>
         {/* <LayoutCustom horizontal itemsCenter justify="space-between" mh={24}>
@@ -151,7 +146,7 @@ const themedStyles = StyleService.create({
   },
   img: {
     width: theme.image.big,
-    height:theme.image.big
+    height: theme.image.big
   },
   topNavigation: {
     paddingHorizontal: theme.paddings.medium,
@@ -162,6 +157,11 @@ const themedStyles = StyleService.create({
   buttonContainer: {
     width: '50%',
     padding: theme.paddings.medium
+  },
+  carouselStyle: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: theme.margins.small,
   }
 });
 
