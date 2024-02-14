@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { Image } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import {
   TopNavigation,
@@ -16,23 +16,16 @@ import { Images } from "assets/images";
 // ----------------------------- Components && Elements -----------------------
 
 import {
-  AppIcon,
   Container,
   Content,
   LayoutCustom,
-  NavigationAction,
   RoundedButton,
   Text,
 } from "components";
 import Carousel from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 import { FinanceStackParamList } from "types/navigation-types";
-import CreditCard from "./CreditCard";
-import PaginationItem from "./Pagination";
 import IButton from "./IButton";
-import EvaIcons from "types/eva-icon-enum";
-import { Icons } from "assets/icons";
-import ActivityItem from "./ActivityItem";
 import TimeCard from "./TimeCard";
 import theme from "theme";
 import CurrencyToggle from "../Switch";
@@ -41,7 +34,7 @@ const HomeScreen = React.memo(() => {
   const styles = useStyleSheet(themedStyles);
   const { navigate } = useNavigation<NavigationProp<FinanceStackParamList>>();
   const { height, width, top, bottom } = useLayout();
-  // const [currency, setCurrency] = useState('ARS')
+  const [currency, setCurrency] = useState('ARS')
 
   const progressValue = useSharedValue<number>(0);
   return (
@@ -60,7 +53,7 @@ const HomeScreen = React.memo(() => {
       />
       <Content>
         <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
-          {/* <CurrencyToggle /> */}
+          <CurrencyToggle changeCurrency={setCurrency} />
         </LayoutCustom>
         <LayoutCustom alignSelfCenter>
         </LayoutCustom>
