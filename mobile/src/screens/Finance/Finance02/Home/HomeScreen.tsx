@@ -2,17 +2,15 @@ import React, { useState } from "react";
 import { Image } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import {
-  TopNavigation,
   StyleService,
-  useStyleSheet,
-  useTheme,
+  TopNavigation,
+  useStyleSheet
 } from "@ui-kitten/components";
 // ----------------------------- Navigation -----------------------------------
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 // ----------------------------- Hooks ---------------------------------------
 import { useLayout } from "hooks";
 // ----------------------------- Assets ---------------------------------------
-import { Images } from "assets/images";
 // ----------------------------- Components && Elements -----------------------
 
 import {
@@ -22,13 +20,14 @@ import {
   RoundedButton,
   Text,
 } from "components";
-import Carousel from "react-native-reanimated-carousel";
+import CurrencyToggle from "components/Switch";
 import { useSharedValue } from "react-native-reanimated";
+import Carousel from "react-native-reanimated-carousel";
+import theme from "theme";
 import { FinanceStackParamList } from "types/navigation-types";
 import IButton from "./IButton";
 import TimeCard from "./TimeCard";
-import theme from "theme";
-import CurrencyToggle from "../Switch";
+// import CurrencyToggle from "../../../../components/Switch";
 
 const HomeScreen = React.memo(() => {
   const styles = useStyleSheet(themedStyles);
