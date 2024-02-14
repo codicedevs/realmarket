@@ -1,12 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { User } from './user.entity';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ErrorManager } from 'src/utils/error.manager';
-import { error } from 'console';
-import { ObjectId } from 'mongodb';
 import { hash } from 'bcrypt';
+import { ObjectId } from 'mongodb';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
@@ -33,7 +31,7 @@ export class UsersService {
       });
 
       if (!user) {
-        throw new HttpException('No users found', HttpStatus.NOT_FOUND)
+        throw new HttpException('No users found', HttpStatus.NOT_FOUND);
       }
       return user;
     } catch (error) {
@@ -47,7 +45,7 @@ export class UsersService {
       });
 
       if (!user) {
-        throw new HttpException('No users found', HttpStatus.NOT_FOUND)
+        throw new HttpException('No users found', HttpStatus.NOT_FOUND);
       }
       return user;
     } catch (error) {
@@ -73,7 +71,10 @@ export class UsersService {
         body,
       );
       if (user.affected === 0) {
-        throw new HttpException('Theres no modifications', HttpStatus.NOT_MODIFIED)
+        throw new HttpException(
+          'Theres no modifications',
+          HttpStatus.NOT_MODIFIED,
+        );
       }
       return this.findUserById(new ObjectId(id));
     } catch (error) {
@@ -83,8 +84,8 @@ export class UsersService {
   async deleteUser(id: string): Promise<DeleteResult | undefined> {
     try {
       const user: DeleteResult = await this.userRepository.delete(id);
-      if (user.affected === 0) {      
-        throw new HttpException('No users found', HttpStatus.NOT_FOUND)
+      if (user.affected === 0) {
+        throw new HttpException('No users found', HttpStatus.NOT_FOUND);
       }
       return user;
     } catch (error) {
@@ -100,6 +101,5 @@ export class UsersService {
 //         return
 
 //   }
-
 
 // }
