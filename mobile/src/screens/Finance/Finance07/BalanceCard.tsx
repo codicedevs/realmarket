@@ -1,19 +1,14 @@
 import React from "react";
 // ----------------------------- UI kitten -----------------------------------
-import { StyleService, useStyleSheet, useTheme } from "@ui-kitten/components";
+import { StyleService, useStyleSheet } from "@ui-kitten/components";
 // ----------------------------- Navigation -----------------------------------
-import { useNavigation } from "@react-navigation/native";
 // ----------------------------- Hooks ---------------------------------------
-import { useLayout, useToggle } from "hooks";
 
 // ----------------------------- Components && Elements -----------------------
-import { AppIcon, LayoutCustom, Text } from "components";
-import convertPrice from "utils/convertPrice";
+import { LayoutCustom, Text } from "components";
 
 // ----------------------------- Types ---------------------------------------
-import EvaIcons from "types/eva-icon-enum";
-import { Images } from "assets/images";
-import { Image, ImageBackground } from "react-native";
+import { ImageBackground } from "react-native";
 import theme from "theme";
 
 interface IBalanceCardProps {
@@ -22,7 +17,6 @@ interface IBalanceCardProps {
 }
 
 const BalanceCard = React.memo(({ balance, grow }: IBalanceCardProps) => {
-    const theme = useTheme();
     const styles = useStyleSheet(themedStyles);
 
     return (
@@ -30,11 +24,11 @@ const BalanceCard = React.memo(({ balance, grow }: IBalanceCardProps) => {
             {/* @ts-ignore */}
             <ImageBackground style={styles.imageCard} source={require("../../../assets/images/icons/illustration.png")}>
                 <LayoutCustom style={styles.infoContainer}>
-                    <LayoutCustom mt={10} alignSelfCenter >
+                    <LayoutCustom alignSelfCenter >
                         <Text fontSize={17} status="basic">Saldo</Text>
                     </LayoutCustom>
-                    <LayoutCustom mt={16} alignSelfCenter>
-                        <Text fontSize={22} status="basic" category="t2">
+                    <LayoutCustom mt={theme.margins.small} mb={theme.margins.medium} alignSelfCenter>
+                        <Text style={styles.moneyText} fontSize={22} status="basic" category="t2">
                             $1.345.678,00
                         </Text>
                         {/* <LayoutCustom style={styles.grow}>
@@ -54,18 +48,19 @@ export default BalanceCard;
 
 const themedStyles = StyleService.create({
     container: {
-        borderRadius: 16,
+        borderRadius: 20,
         backgroundColor: "background-basic-color-3",
         marginHorizontal: 16,
         overflow: "hidden",
-        height: '45%',
-        width: '90%',
+        height: '55%',
+        width: '85%',
     },
     infoContainer: {
         padding: theme.paddings.medium
     },
     imageCard: {
-        height: "100%"
+        height: "100%",
+        backgroundColor: "#701BC4"
     },
     grow: {
         borderRadius: 99,
@@ -75,4 +70,7 @@ const themedStyles = StyleService.create({
         paddingHorizontal: 10,
         paddingVertical: 2,
     },
+    moneyText: {
+        color: '#009F9F'
+    }
 });
