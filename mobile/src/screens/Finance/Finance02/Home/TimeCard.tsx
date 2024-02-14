@@ -17,10 +17,10 @@ const TimeCard = ({ item }: { item: CreditCardProps }) => {
     <LayoutCustom style={{
       ...styles.card
     }}>
-      <ImageBackground style={{ height: '100%', backgroundColor: item.color, borderRadius: 10 }} source={require("../../../../assets/images/icons/colorful-background.png")}>
-        <LayoutCustom alignSelfCenter itemsCenter padding={theme.paddings.medium} style={{marginTop: theme.margins.small}}>
-          <Image style={{height: theme.image.big, width: theme.image.big}} source={item.icon} />
-          <Text marginTop={10} fontSize={23} category='t5'>$1.323.434,00</Text>
+      <ImageBackground style={{ ...styles.imageBack, backgroundColor: item.color }} source={require("../../../../assets/images/icons/colorful-background.png")}>
+        <LayoutCustom alignSelfCenter itemsCenter padding={theme.paddings.medium} style={styles.textContainer}>
+          <Image style={themedStyles.image} source={item.icon} />
+          <Text marginTop={theme.margins.small} fontSize={23} category='t5'>$1.323.434,00</Text>
         </LayoutCustom>
       </ImageBackground>
     </LayoutCustom>
@@ -43,4 +43,12 @@ const themedStyles = StyleService.create({
     marginRight: theme.margins.small,
     height: '85%'
   },
+  imageBack: {
+    height: '100%',
+    borderRadius: 10
+  },
+  textContainer: {
+    marginTop: theme.margins.small
+  },
+  image: { height: theme.image.big, width: theme.image.big }
 });
