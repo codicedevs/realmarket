@@ -2,17 +2,19 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
   HttpCode,
   HttpStatus,
   Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthGuard } from './guards/auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 import { Public } from './SkipAuth';
+import { AuthService } from './auth.service';
 import { RefreshAuthGuard } from './guards/refresh.guards';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -28,12 +30,10 @@ export class AuthController {
   @Public()
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
-  async refreshToken(@Request() req) {
-    const token = RefreshAuthGuard.extractTokenFromHeader(req);
-    return await this.authService.refreshToken(token);
+  async refreshToken(@Headers('refresh-token') refreshToken: string) {
+    return await this.authService.refreshToken(refreshToken);
   }
 
-  @UseGuards(AuthGuard)
   @Get('users')
   getProfile(@Request() req) {
     return req.user;

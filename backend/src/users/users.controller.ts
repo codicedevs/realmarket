@@ -6,21 +6,19 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/auth/SkipAuth';
+import { ObjectId } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { User } from './user.entity';
-import { ObjectId } from 'typeorm';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { UsersService } from './users.service';
 
 @ApiTags('users')
 @Controller('users')
-@UseGuards(AuthGuard)
+@Public()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
   @Get('all')
   public async findAll(): Promise<User[]> {
     return this.usersService.findAll();
