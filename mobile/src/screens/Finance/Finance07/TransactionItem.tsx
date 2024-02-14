@@ -1,29 +1,28 @@
 import React from "react";
-import { View, Image, StyleSheet, ImageSourcePropType } from "react-native";
+import { ImageSourcePropType } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import {
-  TopNavigation,
   StyleService,
   useStyleSheet,
-  useTheme,
+  useTheme
 } from "@ui-kitten/components";
 // ----------------------------- Navigation -----------------------------------
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 // ----------------------------- Hooks ---------------------------------------
 import { useLayout } from "hooks";
 // ----------------------------- Assets ---------------------------------------
-import { Images } from "assets/images";
 // ----------------------------- Components && Elements -----------------------
 
-import { Container, Content, LayoutCustom, Text } from "components";
+import { LayoutCustom, Text } from "components";
 import dayjs from "dayjs";
-import convertPrice from "utils/convertPrice";
 
 interface ITransactionItemProps {
   image?: ImageSourcePropType | undefined;
   title: string;
   created_at: Date;
-  amount: number;
+  amount: string;
+  receivedBy?: string;
+  total?: string
 }
 
 const TransactionItem: React.FC<{ data: ITransactionItemProps }> = ({
@@ -37,25 +36,26 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps }> = ({
   return (
     <LayoutCustom style={styles.container} horizontal>
       <LayoutCustom horizontal gap={12} itemsCenter>
-        {data.image ? (
-          // @ts-ignore
-          <Image source={data.image} style={styles.image} />
-        ) : (
-          <LayoutCustom style={styles.image}>
-            <Text category="t1" status="primary" marginTop={4}>
-              {data.title.charAt(0)}
-            </Text>
-          </LayoutCustom>
-        )}
-        <LayoutCustom gap={4}>
-          <Text>{data.title}</Text>
-          <Text category="subhead" status="placeholder">
-            {dayjs(data.created_at).format("MMM DD YYYY hh:mm A")}
+        <LayoutCustom style={styles.image}>
+          <Text fontSize={10} category="subhead">
+            {dayjs(data.created_at).format("MM/DD/YY")}
           </Text>
         </LayoutCustom>
+        <LayoutCustom gap={1}>
+          <Text>{data.title}</Text>
+          {
+            data.receivedBy ?
+              <Text category="subhead" status="placeholder">
+                {data.receivedBy}
+              </Text>
+              :
+              null
+          }
+          <Text status="placeholder">{data.total}</Text>
+        </LayoutCustom>
       </LayoutCustom>
-      <Text category='body' status={data.amount > 0 ? "success-dark" : "danger"}>
-        {convertPrice(data.amount)}
+      <Text category='body' status={data.amount[0] !== "-" ? "success-dark" : "danger"}>
+        {data.amount}
       </Text>
     </LayoutCustom>
   );
@@ -71,13 +71,12 @@ const themedStyles = StyleService.create({
   },
   content: {},
   image: {
-    width: 52,
-    height: 52,
-    borderWidth: 1,
+    width: 62,
+    height: 62,
     borderColor: "background-basic-color-4",
-    backgroundColor: "text-white-color",
+    backgroundColor: "#252362",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
+    borderRadius: 20,
   },
 });

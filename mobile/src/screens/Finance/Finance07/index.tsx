@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 // ----------------------------- UI kitten -----------------------------------
 import {
-  TopNavigation,
   StyleService,
-  useStyleSheet,
-  useTheme,
-  Avatar,
+  TopNavigation,
+  useStyleSheet
 } from "@ui-kitten/components";
 // ----------------------------- Hooks ---------------------------------------
 import { useLayout } from "hooks";
@@ -13,32 +11,30 @@ import { useLayout } from "hooks";
 import { Images } from "assets/images";
 // ----------------------------- Components && Elements -----------------------
 
+import { faker } from "@faker-js/faker";
 import {
-  AppIcon,
   Container,
   Content,
   LayoutCustom,
-  NavigationAction,
-  Text,
+  RoundedButton
 } from "components";
-import CreditCard from "./CreditCard";
 import TransactionItem from "./TransactionItem";
-import { faker } from "@faker-js/faker";
-import ServiceItem from "./ServiceItem";
 // ----------------------------- Types ----------------------------------------
-import EvaIcons from "types/eva-icon-enum";
 // ----------------------------- Reanimated 2 -----------------------
-import Carousel from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
 // ----------------------------- Navigation -----------------------
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import CurrencyToggle from "components/Switch";
+import theme from "theme";
+import { FinanceStackParamList } from "types/navigation-types";
+import BalanceCard from "./BalanceCard";
 
 const Finance07 = React.memo(() => {
-  const {goBack}=useNavigation()
-  const theme = useTheme();
+  const { goBack } = useNavigation()
   const styles = useStyleSheet(themedStyles);
   const { width } = useLayout();
   const time_now = new Date().getHours();
+  const [currency, setCurrency] = useState('ARS')
   const _intro = () => {
     if (time_now >= 0 && time_now < 12) {
       return "Good Morning!";
@@ -52,83 +48,33 @@ const Finance07 = React.memo(() => {
   };
   const notification = 5;
 
+  const { navigate } = useNavigation<NavigationProp<FinanceStackParamList>>();
+
   const progressValue = useSharedValue(0);
 
   return (
     <Container style={styles.container}>
       <TopNavigation
+        alignment="center"
+        title="Disponibilidad"
         style={styles.topNavigation}
         accessoryLeft={() => (
-          <LayoutCustom horizontal itemsCenter gap={12} onPress={goBack}>
-            <Avatar source={Images.avatar.avatar_06} shape="square" />
-            <LayoutCustom>
-              <Text category="subhead" status="grey">
-                {_intro()}
-              </Text>
-              <Text>{faker.name.fullName()}</Text>
-            </LayoutCustom>
-          </LayoutCustom>
+          <RoundedButton
+            icon="arrow-left"
+            onPress={() => navigate("FinanceIntro")}
+          />
         )}
-        accessoryRight={() => (
-          <LayoutCustom>
-            <NavigationAction icon={EvaIcons.BellOutline} />
-            {notification > 0 && (
-              <LayoutCustom style={styles.notification}>
-                <Text status="white" category="c1">
-                  {notification}
-                </Text>
-              </LayoutCustom>
-            )}
-          </LayoutCustom>
-        )}
+        accessoryRight={() => <RoundedButton icon="bell" />}
       />
       <Content contentContainerStyle={styles.content}>
-        <LayoutCustom gap={16} mh={24}>
-          <Text category="t5">Services</Text>
-          <LayoutCustom horizontal gap={12}>
-            {SAMPLE_SERVICE.map((service, index) => {
-              return <ServiceItem item={service} key={index} />;
-            })}
+        <LayoutCustom mt={theme.margins.large} mb={theme.margins.small}>
+          <LayoutCustom alignSelfCenter mb={theme.margins.medium}>
+            {/* <Text fontSize={26} marginBottom={15} category="t1" >Movimientos</Text> */}
+            <CurrencyToggle changeCurrency={setCurrency} />
           </LayoutCustom>
+          <BalanceCard balance={233004.91} grow={12.2} />
         </LayoutCustom>
-        <Carousel
-          data={SAMPLE_CARD}
-          width={width * 0.86}
-          height={width * 0.5}
-          style={styles.carousel}
-          loop
-          pagingEnabled={true}
-          snapEnabled={true}
-          autoPlay={false}
-          onProgressChange={(_, absoluteProgress) =>
-            (progressValue.value = absoluteProgress)
-          }
-          mode="parallax"
-          modeConfig={{
-            parallaxScrollingScale: 0.98,
-            parallaxScrollingOffset: 24,
-          }}
-          renderItem={({ item, index, animationValue }) => (
-            <CreditCard
-              data={item}
-              key={index}
-              animationValue={animationValue}
-            />
-          )}
-        />
-        <LayoutCustom mt={32} gap={24} mh={24}>
-          <LayoutCustom horizontal justify="space-between" itemsCenter mb={12}>
-            <Text category="t5">Recent Transactions</Text>
-            <LayoutCustom horizontal itemsCenter>
-              <Text category="body" status="primary">
-                See All
-              </Text>
-              <AppIcon
-                name={EvaIcons.ChevronRight}
-                fill={theme["text-primary-color"]}
-              />
-            </LayoutCustom>
-          </LayoutCustom>
+        <LayoutCustom overflow="scroll" gap={15} mh={theme.margins.medium}>
           {SAMPLE_TRANSACTION.map((transaction, index) => {
             return <TransactionItem data={transaction} key={index} />;
           })}
@@ -148,52 +94,40 @@ const themedStyles = StyleService.create({
   topNavigation: {
     paddingHorizontal: 24,
   },
-  notification: {
-    position: "absolute",
-    top: 2,
-    right: 4,
-    width: 17,
-    height: 17,
-    borderRadius: 99,
-    backgroundColor: "color-danger-active",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   content: {
-    paddingTop: 24,
-    paddingBottom: 60,
-  },
-  carousel: {
-    width: "100%",
-    justifyContent: "center",
-    marginTop: 40,
-    alignItems: "center",
+    overflow: 'scroll'
   },
 });
 
 const SAMPLE_TRANSACTION = [
   {
     image: Images.finance.prime,
-    title: "Prime Membership",
+    title: "Venta",
     created_at: new Date(new Date().setHours(new Date().getHours())),
-    amount: 1230,
+    amount: "-$5000",
+    receivedBy: '[MRCAO]',
+    total: "$1.345.000,00"
   },
   {
     image: Images.finance.nike,
-    title: "Nike Store",
+    title: "Caución tomadora",
     created_at: new Date(new Date().setHours(new Date().getHours()) - 1),
-    amount: -4230,
+    amount: "-$50.000",
+    receivedBy: '2023065826',
+    total: "1.350.000,00"
   },
   {
     title: faker.name.firstName("male"),
     created_at: new Date(new Date().setHours(new Date().getHours()) - 2),
-    amount: 11230,
+    amount: "$50.000",
+    total: "$1.400.000,00"
   },
   {
-    title: faker.name.firstName("female"),
+    title: 'Ret. gcias. s/CL',
     created_at: new Date(new Date().setHours(new Date().getHours()) - 4),
-    amount: -5230,
-  },
+    amount: "$15000",
+    total: "1.350.000,00"
+  }
 ];
 
 const SAMPLE_SERVICE = [
@@ -210,16 +144,16 @@ const SAMPLE_CARD = [
     balance: 123223,
     exp_time: "09/25",
   },
-  {
-    image: Images.finance.creditcard_02,
-    number: "1234",
-    balance: 123223,
-    exp_time: "09/25",
-  },
-  {
-    image: Images.finance.creditcard_03,
-    number: "1234",
-    balance: 123223,
-    exp_time: "09/25",
-  },
+  // {
+  //   image: Images.finance.creditcard_02,
+  //   number: "1234",
+  //   balance: 123223,
+  //   exp_time: "09/25",
+  // },
+  // {
+  //   image: Images.finance.creditcard_03,
+  //   number: "1234",
+  //   balance: 123223,
+  //   exp_time: "09/25",
+  // },
 ];
