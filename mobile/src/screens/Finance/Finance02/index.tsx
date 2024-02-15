@@ -1,22 +1,22 @@
-import * as React from "react";
 import {
-  createBottomTabNavigator,
   BottomTabBarProps,
+  createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
+import * as React from "react";
 
-import { TouchableOpacity, View } from "react-native";
-import { AppIcon, LayoutCustom, Text } from "components";
 import {
   Icon,
   StyleService,
   useStyleSheet,
   useTheme,
 } from "@ui-kitten/components";
-import EvaIcons from "types/eva-icon-enum";
+import { LayoutCustom } from "components";
+import { TouchableOpacity } from "react-native";
 import { globalStyle } from "styles/globalStyle";
-import HomeScreen from "./Home/HomeScreen";
+import ActionScreen from "../Actions";
 import Finance07 from "../Finance07";
 import Finance08 from "../Finance08";
+import HomeScreen from "./Home/HomeScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -108,7 +108,7 @@ const Finance02 = () => {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="MyCard" component={Finance07} />
         <Tab.Screen name="Statistic" component={Finance08} />
-        <Tab.Screen name="Profile" component={Screen} />
+        <Tab.Screen name="Profile" component={ActionScreen} />
       </Tab.Navigator>
     </LayoutCustom>
   );
