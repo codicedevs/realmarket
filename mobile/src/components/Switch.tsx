@@ -1,5 +1,5 @@
-import React, { useState, Dispatch, SetStateAction } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const CurrencyToggle = ({ changeCurrency }: { changeCurrency: React.Dispatch<React.SetStateAction<string>> }) => {
   const [currency, setCurrency] = useState('ARS');
