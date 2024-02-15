@@ -1,7 +1,7 @@
-import {useTheme} from '@ui-kitten/components';
-import React, {memo} from 'react';
-import {TouchableOpacity} from 'react-native';
-import {ILayoutCustomProps} from 'types/component-types';
+import { useTheme } from '@ui-kitten/components';
+import React, { memo } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { ILayoutCustomProps } from 'types/component-types';
 
 const LayoutCustom: React.FC<ILayoutCustomProps> = memo(
   ({
@@ -14,6 +14,7 @@ const LayoutCustom: React.FC<ILayoutCustomProps> = memo(
     pt,
     mh,
     pl,
+    pr,
     mv,
     ml,
     mr,
@@ -29,7 +30,7 @@ const LayoutCustom: React.FC<ILayoutCustomProps> = memo(
     rowGap,
     columnGap,
     onLongPress,
-    justify ,
+    justify,
     onPress,
     border,
     maxWidth,
@@ -62,6 +63,7 @@ const LayoutCustom: React.FC<ILayoutCustomProps> = memo(
               paddingHorizontal: padder ? 24 : ph,
               paddingBottom: pb,
               paddingLeft: pl,
+              paddingRight: pr,
               padding: padding,
               justifyContent: justify,
               marginTop: mt,
