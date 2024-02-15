@@ -1,7 +1,7 @@
-import { StyleService, useStyleSheet } from '@ui-kitten/components'
-import { LayoutCustom, Text } from 'components'
+import { StyleService, useStyleSheet } from '@ui-kitten/components';
+import { LayoutCustom, Text } from 'components';
+import React from 'react';
 import { Image, ImageBackground } from 'react-native';
-import React from 'react'
 import theme from 'theme';
 
 interface CreditCardProps {
@@ -32,7 +32,7 @@ export default TimeCard
 const themedStyles = StyleService.create({
   card: {
     borderRadius: 25,
-    marginVertical: 16,
+    // marginVertical: 16,
     shadowOffset: {
       width: 8,
       height: 8,
@@ -45,7 +45,7 @@ const themedStyles = StyleService.create({
   },
   imageBack: {
     height: '100%',
-    borderRadius: 10
+    borderRadius: 5
   },
   textContainer: {
     marginTop: theme.margins.small

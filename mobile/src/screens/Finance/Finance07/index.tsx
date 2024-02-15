@@ -92,7 +92,7 @@ const themedStyles = StyleService.create({
     paddingBottom: 0,
   },
   topNavigation: {
-    paddingHorizontal: 24,
+    paddingHorizontal: theme.paddings.medium,
   },
   content: {
     overflow: 'scroll'
