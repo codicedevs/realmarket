@@ -3,8 +3,7 @@ import React, { memo } from "react";
 import {
   Avatar,
   StyleService,
-  useStyleSheet,
-  useTheme
+  useStyleSheet
 } from "@ui-kitten/components";
 // ----------------------------- Hooks -----------------------------------
 import { useLayout } from "hooks";
@@ -21,6 +20,7 @@ import AnimatedAppearance, {
 } from "components/AnimatedAppearance";
 // ----------------------------- Reduxs -----------------------------------
 import { NavigationProp, useNavigation } from "@react-navigation/native";
+import theme from "theme";
 import { CurrencyTypeEnum } from "types/element-types";
 import { RootStackParamList } from "types/navigation-types";
 
@@ -62,7 +62,6 @@ const ActionCard = memo(
   ({ data, index }: { data: ICoinProps; index: number }) => {
     const { width } = useLayout();
     const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
-    const theme = useTheme();
     const styles = useStyleSheet(themedStyles);
 
     const prices = _.map(
@@ -82,12 +81,13 @@ const ActionCard = memo(
     };
     return (
       <AnimatedAppearance type={Animation_Types_Enum.SlideInLeft} index={index}>
-        <LayoutCustom justify="space-between"
+        <LayoutCustom
+          justify="space-between"
           style={styles.item}
           horizontal
-          padding={5}
+          pv={theme.paddings.xSmall}
           itemsCenter
-          ph={15}
+          ph={theme.paddings.xSmall}
         // onPress={goBack}
         >
           {/* <LayoutCustom
@@ -100,12 +100,18 @@ const ActionCard = memo(
               },
             ]}
           /> */}
-          <Avatar source={{ uri: data.image }} size="tiny" />
-          <Text>ars</Text>
-          <Text>$893.81</Text>
-          <LayoutCustom>
-            <Text>$45.000,00</Text>
-            <Text>323</Text>
+          <LayoutCustom style={{ width: '20%' }}>
+            <Avatar source={{ uri: data.image }} size="tiny" />
+          </LayoutCustom>
+          <LayoutCustom style={{ width: '25%' }}>
+            <Text fontSize={12}>AR$</Text>
+          </LayoutCustom>
+          <LayoutCustom style={{ width: '25%' }}>
+            <Text fontSize={10}>$98930.81</Text>
+          </LayoutCustom>
+          <LayoutCustom pr={theme.paddings.small} style={{ width: '25%', alignItems: "flex-end" }}>
+            <Text numberOfLines={1} fontSize={10}>$10.450.000</Text>
+            <Text category="subhead" fontSize={10}>323</Text>
           </LayoutCustom>
         </LayoutCustom>
       </AnimatedAppearance>
@@ -118,12 +124,10 @@ export default ActionCard;
 const themedStyles = StyleService.create({
   item: {
     flex: 1,
-    // borderRadius: 10,
-    overflow: "hidden",
     backgroundColor: "background-basic-color-3",
     marginBottom: 12,
-    gap: 8,
-    marginHorizontal: 16,
+    gap: 6,
+    // marginHorizontal: theme.margins.small,
     // shadow
     shadowColor: "background-basic-color-5",
     shadowOffset: {
@@ -136,30 +140,5 @@ const themedStyles = StyleService.create({
     borderTopWidth: 1,
     borderColor: '#009F9F',
     borderBottomWidth: 1
-  },
-  divider: {
-    height: "100%",
-    width: 6,
-    // position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-  },
-  content: {
-    flex: 1,
-  },
-  chart: {
-    // position: "absolute",
-    zIndex: -100,
-    alignSelf: "center",
-    top: 12,
-    bottom: 12,
-  },
-  linear: {
-    // position: "absolute",
-    height: "100%",
-    width: "100%",
-    zIndex: 100,
-    left: 24,
-  },
+  }
 });
