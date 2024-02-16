@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 // ----------------------------- UI kitten -----------------------------------
 import {
-  CheckBox,
   StyleService,
   TopNavigation,
   useStyleSheet
@@ -64,7 +63,7 @@ const Finance08 = React.memo(() => {
             <Text>Total general</Text>
             <Text>AR$1.456.789,000</Text>
           </LayoutCustom>
-          <LayoutCustom
+          {/* <LayoutCustom
             itemsCenter
             horizontal
             justify="space-between"
@@ -80,7 +79,7 @@ const Finance08 = React.memo(() => {
                 onChange={setChecked}
               />
             </LayoutCustom>
-          </LayoutCustom>
+          </LayoutCustom> */}
         </LayoutCustom>
         <LayoutCustom ph={theme.paddings.large}>
           <LayoutCustom horizontal justify="space-between" pv={theme.paddings.xSmall} mt={theme.margins.medium} style={themedStyles.tableTitle}>
