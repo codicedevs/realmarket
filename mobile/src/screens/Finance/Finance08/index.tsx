@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 // ----------------------------- UI kitten -----------------------------------
 import {
-  CheckBox,
   StyleService,
   TopNavigation,
   useStyleSheet
@@ -48,7 +47,7 @@ const Finance08 = React.memo(() => {
         )}
         accessoryRight={() => <RoundedButton icon="bell" />}
       />
-      <Content contentContainerStyle={styles.content}>
+      <Content>
         <LayoutCustom mt={theme.margins.large} mb={theme.margins.medium} alignSelfCenter>
           <CurrencyToggle changeCurrency={setCurrency} />
         </LayoutCustom>
@@ -64,7 +63,7 @@ const Finance08 = React.memo(() => {
             <Text>Total general</Text>
             <Text>AR$1.456.789,000</Text>
           </LayoutCustom>
-          <LayoutCustom
+          {/* <LayoutCustom
             itemsCenter
             horizontal
             justify="space-between"
@@ -80,19 +79,19 @@ const Finance08 = React.memo(() => {
                 onChange={setChecked}
               />
             </LayoutCustom>
-          </LayoutCustom>
+          </LayoutCustom> */}
         </LayoutCustom>
         <LayoutCustom ph={theme.paddings.large}>
-          <LayoutCustom horizontal justify="space-between" pv={theme.paddings.xSmall} mt={theme.margins.medium} style={{ width: '100%' }}>
-            <LayoutCustom style={{ minWidth: '20%' }}>
+          <LayoutCustom horizontal justify="space-between" pv={theme.paddings.xSmall} mt={theme.margins.medium} style={themedStyles.tableTitle}>
+            <LayoutCustom style={themedStyles.invisibleTitle}>
             </LayoutCustom>
-            <LayoutCustom alignSelfCenter style={{ width: '25%' }}>
+            <LayoutCustom alignSelfCenter style={themedStyles.smallerTitle}>
               <Text>Nombre</Text>
             </LayoutCustom>
-            <LayoutCustom alignSelfCenter itemsCenter style={{ width: '25%' }}>
+            <LayoutCustom alignSelfCenter itemsCenter style={themedStyles.smallerTitle}>
               <Text>Valor</Text>
             </LayoutCustom>
-            <LayoutCustom style={{ width: '30%', alignItems: 'flex-end' }}>
+            <LayoutCustom style={themedStyles.biggerTitle}>
               <Text>Total</Text>
               <Text>Cantidad</Text>
             </LayoutCustom>
@@ -118,9 +117,19 @@ const themedStyles = StyleService.create({
   topNavigation: {
     paddingHorizontal: theme.paddings.medium,
   },
-  content: {
-
+  tableTitle: {
+    width: '100%'
   },
+  invisibleTitle: {
+    minWidth: '20%'
+  },
+  smallerTitle: {
+    width: "25%"
+  },
+  biggerTitle: {
+    width: '30%',
+    alignItems: "flex-end"
+  }
 });
 
 const SAMPLE = [{ title: "" }];

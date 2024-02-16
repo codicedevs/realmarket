@@ -60,7 +60,7 @@ const themedStyles = StyleService.create({
     },
     imageCard: {
         height: "100%",
-        backgroundColor: "#701BC4"
+        backgroundColor: theme.colors.violet
     },
     grow: {
         borderRadius: 99,
