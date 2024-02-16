@@ -31,26 +31,26 @@ const LoginScreen = React.memo(() => {
   const { height, width, top, bottom } = useLayout();
   return (
     <Container style={styles.container}>
-      <ImageBackground style={{ height: '100%' }} source={require("../../assets/images/Login/fondoLogin.png")}>
+      <ImageBackground style={themedStyles.background} source={require("../../assets/images/Login/fondoLogin.png")}>
         <LayoutCustom ph={theme.paddings.large} pv={theme.paddings.xlarge}>
           <LayoutCustom itemsCenter>
             <Image style={themedStyles.img} source={require("../../assets/images/Login/rm-logo.png")} />
             <LayoutCustom itemsCenter mt={theme.margins.large}>
               <Text category="header" fontSize={33}>Bienvenido!</Text>
-              <Text category="subhead" style={{ textAlign: 'center', lineHeight: 25 }} fontSize={18} numberOfLines={2}>Ingrese su nombre de usuario y contraseña</Text>
+              <Text category="subhead" style={themedStyles.subTitle} fontSize={18} numberOfLines={2}>Ingrese su nombre de usuario y contraseña</Text>
             </LayoutCustom>
           </LayoutCustom>
-          <LayoutCustom pv={theme.paddings.large} justify="space-around" style={{ height: '45%' }}>
-            <TextInput placeholder="Nombre de usuario" placeholderTextColor={"#ffffff"} style={{ borderBottomWidth: 1, height: 50, borderColor: '#ffffff', color: '#ffffff', fontSize: 20, paddingBottom: 15 }} />
-            <TextInput placeholder="Contraseña" placeholderTextColor={"#ffffff"} style={{ borderBottomWidth: 1, height: 50, borderColor: '#ffffff', color: '#ffffff', fontSize: 20, paddingBottom: 15 }} />
+          <LayoutCustom pv={theme.paddings.large} justify="space-around" style={themedStyles.inputContainer}>
+            <TextInput placeholder="Nombre de usuario" placeholderTextColor={"#ffffff"} style={themedStyles.input} />
+            <TextInput placeholder="Contraseña" placeholderTextColor={"#ffffff"} style={themedStyles.input} />
           </LayoutCustom>
           <LayoutCustom mt={theme.margins.xSmall}>
-            <TouchableOpacity style={{ backgroundColor: "#0E0D31", alignItems: "center", padding: theme.paddings.small, borderRadius: 21, width: '70%', alignSelf: "center" }} onPress={() => navigate('Finance02')}>
+            <TouchableOpacity style={themedStyles.buttonContainer} onPress={() => navigate('Finance02')}>
               <Text category="t2" fontSize={24}>LOGIN</Text>
             </TouchableOpacity>
             <LayoutCustom mt={theme.margins.small} style={{ alignItems: "center" }}>
-              <Text style={{ color: "#0E0D31" }}>Olvido su contraseña?</Text>
-              <Text style={{ color: "#0E0D31" }}>O crear nueva cuenta?</Text>
+              <Text style={themedStyles.forgottenPasswordText}>Olvido su contraseña?</Text>
+              <Text style={themedStyles.forgottenPasswordText}>O crear nueva cuenta?</Text>
             </LayoutCustom>
           </LayoutCustom>
         </LayoutCustom>
@@ -70,19 +70,34 @@ const themedStyles = StyleService.create({
     width: windowWidth * 0.5,
     height: windowHeight * 0.13
   },
-  topNavigation: {
-    paddingHorizontal: theme.paddings.medium,
+  background: {
+    height: '100%',
   },
-  moneyText: {
-    color: theme.colors.skyBlue
+  subTitle: {
+    textAlign: 'center',
+    lineHeight: 25
+  },
+  inputContainer: {
+    height: '45%'
+  },
+  input: {
+    borderBottomWidth: 1,
+    height: 50,
+    borderColor: '#ffffff',
+    color: '#ffffff',
+    fontSize: 20,
+    paddingBottom: 15,
+    fontWeight: "bold"
   },
   buttonContainer: {
-    width: '50%',
-    padding: theme.paddings.medium
-  },
-  carouselStyle: {
+    backgroundColor: theme.colors.background,
     alignItems: "center",
-    justifyContent: "center",
-    marginBottom: theme.margins.small,
+    padding: theme.paddings.small,
+    borderRadius: 21,
+    width: '70%',
+    alignSelf: "center"
+  },
+  forgottenPasswordText: {
+    color: theme.colors.forgoten_password_Text
   }
 });

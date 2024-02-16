@@ -100,16 +100,16 @@ const ActionCard = memo(
               },
             ]}
           /> */}
-          <LayoutCustom style={{ width: '20%' }}>
+          <LayoutCustom style={themedStyles.avatarContainer}>
             <Avatar source={{ uri: data.image }} size="tiny" />
           </LayoutCustom>
-          <LayoutCustom style={{ width: '25%' }}>
+          <LayoutCustom style={themedStyles.smallerContainer}>
             <Text fontSize={12}>AR$</Text>
           </LayoutCustom>
-          <LayoutCustom style={{ width: '25%' }}>
+          <LayoutCustom style={themedStyles.smallerContainer}>
             <Text fontSize={10}>$98930.81</Text>
           </LayoutCustom>
-          <LayoutCustom pr={theme.paddings.small} style={{ width: '25%', alignItems: "flex-end" }}>
+          <LayoutCustom pr={theme.paddings.small} style={themedStyles.biggerContainer}>
             <Text numberOfLines={1} fontSize={10}>$10.450.000</Text>
             <Text category="subhead" fontSize={10}>323</Text>
           </LayoutCustom>
@@ -127,8 +127,6 @@ const themedStyles = StyleService.create({
     backgroundColor: "background-basic-color-3",
     marginBottom: 12,
     gap: 6,
-    // marginHorizontal: theme.margins.small,
-    // shadow
     shadowColor: "background-basic-color-5",
     shadowOffset: {
       width: 4,
@@ -138,7 +136,17 @@ const themedStyles = StyleService.create({
     shadowRadius: 6,
     elevation: 8,
     borderTopWidth: 1,
-    borderColor: '#009F9F',
+    borderColor: theme.colors.skyBlue,
     borderBottomWidth: 1
+  },
+  avatarContainer: {
+    width: '20%'
+  },
+  smallerContainer: {
+    width: '25%'
+  },
+  biggerContainer: {
+    width: '25%',
+    alignItems: "flex-end"
   }
 });

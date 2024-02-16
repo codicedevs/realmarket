@@ -69,7 +69,6 @@ const Finance07 = React.memo(() => {
       <Content contentContainerStyle={styles.content}>
         <LayoutCustom mt={theme.margins.large} mb={theme.margins.small}>
           <LayoutCustom alignSelfCenter mb={theme.margins.medium}>
-            {/* <Text fontSize={26} marginBottom={15} category="t1" >Movimientos</Text> */}
             <CurrencyToggle changeCurrency={setCurrency} />
           </LayoutCustom>
           <BalanceCard balance={233004.91} grow={12.2} />
