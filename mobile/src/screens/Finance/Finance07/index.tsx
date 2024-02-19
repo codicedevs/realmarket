@@ -169,6 +169,7 @@ const themedStyles = StyleService.create({
   },
   modalText: {
     textAlign: 'center',
+    color: 'black'
   },
 });
 
