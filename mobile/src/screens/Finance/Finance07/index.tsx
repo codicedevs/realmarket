@@ -74,9 +74,9 @@ const Finance07 = React.memo(() => {
             <LayoutCustom mb={theme.margins.large}>
               <Text marginBottom={theme.margins.medium} fontSize={20} style={styles.modalText}>Detalle del movimiento</Text>
               <Text category="subhead" marginBottom={theme.margins.xSmall} fontSize={16} style={styles.modalText}> Fecha:</Text>
-              <Text marginBottom={theme.margins.xSmall} fontSize={18} style={styles.modalText}>11/01/23</Text>
-              <Text category="subhead" marginBottom={theme.margins.xSmall} fontSize={16} style={styles.modalText}>Importe:</Text>
-              <Text marginBottom={theme.margins.xSmall} fontSize={18} style={styles.modalText}>$30000</Text>
+              <Text marginBottom={theme.margins.xSmall} fontSize={18} style={styles.modalText}>{(selectedTransaction.created_at).toISOString()}</Text>
+              <Text category="subhead" marginBottom={theme.margins.small} fontSize={16} style={styles.modalText}>Importe:</Text>
+              <Text marginBottom={theme.margins.xSmall} style={styles.amountText} fontSize={18} status={selectedTransaction.amount[0] !== "-" ? "success-dark" : "danger"}>{selectedTransaction.amount}</Text>
               <Text marginBottom={theme.margins.xSmall} style={styles.modalText}>CAUCION TOMADORA</Text>
             </LayoutCustom>
             <Pressable
@@ -171,6 +171,9 @@ const themedStyles = StyleService.create({
     textAlign: 'center',
     color: 'black'
   },
+  amountText: {
+    textAlign: "center"
+  }
 });
 
 const SAMPLE_TRANSACTION = [
@@ -202,32 +205,4 @@ const SAMPLE_TRANSACTION = [
     amount: "$15000",
     total: "1.350.000,00"
   }
-];
-
-const SAMPLE_SERVICE = [
-  { icon: "qr", title: "Scan & Pay" },
-  { icon: "income", title: "Send Money" },
-  { icon: "outcome", title: "Receive Money" },
-  { icon: "wallet_fill", title: "Wallet" },
-];
-
-const SAMPLE_CARD = [
-  {
-    image: Images.finance.creditcard_01,
-    number: "1234",
-    balance: 123223,
-    exp_time: "09/25",
-  },
-  // {
-  //   image: Images.finance.creditcard_02,
-  //   number: "1234",
-  //   balance: 123223,
-  //   exp_time: "09/25",
-  // },
-  // {
-  //   image: Images.finance.creditcard_03,
-  //   number: "1234",
-  //   balance: 123223,
-  //   exp_time: "09/25",
-  // },
 ];
