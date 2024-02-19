@@ -12,6 +12,7 @@ import { MovimientosModule } from './movimientos/movimientos.module';
 import { PosicionesModule } from './posiciones/posiciones.module';
 import { UserModule } from './users/user.module';
 import { UsersController } from './users/users.controller';
+import { EmailService } from './email/email.service';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { UsersController } from './users/users.controller';
     TypeOrmModule.forRoot({
       name: 'default',
       type: 'mongodb',
-      url: 'mongodb+srv://admin:Codice1925@realmarkettest.nzdpe9p.mongodb.net/',
+      url: process.env.DB_URL,
       database: 'RealMarketTest',
       useNewUrlParser: true,
       autoLoadEntities: true,
@@ -42,6 +43,7 @@ import { UsersController } from './users/users.controller';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    EmailService,
     //Esto Bindea a Nivel Global el AUTHGUARD para todos los endpoints a menos que se decoren con @Public()],
   ],
 })

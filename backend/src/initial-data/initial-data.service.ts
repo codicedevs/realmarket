@@ -3,7 +3,6 @@ import * as dayjs from 'dayjs';
 import { PosicionesService } from 'src/posiciones/posiciones.service';
 
 // const baseURL = 'https://agentes.rosval.com.ar/Irmo/api/';
-
 // const fecha24 = moment().add(1, 'days').format('DD/MM/YYYY');
 // const fecha48 = moment().add(2, 'days').format('DD/MM/YYYY');
 

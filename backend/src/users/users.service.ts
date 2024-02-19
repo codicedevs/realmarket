@@ -40,16 +40,16 @@ export class UsersService {
   }
   async findUserByUsername(username: string): Promise<User> {
     try {
-      const user: User = await this.userRepository.findOneBy({
+      const user = await this.userRepository.findOneByOrFail({
         username: username,
       });
-
-      if (!user) {
-        throw new HttpException('No users found', HttpStatus.NOT_FOUND);
-      }
       return user;
     } catch (error) {
-      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+      console.error(error);
+      throw new HttpException(
+        'No se encontro el usuario',
+        HttpStatus.NOT_FOUND,
+      );
     }
   }
   public async createUser(body: CreateUserDto): Promise<User> {

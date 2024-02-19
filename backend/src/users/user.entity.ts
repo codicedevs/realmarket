@@ -14,6 +14,10 @@ export class User {
   pass: string;
   @Column()
   accountId: string;
+  @Column()
+  resetKey: string;
+  @Column()
+  restKeyTimeStamp: string;
 
   //   tipoDocumento: string;
   // cuit?: string;

@@ -1,19 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
-import axios from 'axios';
-import { Posicion } from 'src/types/posicion';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
-import { UpdatePosicioneDto } from './dto/update-posicione.dto';
+import { Posicion } from 'src/types/posicion';
 import { CreatePosicioneDto } from './dto/create-posicione.dto';
+import { UpdatePosicioneDto } from './dto/update-posicione.dto';
 
 @Injectable()
-export class PosicionesService extends RosvalHttpService{
-  
+export class PosicionesService extends RosvalHttpService {
   async findByDate(from: string): Promise<Posicion[]> {
     try {
       const response = await this.http.get<Posicion[]>(
-        `cuentas/423000005/posiciones?fecha=${from}&especie=ARS`      );
-      return response.data
+        `cuentas/423000005/posiciones?fecha=${from}&tipoTitulo=Acciones`,
+      );
+      return response.data;
     } catch (error) {
       console.error(error);
       throw new HttpException('Invalid response', HttpStatus.CONFLICT);
