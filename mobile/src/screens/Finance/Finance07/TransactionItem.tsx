@@ -16,7 +16,7 @@ import { useLayout } from "hooks";
 import { LayoutCustom, Text } from "components";
 import dayjs from "dayjs";
 
-interface ITransactionItemProps {
+export interface ITransactionItemProps {
   image?: ImageSourcePropType | undefined;
   title: string;
   created_at: Date;
@@ -25,8 +25,8 @@ interface ITransactionItemProps {
   total?: string
 }
 
-const TransactionItem: React.FC<{ data: ITransactionItemProps }> = ({
-  data,
+const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction: (data: ITransactionItemProps) => void }> = ({
+  data, selectTransaction
 }) => {
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
@@ -34,7 +34,7 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps }> = ({
   const { height, width, top, bottom } = useLayout();
 
   return (
-    <LayoutCustom style={styles.container} horizontal>
+    <LayoutCustom onPress={() => selectTransaction(data)} style={styles.container} horizontal>
       <LayoutCustom horizontal gap={12} itemsCenter>
         <LayoutCustom style={styles.image}>
           <Text fontSize={10} category="subhead">
