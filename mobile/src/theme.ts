@@ -28,6 +28,8 @@ const theme = {
         background: '#0E0D31',
         /** Negro */
         text: '#333333',
+        /** Lavanda claro */
+        forgoten_password_Text: "#d4d3f3",
         /** Gris (ejemplo: la fecha del detalle de la noticia) */
         label: '#757575',
         /** Blanco */
@@ -35,7 +37,9 @@ const theme = {
         // un azul cielo para algunos textos
         skyBlue: '#009F9F',
         // azul oscuro para boton en home,
-        darkBlue: '#252362'
+        darkBlue: '#252362',
+        /** Purpura oscuro */
+        violet: "#701BC4"
     },
     fonts: {
     },

@@ -18,18 +18,16 @@ import {
   LayoutCustom,
   RoundedButton
 } from "components";
-import TransactionItem from "./TransactionItem";
 // ----------------------------- Types ----------------------------------------
 // ----------------------------- Reanimated 2 -----------------------
 import { useSharedValue } from "react-native-reanimated";
 // ----------------------------- Navigation -----------------------
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import CurrencyToggle from "components/Switch";
 import theme from "theme";
 import { FinanceStackParamList } from "types/navigation-types";
-import BalanceCard from "./BalanceCard";
+import ActionCard from "./ActionsCards";
 
-const Finance07 = React.memo(() => {
+const ActionScreen = React.memo(() => {
   const { goBack } = useNavigation()
   const styles = useStyleSheet(themedStyles);
   const { width } = useLayout();
@@ -67,23 +65,23 @@ const Finance07 = React.memo(() => {
         accessoryRight={() => <RoundedButton icon="bell" />}
       />
       <Content contentContainerStyle={styles.content}>
-        <LayoutCustom mt={theme.margins.large} mb={theme.margins.small}>
-          <LayoutCustom alignSelfCenter mb={theme.margins.medium}>
-            <CurrencyToggle changeCurrency={setCurrency} />
+        <LayoutCustom style={{ height: '90%' }} justify="space-between">
+          <LayoutCustom style={{ height: 150 }}>
+            <ActionCard color="#009F9F" title="Emitir orden" />
           </LayoutCustom>
-          <BalanceCard balance={233004.91} grow={12.2} />
-        </LayoutCustom>
-        <LayoutCustom overflow="scroll" gap={15} mh={theme.margins.medium}>
-          {SAMPLE_TRANSACTION.map((transaction, index) => {
-            return <TransactionItem data={transaction} key={index} />;
-          })}
+          <LayoutCustom style={{ height: 150 }}>
+            <ActionCard color="#D0682E" title='Solicitar transferencia' />
+          </LayoutCustom>
+          <LayoutCustom style={{ height: 150 }}>
+            <ActionCard color="#701BC4" title="Informar transferencia" />
+          </LayoutCustom>
         </LayoutCustom>
       </Content>
     </Container>
   );
 });
 
-export default Finance07;
+export default ActionScreen;
 
 const themedStyles = StyleService.create({
   container: {
@@ -94,7 +92,8 @@ const themedStyles = StyleService.create({
     paddingHorizontal: theme.paddings.medium,
   },
   content: {
-    overflow: 'scroll'
+    flex: 1,
+    justifyContent: 'flex-end'
   },
 });
 

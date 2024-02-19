@@ -1,11 +1,10 @@
-import EvaIcons from "types/eva-icon-enum";
-import * as React from "react";
 import {
   DividerProps,
   LayoutProps,
   TextElement,
   TextProps,
 } from "@ui-kitten/components";
+import * as React from "react";
 import {
   GestureResponderEvent,
   ScrollViewProps,
@@ -13,6 +12,7 @@ import {
   TextStyle,
   ViewStyle,
 } from "react-native/types";
+import EvaIcons from "types/eva-icon-enum";
 
 // -------------------------------- Container --------------------------------
 export interface ContainerProps extends LayoutProps {
@@ -55,16 +55,17 @@ export interface NavigationActionProps {
 // -------------------------------- CustomLayout --------------------------------
 export interface ILayoutCustomProps extends LayoutProps {
   padder?: boolean;
-  mt?: number;
+  mt?: number | string;
   style?: StyleProp<ViewStyle>;
-  mb?: number;
+  mb?: number | string;
   mh?: number;
   mv?: number;
   ml?: number;
   mr?: number;
   ph?: number;
   pt?: number;
-  pl?: number;
+  pl?: number | string;
+  pr?: number | string;
   pv?: number;
   pb?: number;
   maxWidth?: number;

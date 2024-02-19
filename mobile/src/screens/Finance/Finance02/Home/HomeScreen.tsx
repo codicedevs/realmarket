@@ -1,46 +1,39 @@
-import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { Image } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import {
-  TopNavigation,
   StyleService,
-  useStyleSheet,
-  useTheme,
+  TopNavigation,
+  useStyleSheet
 } from "@ui-kitten/components";
 // ----------------------------- Navigation -----------------------------------
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 // ----------------------------- Hooks ---------------------------------------
 import { useLayout } from "hooks";
 // ----------------------------- Assets ---------------------------------------
-import { Images } from "assets/images";
 // ----------------------------- Components && Elements -----------------------
 
 import {
-  AppIcon,
   Container,
   Content,
   LayoutCustom,
-  NavigationAction,
   RoundedButton,
   Text,
 } from "components";
-import Carousel from "react-native-reanimated-carousel";
+import CurrencyToggle from "components/Switch";
 import { useSharedValue } from "react-native-reanimated";
-import { FinanceStackParamList } from "types/navigation-types";
-import CreditCard from "./CreditCard";
-import PaginationItem from "./Pagination";
-import IButton from "./IButton";
-import EvaIcons from "types/eva-icon-enum";
-import { Icons } from "assets/icons";
-import ActivityItem from "./ActivityItem";
-import TimeCard from "./TimeCard";
+import Carousel from "react-native-reanimated-carousel";
 import theme from "theme";
+import { FinanceStackParamList } from "types/navigation-types";
+import IButton from "./IButton";
+import TimeCard from "./TimeCard";
+// import CurrencyToggle from "../../../../components/Switch";
 
 const HomeScreen = React.memo(() => {
-  const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
   const { navigate } = useNavigation<NavigationProp<FinanceStackParamList>>();
   const { height, width, top, bottom } = useLayout();
+  const [currency, setCurrency] = useState('ARS')
 
   const progressValue = useSharedValue<number>(0);
   return (
@@ -57,21 +50,18 @@ const HomeScreen = React.memo(() => {
         )}
         accessoryRight={() => <RoundedButton icon="person_fill" />}
       />
-      <Content contentContainerStyle={styles.content}>
-        <LayoutCustom itemsCenter mt={10} mb={10}>
-        <Text fontSize={20} marginBottom={10} marginTop={10}>Disponibilidad</Text>
+      <Content>
+        <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
+          <CurrencyToggle changeCurrency={setCurrency} />
+        </LayoutCustom>
+        <LayoutCustom alignSelfCenter>
         </LayoutCustom>
         <Carousel
           data={CARDS}
-          width={width * 0.7}
+          width={width * 0.9}
           height={212 * (height / 812)}
           loop={false}
-          style={{
-            width: width,
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: 16,
-          }}
+          style={{ ...themedStyles.carouselStyle, width: width }}
           onProgressChange={(_, absoluteProgress) =>
             (progressValue.value = absoluteProgress)
           }
@@ -81,8 +71,7 @@ const HomeScreen = React.memo(() => {
             parallaxScrollingOffset: 10,
           }}
           renderItem={({ item, index }) => {
-            return  <TimeCard item={item} />
-            //  <CreditCard item={item} key={index} />;
+            return <TimeCard item={item} />
           }}
         />
         {/* <LayoutCustom horizontal itemsCenter justify="center" gap={8}>
@@ -98,9 +87,9 @@ const HomeScreen = React.memo(() => {
             );
           })}
         </LayoutCustom> */}
-        <LayoutCustom horizontal itemsCenter justify="center"  mt={20}>
-          <Image style={{ width: 70, height: 70, }} source={require("../../../../assets/images/icons/moneyStat.png")} />
-          <LayoutCustom ml={20} style={{alignItems:"flex-start"}}>
+        <LayoutCustom horizontal itemsCenter justify="flex-start" pl={theme.paddings.large} mt={theme.margins.medium}>
+          <Image style={themedStyles.img} source={require("../../../../assets/images/icons/moneyStat.png")} />
+          <LayoutCustom ml={20} style={{ alignItems: "flex-start" }}>
             <Text style={{ fontSize: 20, marginBottom: 3 }}>Posiciones</Text>
             <Text style={themedStyles.moneyText} fontSize={20} category="t5">$20.455.342,88</Text>
           </LayoutCustom>
@@ -109,12 +98,14 @@ const HomeScreen = React.memo(() => {
           horizontal
           itemsCenter
           justify="center"
-          gap={30}
-          mt={50}
-          mb={35}
+          mt={theme.margins.large}
         >
-          <IButton icon="wallet_send" title={`Informar\norden`} />
-          <IButton icon="document" title={`Solicitar transferencia`} />
+          <LayoutCustom alignSelfCenter style={styles.buttonContainer}>
+            <IButton name={require(`../../../../assets/images/icons/ordenIcon.png`)} icon="wallet_send" title={`Informar\norden`} />
+          </LayoutCustom>
+          <LayoutCustom style={styles.buttonContainer}>
+            <IButton name={require(`../../../../assets/images/icons/transferIcon.png`)} icon="document" title={`Solicitar\ntransferencia`} />
+          </LayoutCustom>
         </LayoutCustom>
         {/* <LayoutCustom horizontal itemsCenter justify="space-between" mh={24}>
           <Text>Recent Activities</Text>
@@ -145,14 +136,24 @@ const themedStyles = StyleService.create({
   container: {
     flex: 1
   },
-  content: {
-    // flexGrow: 1,
+  img: {
+    width: theme.image.big,
+    height: theme.image.big
   },
   topNavigation: {
-    paddingHorizontal: 24,
+    paddingHorizontal: theme.paddings.medium,
   },
   moneyText: {
     color: theme.colors.skyBlue
+  },
+  buttonContainer: {
+    width: '50%',
+    padding: theme.paddings.medium
+  },
+  carouselStyle: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: theme.margins.small,
   }
 });
 
