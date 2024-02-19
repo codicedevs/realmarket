@@ -50,5 +50,5 @@ Thumbs.db
 
 .eslintcache
 
-backend/.develop.env
+backend/.env
 mobile/yarn.lock
