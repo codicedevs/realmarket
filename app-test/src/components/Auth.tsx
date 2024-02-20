@@ -28,12 +28,6 @@ export const Auth = () => {
       httpService.saveRefreshToken(response.data.refreshToken)
       alert(`Login Ok. ${response?.data?.user?.username}`)
       console.log(response)
-      if(!response){
-        console.log("CARAMBA")
-      } else {
-        console.log("CARA")
-        {<Navigate to="changepass" replace={true} />}
-      }
     }
     catch (err) {
       alert(err)
@@ -66,17 +60,6 @@ export const Auth = () => {
         <Button sx={{ marginTop: 3 }} variant='outlined' color='primary' onClick={request}>
           Cambiar Contraseña
         </Button>
-
-<<<<<<< HEAD
-              <Button sx={{marginTop: 3 }} variant='contained'color='primary' type='submit' >
-                Ingresar
-              </Button>  
-              <Button sx={{marginTop: 3}} variant='outlined'color='primary' onClick={handleChangePass}>
-                Cambiar Contraseña
-              </Button>  
-            
-=======
->>>>>>> d7533bae9805f97973006474e1816be733e2fc4b
       </Box>
 
     </form>
