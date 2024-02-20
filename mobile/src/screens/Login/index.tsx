@@ -1,5 +1,5 @@
-import React from "react";
-import { Dimensions, Image, ImageBackground, TextInput } from "react-native";
+import React, { useState } from "react";
+import { Alert, Dimensions, Image, ImageBackground, TextInput } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import {
   // Input,
@@ -17,6 +17,7 @@ import {
   Container, LayoutCustom, Text
 } from "components";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { httpService } from "services/http.service";
 import theme from "theme";
 import { FinanceStackParamList } from "types/navigation-types";
 // import IButton from "./IButton";
@@ -29,6 +30,26 @@ const LoginScreen = React.memo(() => {
   const styles = useStyleSheet(themedStyles);
   const { navigate } = useNavigation<NavigationProp<FinanceStackParamList>>();
   const { height, width, top, bottom } = useLayout();
+  
+  const [user, setUser] = useState({
+    username: "user5",
+    pass: "12345678",
+  })
+
+  async function login(){
+    try{
+    const res = await httpService.post("auth/login", user)
+    if(!res){
+      navigate('FinanceIntro')
+    } else {
+      navigate('Finance02')}
+    } catch (error){
+      console.error(error);
+      Alert.alert((error as any).message);
+    }
+  }
+
+
   return (
     <Container style={styles.container}>
       <ImageBackground style={themedStyles.background} source={require("../../assets/images/Login/fondoLogin.png")}>
@@ -45,7 +66,7 @@ const LoginScreen = React.memo(() => {
             <TextInput placeholder="Contraseña" placeholderTextColor={"#ffffff"} style={themedStyles.input} />
           </LayoutCustom>
           <LayoutCustom mt={theme.margins.xSmall}>
-            <TouchableOpacity style={themedStyles.buttonContainer} onPress={() => navigate('Finance02')}>
+            <TouchableOpacity style={themedStyles.buttonContainer} onPress={() => login() }>
               <Text category="t2" fontSize={24}>LOGIN</Text>
             </TouchableOpacity>
             <LayoutCustom mt={theme.margins.small} style={{ alignItems: "center" }}>

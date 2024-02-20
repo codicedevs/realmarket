@@ -30,6 +30,8 @@ const AppContainer = () => {
   const themes = useTheme();
   const theme = useAppSelector(appSelector).theme;
   const isDarkMode = theme === ThemeMode.DARK;
+
+
   return (
     <ApplicationProvider
       {...eva}
@@ -55,11 +57,6 @@ const AppContainer = () => {
             screenOptions={{
               headerShown: false,
             }}>
-            {/* <Stack.Screen name='Settings' component={SettingScreen} /> */}
-            {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
-            {/* <Stack.Screen name="Walkthrough" component={WalkthroughNavigator} />
-            <Stack.Screen name="Authenticate" component={AuthenticateNavigator} />
-            <Stack.Screen name="Ecommerce" component={EcommerceNavigator} /> */}
             <Stack.Screen name="Finance" component={FinanceNavigator} />
           </Stack.Navigator>
         </View>

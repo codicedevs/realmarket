@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@codice-arg/http-service": "^1.0.3",
     "@eva-design/eva": "^2.2.0",
     "@expo/webpack-config": "^19.0.0",
     "@faker-js/faker": "^7.6.0",

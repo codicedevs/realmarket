@@ -12,6 +12,8 @@ export class AuthService {
   ) {}
 
   async signIn(username: string, password: string) {
+    //Hacer un DTO de signIn
+
     if (!username || !password)
       throw new HttpException(
         'Faltan credenciales: usuario o password',
@@ -24,16 +26,16 @@ export class AuthService {
 
     // Controla que el usuario exista
 
-    if (!user) {
-      throw new HttpException('El usuario no existe', 403);
-    }
+    // if (!user) {
+    //   throw new HttpException('El usuario no existe', 401);
+    // }
 
     //Controla la contrasena
     //La contrasena guardada tiene que estar hasheada
 
     const checkpass = await bcrypt.compare(password, user.pass);
     if (!checkpass) {
-      throw new HttpException('Passwords do not match', 403);
+      throw new HttpException('Passwords do not match', 401);
     }
 
     //TODO: Podríamos tipar el payload de jwt para saber en todas las partes del código que está recibiendo
