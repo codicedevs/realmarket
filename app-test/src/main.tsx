@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Auth } from './components/Auth.tsx'
 import './index.css'
+import ChangePass from './pages/ChangePass.tsx'
 import Home from './pages/Home.tsx'
 
 const router = createBrowserRouter([
@@ -15,6 +16,11 @@ const router = createBrowserRouter([
     id: "inicio",
     path: "/inicio",
     element: <Home/>
+  },
+  {
+    id: "changePass",
+    path: "changePass",
+    element: <ChangePass />,
   }
 ])
 

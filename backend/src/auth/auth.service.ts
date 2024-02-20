@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { jwtConstants } from './constants';
+import { JWTPayload } from './types/payload';
 
 @Injectable()
 export class AuthService {
@@ -40,10 +41,10 @@ export class AuthService {
 
     //TODO: Podríamos tipar el payload de jwt para saber en todas las partes del código que está recibiendo
 
-    const payload = {
+    const payload: JWTPayload = {
       sub: user._id,
       username: user.username,
-      cuenta: user.accountId,
+      accountId: user.accountId,
     };
     const accessToken = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
@@ -62,9 +63,12 @@ export class AuthService {
 
   async refreshToken(refreshToken: string) {
     //TODO: verifyAsync se puede tipar para que el payload lo devuelva tipado
-    const payload = await this.jwtService.verifyAsync(refreshToken, {
-      secret: jwtConstants.refreshKey,
-    });
+    const payload = await this.jwtService.verifyAsync<JWTPayload>(
+      refreshToken,
+      {
+        secret: jwtConstants.refreshKey,
+      },
+    );
     delete payload.iat;
     delete payload.exp;
     return {

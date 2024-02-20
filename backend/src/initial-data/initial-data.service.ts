@@ -15,9 +15,18 @@ export class InitialDataService {
     const fechaHoy = dayjs().format('DD/MM/YYYY');
     const fecha24 = dayjs().add(1, 'day').format('DD/MM/YYYY');
     const fecha48 = dayjs().add(2, 'day').format('DD/MM/YYYY');
-    const posicionesHoy = await this.posicionesService.findByDate(fechaHoy);
-    const posiciones24 = await this.posicionesService.findByDate(fecha24);
-    const posiciones48 = await this.posicionesService.findByDate(fecha48);
+    const posicionesHoy = await this.posicionesService.findByDate(
+      '42300005',
+      fechaHoy,
+    );
+    const posiciones24 = await this.posicionesService.findByDate(
+      '42300005',
+      fecha24,
+    );
+    const posiciones48 = await this.posicionesService.findByDate(
+      '42300005',
+      fecha48,
+    );
     const saldoHoy = posicionesHoy.find((e) => e.tipoTitulo === 'Moneda');
     const saldo24 = posiciones24.find((e) => e.tipoTitulo === 'Moneda');
     const saldo48 = posiciones48.find((e) => e.tipoTitulo === 'Moneda');

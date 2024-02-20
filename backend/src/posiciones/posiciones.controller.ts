@@ -1,18 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
+  Req,
 } from '@nestjs/common';
-import { PosicionesService } from './posiciones.service';
+import { ApiTags } from '@nestjs/swagger';
+import { getJwtPayload } from 'src/auth/utils/jwt.utils';
+import { Posicion } from 'src/types/posicion';
 import { CreatePosicioneDto } from './dto/create-posicione.dto';
 import { UpdatePosicioneDto } from './dto/update-posicione.dto';
-import { Posicion } from 'src/types/posicion';
-import { ApiTags } from '@nestjs/swagger';
+import { PosicionesService } from './posiciones.service';
 
 @ApiTags('posiciones')
 @Controller('posiciones')
@@ -22,8 +24,10 @@ export class PosicionesController {
   @Get('byDate')
   public async getMovimientos(
     @Query('from') from: string,
+    @Req() request: Request,
   ): Promise<Array<Posicion>> {
-    return this.posicionesService.findByDate(from);
+    const { accountId } = getJwtPayload(request);
+    return this.posicionesService.findByDate(accountId, from);
   }
   @Post()
   create(@Body() createPosicioneDto: CreatePosicioneDto) {

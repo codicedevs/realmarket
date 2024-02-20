@@ -7,10 +7,10 @@ import { UpdatePosicioneDto } from './dto/update-posicione.dto';
 
 @Injectable()
 export class PosicionesService extends RosvalHttpService {
-  async findByDate(from: string): Promise<Posicion[]> {
+  async findByDate(accountId: string, from: string): Promise<Posicion[]> {
     try {
       const response = await this.http.get<Posicion[]>(
-        `cuentas/423000005/posiciones?fecha=${from}&tipoTitulo=Acciones`,
+        `cuentas/${accountId}/posiciones?fecha=${from}&tipoTitulo=Acciones`,
       );
       return response.data;
     } catch (error) {
