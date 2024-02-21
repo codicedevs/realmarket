@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import { rosvalSettings } from 'src/settings';
 
 @Injectable()
 export class RosvalHttpService {
   constructor() {
     if (!RosvalHttpService.http) {
       RosvalHttpService.http = axios.create({
-        baseURL: 'https://agentes.rosval.com.ar/Irmo/api/',
+        baseURL: rosvalSettings.ROSVAL_BASE_URL,
       });
       RosvalHttpService.http.interceptors.response.use(
         null,
@@ -52,9 +53,9 @@ export class RosvalHttpService {
 
   async getBearerToken(): Promise<string> {
     const response = await this.http.post(`login`, {
-      clientId: '423000005',
-      username: 'API_Resumen',
-      password: 'API_Resumen',
+      clientId: rosvalSettings.ROSVAL_USER_ID,
+      username: rosvalSettings.ROSVAL_USER_NAME,
+      password: rosvalSettings.ROSVAL_USER_PASS,
     });
 
     return response.data.token;

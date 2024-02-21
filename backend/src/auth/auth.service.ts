@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { jwtSettings } from 'src/settings';
 import { UsersService } from 'src/users/users.service';
-import { jwtConstants } from './constants';
 import { JWTPayload } from './types/payload';
 
 @Injectable()
@@ -48,8 +48,8 @@ export class AuthService {
     };
     const accessToken = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: jwtConstants.refreshKey,
-      expiresIn: '7d',
+      secret: jwtSettings.JWT_REFRESH_SECRET,
+      expiresIn: jwtSettings.JWT_REFRFES_EXPIRES_IN,
     });
 
     const data = {
@@ -66,7 +66,7 @@ export class AuthService {
     const payload = await this.jwtService.verifyAsync<JWTPayload>(
       refreshToken,
       {
-        secret: jwtConstants.refreshKey,
+        secret: jwtSettings.JWT_REFRESH_SECRET,
       },
     );
     delete payload.iat;
