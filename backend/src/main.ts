@@ -1,11 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as morgan from 'morgan';
 import { AppModule } from './app.module';
 import { CORS } from './constants';
 import { GlobalExceptionFilter } from './globalexception/global.exception.filter';
+import { serverSettings } from './settings';
 import { getProtocolConfig } from './utils/ssl';
 
 async function bootstrap() {
@@ -39,13 +39,11 @@ async function bootstrap() {
 
   app.use(morgan('dev'));
 
-  const configService = app.get(ConfigService);
-
   app.enableCors(CORS);
 
   app.useGlobalFilters(new GlobalExceptionFilter());
 
-  await app.listen(configService.get('PORT'));
+  await app.listen(serverSettings.SERVER_PORT);
 
   console.log(`Application running on:${await app.getUrl()}`);
   // console.log(protocol)

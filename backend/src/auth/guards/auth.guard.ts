@@ -7,8 +7,8 @@ import {
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { jwtSettings } from 'src/settings';
 import { IS_PUBLIC_KEY } from '../SkipAuth';
-import { jwtConstants } from '../constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.secret,
+        secret: jwtSettings.JWT_ACCESS_SECRET,
       });
       //Se asigna el payload decodificado a la propiedad user de la request 
       request['user'] = payload;
