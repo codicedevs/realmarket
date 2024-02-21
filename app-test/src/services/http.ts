@@ -4,21 +4,23 @@ class Http extends HttpBase {
   constructor() {
     super('http://localhost:8000')
   }
-  loadRefreshToken(): string | Promise<string | null> | null {
+  getRefreshToken(): string | null {
     return localStorage.getItem('refresh');
   }
-  saveRefreshToken(refreshToken: string | null): void | Promise<void> {
+  saveRefreshToken(refreshToken: string | null): void {
     return localStorage.setItem('refresh', refreshToken ?? '');
   }
-  loadAccessToken(): string | Promise<string | null> | null {
+  getAccessToken(): string | null {
     return localStorage.getItem('access');
   }
-  saveAccessToken(accessToken: string | null): void | Promise<void> {
+  saveAccessToken(accessToken: string | null): void {
     return localStorage.setItem('access', accessToken ?? '');
   }
   //Comment
-  async refreshAccessToken(refreshToken: string): Promise<string | null> {
+  async refreshAccessToken(): Promise<string | null> {
     try {
+      const refreshToken = this.getRefreshToken()
+      if (!refreshToken) throw new Error("Cannot get refresh token");
       const resp = await this.post<{ accessToken: string; }>('auth/refresh', undefined, { headers: { 'refresh-token': refreshToken } })
       return resp.data.accessToken
     } catch (error) {

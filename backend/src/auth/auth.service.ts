@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signIn(username: string, password: string) {
     //Hacer un DTO de signIn
@@ -39,8 +39,6 @@ export class AuthService {
       throw new HttpException('Passwords do not match', 401);
     }
 
-    //TODO: Podríamos tipar el payload de jwt para saber en todas las partes del código que está recibiendo
-
     const payload: JWTPayload = {
       sub: user._id,
       username: user.username,
@@ -49,6 +47,7 @@ export class AuthService {
     const accessToken = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: jwtConstants.refreshKey,
+      //TODO: Mover a settings
       expiresIn: '7d',
     });
 
@@ -62,7 +61,6 @@ export class AuthService {
   }
 
   async refreshToken(refreshToken: string) {
-    //TODO: verifyAsync se puede tipar para que el payload lo devuelva tipado
     const payload = await this.jwtService.verifyAsync<JWTPayload>(
       refreshToken,
       {
