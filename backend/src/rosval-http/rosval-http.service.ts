@@ -1,23 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
-
+import { rosvalSettings } from 'src/settings';
 
 @Injectable()
 export class RosvalHttpService {
-  constructor(){
-    if(!RosvalHttpService.http) {
-      RosvalHttpService.http = axios.create({baseURL: 'https://agentes.rosval.com.ar/Irmo/api/'})
-    RosvalHttpService.http.interceptors.response.use(null, this.handleErrorInterceptor)
+  constructor() {
+    if (!RosvalHttpService.http) {
+      RosvalHttpService.http = axios.create({
+        baseURL: rosvalSettings.ROSVAL_BASE_URL,
+      });
+      RosvalHttpService.http.interceptors.response.use(
+        null,
+        this.handleErrorInterceptor,
+      );
+    }
+    this.http = RosvalHttpService.http;
   }
-  this.http = RosvalHttpService.http;
-}
-  
-private static http: AxiosInstance 
-http: AxiosInstance
 
-tokenRosval: string | undefined;
+  private static http: AxiosInstance;
+  http: AxiosInstance;
 
- handleErrorInterceptor  = async (error: any) => {
+  tokenRosval: string | undefined;
+
+  handleErrorInterceptor = async (error: any) => {
     const originalRequest = error.config;
     //Si el status no es de no authorizado (401) el handler no se ocupa del error
     if (error.response?.status !== 401) throw error;
@@ -34,25 +39,25 @@ tokenRosval: string | undefined;
     //Se reintenta la request
     return this.http(newRequest);
   };
-  
+
   /**
    * Asigna cabecera de authenticación a una `requestConfig` de `axios`. Toma el accesToken del `asyncStorage`
    * @param {*} config
    * @returns
    */
   async setAuthHeaderToConfig(config: InternalAxiosRequestConfig<any>) {
-    this.http.defaults.headers.common['Authorization'] =`Bearer ${this.tokenRosval}`
+    this.http.defaults.headers.common['Authorization'] =
+      `Bearer ${this.tokenRosval}`;
     return config;
   }
-  
+
   async getBearerToken(): Promise<string> {
     const response = await this.http.post(`login`, {
-      clientId: '423000005',
-      username: 'API_Resumen',
-      password: 'API_Resumen',
+      clientId: rosvalSettings.ROSVAL_USER_ID,
+      username: rosvalSettings.ROSVAL_USER_NAME,
+      password: rosvalSettings.ROSVAL_USER_PASS,
     });
-    
+
     return response.data.token;
   }
-  
 }

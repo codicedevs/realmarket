@@ -1,6 +1,5 @@
 import { HttpBase } from '@codice-arg/http-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { navigate } from 'navigation/root-navigation';
 import { Alert } from 'react-native';
 
 
