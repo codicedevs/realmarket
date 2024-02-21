@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import axios, { Axios, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 export abstract class HttpBase {
   protected axiosInstance: Axios
@@ -14,7 +14,7 @@ export abstract class HttpBase {
     return this.axiosInstance.get(url, config);
   }
   delete<T = any, R = AxiosResponse<T, any>, D = any>(url: string, config?: AxiosRequestConfig<D> | undefined): Promise<R> {
-    return this.delete(url, config);
+    return this.axiosInstance.delete(url, config);
   }
   head<T = any, R = AxiosResponse<T, any>, D = any>(url: string, config?: AxiosRequestConfig<D> | undefined): Promise<R> {
     return this.axiosInstance.head(url, config)
@@ -40,16 +40,18 @@ export abstract class HttpBase {
   patchForm<T = any, R = AxiosResponse<T, any>, D = any>(url: string, data?: D | undefined, config?: AxiosRequestConfig<D> | undefined): Promise<R> {
     return this.axiosInstance.patchForm(url, data, config);
   }
+  /**Recupero del access token del storage. Es opcional.*/
+  protected getRefreshToken?(): Promise<string | null> | string | null
+  /**Guardado del access token del storage Es opcional.*/
+  protected saveRefreshToken?(refreshToken: string | null): Promise<void> | void
   /**Recupero del access token del storage */
-  abstract loadRefreshToken(): Promise<string | null> | string | null
-  /**Recupero del access token del storage */
-  abstract loadAccessToken(): Promise<string | null> | string | null
+  abstract getAccessToken(): Promise<string | null> | string | null
   /**Guardado de accesstoken en storage */
   abstract saveAccessToken(accessToken: string | null): Promise<void> | void
-  /**Metodo para el refresco del accessToken*/
-  abstract refreshAccessToken(refreshToken: string): Promise<string | null> | string | null
-  /**Callback que se ejecuta cuando se agotan los intentes de refresco del token */
-  protected onUnauthorized?(): void | Promise<void>
+  /**Metodo para el refresco del accessToken. Al momento del un fallo de una request con status 401 refrescará el `accessToken` con este método y reintentará.*/
+  abstract refreshAccessToken(refreshToken?: string | null): Promise<string | null> | string | null
+  /**Método que se ejecuta cuando se agotan los reintentos de refresco de `accessToken`. Si no se define arrojará el `error` proveniente de la request*/
+  protected onUnauthorized?(error: any): void | Promise<void>
 
   protected handleRequestInterceptor = async (config: InternalAxiosRequestConfig<any>) => {
     return this.setAuthHeaderToConfig(config);
@@ -61,13 +63,8 @@ export abstract class HttpBase {
    * @returns 
    */
   protected setAuthHeaderToConfig = async (config: InternalAxiosRequestConfig<any>) => {
-    const accessToken = await this.loadAccessToken();
-    if (accessToken) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${accessToken}`,
-      } as AxiosRequestHeaders
-    }
+    const accessToken = await this.getAccessToken();
+    if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
     return config
   }
 
@@ -76,20 +73,18 @@ export abstract class HttpBase {
     const originalRequest = error.config;
     //Si el status no es de no authorizado (401) el handler no se ocupa del error
     if (error.response?.status !== 401) throw error;
-    //get refreshToken
-    const refreshToken = await this.loadRefreshToken()
+    //Se refresca el accesToken
+    const accessToken = await this.refreshAccessToken()
     // Condiciones para el reintento
     const retryCondition =
       originalRequest &&
-      !originalRequest._retry &&      //No se reintenta si viene de un reintento(Es decir si es un segundo reintento).
-      refreshToken                    //Tiene que haber un refresh token para poder renovar el access token
-    //Si no se cumplen con las condiciones de reintento se termina emitiendo un evento de no autorizado o tirando la excepción.
+      !originalRequest._retry &&      //No se reintenta si viene de un reintento(Es decir si es un tercer intento).
+      accessToken                    //Tiene que haber un access para reintentar
+    //Si no se cumplen con las condiciones de reintento se termina ejecutando un callback o tirando la excepción.
     if (!retryCondition) {
-      if (this.onUnauthorized) return this.onUnauthorized()
+      if (this.onUnauthorized) return this.onUnauthorized(error)
       throw error
     }
-    //Se refresca el accesToken
-    const accessToken = await this.refreshAccessToken(refreshToken)
     //Se almacena nuevo accesToken
     await this.saveAccessToken(accessToken)
     //Se setea campo custom para identificar el reintento.

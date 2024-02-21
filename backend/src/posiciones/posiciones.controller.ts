@@ -10,6 +10,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 import { getJwtPayload } from 'src/auth/utils/jwt.utils';
 import { Posicion } from 'src/types/posicion';
 import { CreatePosicioneDto } from './dto/create-posicione.dto';
@@ -19,7 +20,7 @@ import { PosicionesService } from './posiciones.service';
 @ApiTags('posiciones')
 @Controller('posiciones')
 export class PosicionesController {
-  constructor(private readonly posicionesService: PosicionesService) {}
+  constructor(private readonly posicionesService: PosicionesService) { }
 
   @Get('byDate')
   public async getMovimientos(

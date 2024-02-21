@@ -39,8 +39,6 @@ export class AuthService {
       throw new HttpException('Passwords do not match', 401);
     }
 
-    //TODO: Podríamos tipar el payload de jwt para saber en todas las partes del código que está recibiendo
-
     const payload: JWTPayload = {
       sub: user._id,
       username: user.username,
@@ -62,7 +60,6 @@ export class AuthService {
   }
 
   async refreshToken(refreshToken: string) {
-    //TODO: verifyAsync se puede tipar para que el payload lo devuelva tipado
     const payload = await this.jwtService.verifyAsync<JWTPayload>(
       refreshToken,
       {
