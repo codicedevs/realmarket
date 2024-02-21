@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
 import { ObjectId } from 'mongodb';
@@ -11,95 +11,43 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<User[]> {
-    try {
-      const users: User[] = await this.userRepository.find();
-      if (users.length === 0) {
-        throw new HttpException('No users found', HttpStatus.NOT_FOUND);
-      }
-      return users;
-    } catch (error) {
-      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-    }
+    const users: User[] = await this.userRepository.find();
+    return users;
   }
-  async findUserById(id: ObjectId): Promise<User> {
-    try {
-      const user: User = await this.userRepository.findOneBy({
-        _id: new ObjectId(id),
-      });
+  async findById(id: ObjectId): Promise<User> {
+    const user: User = await this.userRepository.findOneByOrFail({
+      _id: new ObjectId(id),
+    });
 
-      if (!user) {
-        throw new HttpException('No users found', HttpStatus.NOT_FOUND);
-      }
-      return user;
-    } catch (error) {
-      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-    }
+    return user;
   }
-  async findUserByUsername(username: string): Promise<User> {
-    try {
-      const user = await this.userRepository.findOneByOrFail({
-        username: username,
-      });
-      return user;
-    } catch (error) {
-      console.error(error);
-      throw new HttpException(
-        'No se encontro el usuario',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async findByUsername(username: string): Promise<User> {
+    const user = await this.userRepository.findOneByOrFail({
+      username: username,
+    });
+    return user;
   }
-  public async createUser(body: CreateUserDto): Promise<User> {
-    try {
-      const hashedPass = await hash(body?.pass, 10);
-      body.pass = hashedPass;
-      return await this.userRepository.save(body);
-    } catch (error) {
-      throw new Error(error);
-    }
+  public async create(body: CreateUserDto): Promise<User> {
+    const hashedPass = await hash(body?.pass, 10);
+    body.pass = hashedPass;
+    return this.userRepository.save(body);
   }
-  async updateUser(
-    id: ObjectId,
-    body: UpdateUserDto,
-  ): Promise<User | undefined> {
-    try {
-      const user: UpdateResult = await this.userRepository.update(
-        new ObjectId(id),
-        body,
-      );
-      if (user.affected === 0) {
-        throw new HttpException(
-          'Theres no modifications',
-          HttpStatus.NOT_MODIFIED,
-        );
-      }
-      return this.findUserById(new ObjectId(id));
-    } catch (error) {
-      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-    }
+
+  async updateById(id: ObjectId, body: UpdateUserDto,): Promise<User | undefined> {
+    const result: UpdateResult = await this.userRepository.update(
+      new ObjectId(id),
+      body,
+    );
+    if (!result.affected) throw new NotFoundException("Usuario no encontrado")
+    return this.findById(new ObjectId(id));
   }
-  async deleteUser(id: string): Promise<DeleteResult | undefined> {
-    try {
-      const user: DeleteResult = await this.userRepository.delete(id);
-      if (user.affected === 0) {
-        throw new HttpException('No users found', HttpStatus.NOT_FOUND);
-      }
-      return user;
-    } catch (error) {
-      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-    }
+
+  async deleteById(id: string): Promise<DeleteResult | undefined> {
+    const result = await this.userRepository.delete(id);
+    if (!result.affected) throw new NotFoundException("Usuario no encontrado")
+    return result
   }
 }
-
-//   async updateUser(updateUserDto: UpdateUserDto, id: string):Promise<User[]> {
-//     // const userQuery = await this.findById(id);
-//     //     const userAct = Object.assign(userQuery, updateUserDto)
-//     //     this.users = this.users.map(u=>u.id === id ? userAct : u)
-//         return
-
-//   }
-
-// }
