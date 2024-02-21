@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -35,11 +35,10 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtSettings.JWT_ACCESS_SECRET,
       });
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
+      //Se asigna el payload decodificado a la propiedad user de la request 
       request['user'] = payload;
-    } catch {
-      throw new UnauthorizedException('');
+    } catch (error) {
+      throw new UnauthorizedException(error.message);
     }
     return true;
   }

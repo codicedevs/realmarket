@@ -24,23 +24,23 @@ export class UsersController {
   @Get(':id')
   @ApiParam({ name: 'id' })
   public async findUserById(@Param('id') id: ObjectId): Promise<User> {
-    return this.usersService.findUserById(id);
+    return this.usersService.findById(id);
   }
   @Put('edit/:id')
   public async updateUser(
     @Param('id') id: ObjectId,
     @Body() body: UpdateUserDto,
   ): Promise<User> {
-    return this.usersService.updateUser(id, body);
+    return this.usersService.updateById(id, body);
   }
 
   @Post('register')
   public async registerUser(@Body() body: CreateUserDto) {
-    return await this.usersService.createUser(body);
+    return await this.usersService.create(body);
   }
 
   @Delete(':id')
   async deleteById(@Param('id') id: string) {
-    return await this.usersService.deleteUser(id);
+    return await this.usersService.deleteById(id);
   }
 }
