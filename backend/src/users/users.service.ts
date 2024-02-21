@@ -30,7 +30,8 @@ export class UsersService {
     });
     return user;
   }
-  public async create(body: CreateUserDto): Promise<User> {
+
+  async create(body: CreateUserDto): Promise<User> {
     const hashedPass = await hash(body?.pass, 10);
     body.pass = hashedPass;
     return this.userRepository.save(body);
