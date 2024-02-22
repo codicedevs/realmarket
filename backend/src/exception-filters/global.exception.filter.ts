@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { BSONError } from 'bson';
+import { Response } from 'express';
 import {
   CannotCreateEntityIdMapError,
   EntityNotFoundError,
@@ -14,13 +15,15 @@ import {
 
 @Catch() // este decorador captura una excepcion,
 export class GlobalExceptionFilter implements ExceptionFilter {
-  catch(exception: any, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
+    const response = ctx.getResponse<Response>();
     const request = ctx.getRequest();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR; // si el status es internal server error no entra en el switch y devuelve directamente
     let message = 'Internal Server Error';
+    const { url } = request;
+    const timestamp = new Date().toISOString();
 
     // Utilizamos un switch para manejar diferentes tipos de excepciones
     switch (true) {
@@ -50,19 +53,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       default:
         break;
     }
-    console.error({
-      errorType: exception.constructor.name,
-      errorMessage: exception.message,
-      stackTrace: exception.stack,
-      statusCode: status,
-      requestPath: request.url,
-    });
+    console.error(exception);
+
     // Respondemos con el código de estado, mensaje y, opcionalmente, el código de error
     response.status(status).json({
-      statusCode: status,
-      message: message,
-      timestamp: new Date().toISOString(),
-      path: request.url,
+      message,
+      timestamp,
+      url,
     });
   }
 }

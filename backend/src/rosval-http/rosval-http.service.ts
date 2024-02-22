@@ -45,7 +45,7 @@ export class RosvalHttpService {
    * @param {*} config
    * @returns
    */
-  async setAuthHeaderToConfig(config: InternalAxiosRequestConfig<any>) {
+  async setAuthHeaderToConfig(config: InternalAxiosRequestConfig) {
     this.http.defaults.headers.common['Authorization'] =
       `Bearer ${this.tokenRosval}`;
     return config;
