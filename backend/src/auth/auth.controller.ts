@@ -12,6 +12,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from './SkipAuth';
 import { AuthService } from './auth.service';
+import { SignInUserDto } from './dto/auth.dto';
 import { RefreshAuthGuard } from './guards/refresh.guards';
 
 @ApiTags('auth')
@@ -23,7 +24,7 @@ export class AuthController {
   @Public()
   @Post('login')
   //TODO: Ver si es necesario hacer un DTO con validación
-  signIn(@Body() signInDto: Record<string, any>) {
+  signIn(@Body() signInDto: SignInUserDto) {
     return this.authService.signIn(signInDto.username, signInDto.pass);
   }
 
