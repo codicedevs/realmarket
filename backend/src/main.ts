@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as morgan from 'morgan';
 import { AppModule } from './app.module';
 import { CORS } from './constants';
-import { GlobalExceptionFilter } from './globalexception/global.exception.filter';
+import { GlobalExceptionFilter } from './exception-filters/global.exception.filter';
 import { serverSettings } from './settings';
 import { getProtocolConfig } from './utils/ssl';
 
@@ -27,8 +27,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('documentation', app, document);
 
-  //
-
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -46,6 +44,5 @@ async function bootstrap() {
   await app.listen(serverSettings.SERVER_PORT);
 
   console.log(`Application running on:${await app.getUrl()}`);
-  // console.log(protocol)
 }
 bootstrap();

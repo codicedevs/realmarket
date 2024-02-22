@@ -11,7 +11,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async findAll(): Promise<User[]> {
     const users: User[] = await this.userRepository.find();
@@ -37,18 +37,21 @@ export class UsersService {
     return this.userRepository.save(body);
   }
 
-  async updateById(id: ObjectId, body: UpdateUserDto,): Promise<User | undefined> {
+  async updateById(
+    id: ObjectId,
+    body: UpdateUserDto,
+  ): Promise<User | undefined> {
     const result: UpdateResult = await this.userRepository.update(
       new ObjectId(id),
       body,
     );
-    if (!result.affected) throw new NotFoundException("Usuario no encontrado")
+    if (!result.affected) throw new NotFoundException('Usuario no encontrado');
     return this.findById(new ObjectId(id));
   }
 
   async deleteById(id: string): Promise<DeleteResult | undefined> {
     const result = await this.userRepository.delete(id);
-    if (!result.affected) throw new NotFoundException("Usuario no encontrado")
-    return result
+    if (!result.affected) throw new NotFoundException('Usuario no encontrado');
+    return result;
   }
 }

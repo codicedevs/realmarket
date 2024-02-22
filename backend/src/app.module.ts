@@ -6,8 +6,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guards/auth.guard';
-import { EmailService } from './email/email.service';
-import { InitialDataModule } from './initial-data/initial-data.module';
 import { MovimientosModule } from './movimientos/movimientos.module';
 import { PosicionesModule } from './posiciones/posiciones.module';
 import { dbSettings } from './settings';
@@ -30,7 +28,6 @@ import { UsersController } from './users/users.controller';
     AuthModule,
     MovimientosModule,
     PosicionesModule,
-    InitialDataModule,
   ],
   controllers: [AppController, UsersController],
   providers: [
@@ -39,8 +36,6 @@ import { UsersController } from './users/users.controller';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    EmailService,
-    //Esto Bindea a Nivel Global el AUTHGUARD para todos los endpoints a menos que se decoren con @Public()],
   ],
 })
 export class AppModule {}

@@ -8,7 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { jwtSettings } from 'src/settings';
-import { IS_PUBLIC_KEY } from '../SkipAuth';
+import { IS_PUBLIC_KEY } from '../skip-auth';
 
 @Injectable()
 export class RefreshAuthGuard implements CanActivate {

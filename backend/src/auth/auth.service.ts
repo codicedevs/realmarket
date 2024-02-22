@@ -11,20 +11,21 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async signIn(username: string, password: string) {
-    if (!username || !password) throw new BadRequestException('Faltan credenciales: usuario o password');
-    let user: User | null = null
+    if (!username || !password)
+      throw new BadRequestException('Faltan credenciales: usuario o password');
+    let user: User | null = null;
     try {
       user = await this.usersService.findByUsername(username);
     } catch (error) {
-      throw new HttpException('Credenciales inválidas', 401)
+      throw new HttpException('Credenciales inválidas', 401);
     }
     //Controla la contrasena
     //La contrasena guardada tiene que estar hasheada
     const checkpass = await bcrypt.compare(password, user.pass);
-    if (!checkpass) throw new HttpException('Credenciales inválidas', 401)
+    if (!checkpass) throw new HttpException('Credenciales inválidas', 401);
 
     const payload: JWTPayload = {
       sub: user._id,
