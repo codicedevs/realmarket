@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import { isAxiosError } from 'axios';
 import { BSONError } from 'bson';
 import { Response } from 'express';
 import {
@@ -53,6 +54,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       case exception instanceof BSONError: //Mongo - Error de ObjectId
         status = HttpStatus.UNPROCESSABLE_ENTITY;
         message = `"ObjectID error: "${exception.message}`;
+        break;
+      case isAxiosError(exception):
+        status = exception.response.status;
+        message = 'Rosval Error';
+        details = exception.response.data.errors;
         break;
       default:
         break;

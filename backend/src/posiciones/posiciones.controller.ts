@@ -10,12 +10,18 @@ import { PosicionesService } from './posiciones.service';
 export class PosicionesController {
   constructor(private readonly posicionesService: PosicionesService) {}
 
-  @Get('byDate')
-  public async getMovimientos(
+  @Get('by-date')
+  public async getPosiciones(
     @Query('from') from: string,
     @Req() request: Request,
   ): Promise<Array<Posicion>> {
     const { accountId } = getJwtPayload(request);
     return this.posicionesService.findByDate(accountId, from);
+  }
+
+  @Get('cash-position-by-dates')
+  public async getCashPositionByDates(@Req() request: Request) {
+    const { accountId } = getJwtPayload(request);
+    return this.posicionesService.getCashPositionByDates(accountId);
   }
 }
