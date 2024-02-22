@@ -44,6 +44,5 @@ async function bootstrap() {
   await app.listen(serverSettings.SERVER_PORT);
 
   console.log(`Application running on:${await app.getUrl()}`);
-  // console.log(protocol)
 }
 bootstrap();

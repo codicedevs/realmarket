@@ -34,4 +34,5 @@ export const rosvalSettings = {
   ROSVAL_USER_NAME: process.env.ROSVAL_USER_NAME,
   ROSVAL_USER_PASS: process.env.ROSVAL_USER_PASS,
   ROSVAL_BASE_URL: process.env.ROSVAL_BASE_URL,
+  ROSVAL_ACCESS_TOKEN: '',
 };

@@ -24,13 +24,17 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     let message = 'Internal Server Error';
     const { url } = request;
     const timestamp = new Date().toISOString();
+    let details = undefined;
 
     // Utilizamos un switch para manejar diferentes tipos de excepciones
     switch (true) {
       // Manejo de excepciones de tipo HttpException
       case exception instanceof HttpException:
         status = exception.getStatus();
+        const response = exception.getResponse();
         message = exception.message;
+        details =
+          typeof response === 'object' ? response['message'] : undefined;
         break;
       // Manejo de excepciones de tipo QueryFailedError (TypeORM)
       case exception instanceof QueryFailedError:
@@ -60,6 +64,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message,
       timestamp,
       url,
+      statusCode: status,
+      details,
+      path: request.url,
     });
   }
 }
