@@ -20,7 +20,7 @@ import { PosicionesService } from './posiciones.service';
 @ApiTags('posiciones')
 @Controller('posiciones')
 export class PosicionesController {
-  constructor(private readonly posicionesService: PosicionesService) { }
+  constructor(private readonly posicionesService: PosicionesService) {}
 
   @Get('byDate')
   public async getMovimientos(

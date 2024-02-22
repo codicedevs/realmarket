@@ -16,7 +16,7 @@ import { UsersService } from './users.service';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
   @Get('all')
   public async findAll(): Promise<User[]> {
     return this.usersService.findAll();

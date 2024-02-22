@@ -3,7 +3,7 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
-  HttpStatus
+  HttpStatus,
 } from '@nestjs/common';
 import { BSONError } from 'bson';
 import {
@@ -44,8 +44,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         message = exception.message;
         break;
       case exception instanceof BSONError: //Mongo - Error de ObjectId
-        status = HttpStatus.UNPROCESSABLE_ENTITY
-        message = `"ObjectID error: "${exception.message}`
+        status = HttpStatus.UNPROCESSABLE_ENTITY;
+        message = `"ObjectID error: "${exception.message}`;
         break;
       default:
         break;
