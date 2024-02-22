@@ -3,9 +3,9 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
-  HttpStatus,
-  UnauthorizedException,
+  HttpStatus
 } from '@nestjs/common';
+import { BSONError } from 'bson';
 import {
   CannotCreateEntityIdMapError,
   EntityNotFoundError,
@@ -21,7 +21,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR; // si el status es internal server error no entra en el switch y devuelve directamente
     let message = 'Internal Server Error';
-    let code;
 
     // Utilizamos un switch para manejar diferentes tipos de excepciones
     switch (true) {
@@ -34,22 +33,19 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       case exception instanceof QueryFailedError:
         status = HttpStatus.UNPROCESSABLE_ENTITY;
         message = exception.message;
-        code = (exception as any).code;
         break;
       // Manejo de excepciones de tipo EntityNotFoundError y CannotCreateEntityIdMapError (TypeORM)
       case exception instanceof EntityNotFoundError:
         status = HttpStatus.NOT_FOUND;
         message = exception.message;
-        code = (exception as any).code;
-        break;
-      case exception instanceof UnauthorizedException:
-        status = HttpStatus.UNAUTHORIZED;
-        message = exception.message;
         break;
       case exception instanceof CannotCreateEntityIdMapError: //guardar una entidad que ya tiene un ID asignado
         status = HttpStatus.UNPROCESSABLE_ENTITY;
         message = exception.message;
-        code = (exception as any).code;
+        break;
+      case exception instanceof BSONError: //Mongo - Error de ObjectId
+        status = HttpStatus.UNPROCESSABLE_ENTITY
+        message = `"ObjectID error: "${exception.message}`
         break;
       default:
         break;
@@ -60,7 +56,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       stackTrace: exception.stack,
       statusCode: status,
       requestPath: request.url,
-      errorCode: code,
     });
     // Respondemos con el código de estado, mensaje y, opcionalmente, el código de error
     response.status(status).json({
@@ -68,7 +63,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message: message,
       timestamp: new Date().toISOString(),
       path: request.url,
-      code: code,
     });
   }
 }
