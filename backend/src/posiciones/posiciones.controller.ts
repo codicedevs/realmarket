@@ -1,20 +1,8 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Query, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { getJwtPayload } from 'src/auth/utils/jwt.utils';
-import { Posicion } from 'src/types/posicion';
-import { CreatePosicioneDto } from './dto/create-posicione.dto';
-import { UpdatePosicioneDto } from './dto/update-posicione.dto';
+import { Posicion } from './entities/posicion.entity';
 import { PosicionesService } from './posiciones.service';
 
 @ApiTags('posiciones')
@@ -29,32 +17,5 @@ export class PosicionesController {
   ): Promise<Array<Posicion>> {
     const { accountId } = getJwtPayload(request);
     return this.posicionesService.findByDate(accountId, from);
-  }
-  @Post()
-  create(@Body() createPosicioneDto: CreatePosicioneDto) {
-    return this.posicionesService.create(createPosicioneDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.posicionesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.posicionesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updatePosicioneDto: UpdatePosicioneDto,
-  ) {
-    return this.posicionesService.update(+id, updatePosicioneDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.posicionesService.remove(+id);
   }
 }

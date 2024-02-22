@@ -10,9 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from './SkipAuth';
 import { AuthService } from './auth.service';
 import { RefreshAuthGuard } from './guards/refresh.guards';
+import { Public } from './skip-auth';
 
 @ApiTags('auth')
 @Controller('auth')
