@@ -3,7 +3,7 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
-  HttpStatus
+  HttpStatus,
 } from '@nestjs/common';
 import { BSONError } from 'bson';
 import {
@@ -21,13 +21,17 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR; // si el status es internal server error no entra en el switch y devuelve directamente
     let message = 'Internal Server Error';
+    let details = undefined;
 
     // Utilizamos un switch para manejar diferentes tipos de excepciones
     switch (true) {
       // Manejo de excepciones de tipo HttpException
       case exception instanceof HttpException:
         status = exception.getStatus();
+        const response = exception.getResponse();
         message = exception.message;
+        details =
+          typeof response === 'object' ? response['message'] : undefined;
         break;
       // Manejo de excepciones de tipo QueryFailedError (TypeORM)
       case exception instanceof QueryFailedError:
@@ -44,8 +48,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         message = exception.message;
         break;
       case exception instanceof BSONError: //Mongo - Error de ObjectId
-        status = HttpStatus.UNPROCESSABLE_ENTITY
-        message = `"ObjectID error: "${exception.message}`
+        status = HttpStatus.UNPROCESSABLE_ENTITY;
+        message = `"ObjectID error: "${exception.message}`;
         break;
       default:
         break;
@@ -61,6 +65,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       statusCode: status,
       message: message,
+      details,
       timestamp: new Date().toISOString(),
       path: request.url,
     });
