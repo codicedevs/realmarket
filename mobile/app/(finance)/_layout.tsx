@@ -1,9 +1,9 @@
-import { Tabs, Redirect } from 'expo-router'
+import { StyleService } from '@ui-kitten/components'
+import { Redirect, Tabs } from 'expo-router'
 import React from 'react'
+import { Dimensions, Image, View } from 'react-native'
 import { useSession } from '../../context/AuthProvider'
 import theme from '../../utils/theme'
-import { Dimensions, Image, View } from 'react-native'
-import { StyleService } from '@ui-kitten/components'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -36,14 +36,14 @@ const TabLayout = () => {
         )
       }} name='home' />
       <Tabs.Screen options={{
-        title: "Acciones", tabBarIcon: ({ focused }) => (
+        title: "Posiciones", tabBarIcon: ({ focused }) => (
           <View style={{ ...themedStyles.singleTabStyle, backgroundColor: focused ? theme.colors.activeLabel : theme.colors.background }}>
             <Image style={themedStyles.imageStyle} source={positionIcon} />
           </View>
         )
       }} name='index' />
       <Tabs.Screen options={{
-        title: "Posiciones", tabBarIcon: ({ focused }) => (
+        title: "Ordenes", tabBarIcon: ({ focused }) => (
           <View style={{ ...themedStyles.singleTabStyle, backgroundColor: focused ? theme.colors.activeLabel : theme.colors.background }}>
             <Image style={themedStyles.imageStyle} source={actionsIcon} />
           </View>
