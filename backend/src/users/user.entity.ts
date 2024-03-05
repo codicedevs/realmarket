@@ -15,6 +15,10 @@ export class User {
   @Column()
   accountId: string;
   @Column()
+  email: string;
+  @Column()
+  telefono: string;
+  @Column()
   resetKey: string;
   @Column()
   restKeyTimeStamp: string;

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
@@ -7,24 +6,19 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guards/auth.guard';
-import { InitialDataModule } from './initial-data/initial-data.module';
 import { MovimientosModule } from './movimientos/movimientos.module';
 import { PosicionesModule } from './posiciones/posiciones.module';
+import { dbSettings } from './settings';
 import { UserModule } from './users/user.module';
 import { UsersController } from './users/users.controller';
-import { EmailService } from './email/email.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-      isGlobal: true,
-    }),
     TypeOrmModule.forRoot({
       name: 'default',
       type: 'mongodb',
-      url: process.env.DB_URL,
-      database: 'RealMarketTest',
+      url: dbSettings.DB_URL,
+      database: dbSettings.DB_NAME,
       useNewUrlParser: true,
       autoLoadEntities: true,
       useUnifiedTopology: true,
@@ -34,7 +28,6 @@ import { EmailService } from './email/email.service';
     AuthModule,
     MovimientosModule,
     PosicionesModule,
-    InitialDataModule,
   ],
   controllers: [AppController, UsersController],
   providers: [
@@ -43,8 +36,6 @@ import { EmailService } from './email/email.service';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    EmailService,
-    //Esto Bindea a Nivel Global el AUTHGUARD para todos los endpoints a menos que se decoren con @Public()],
   ],
 })
 export class AppModule {}

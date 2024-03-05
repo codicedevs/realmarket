@@ -1,55 +1,27 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
-import { PosicionesService } from './posiciones.service';
-import { CreatePosicioneDto } from './dto/create-posicione.dto';
-import { UpdatePosicioneDto } from './dto/update-posicione.dto';
-import { Posicion } from 'src/types/posicion';
+import { Controller, Get, Query, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { getJwtPayload } from 'src/auth/utils/jwt.utils';
+import { Posicion } from './entities/posicion.entity';
+import { PosicionesService } from './posiciones.service';
 
 @ApiTags('posiciones')
 @Controller('posiciones')
 export class PosicionesController {
   constructor(private readonly posicionesService: PosicionesService) {}
 
-  @Get('byDate')
-  public async getMovimientos(
+  @Get('by-date')
+  public async getPosiciones(
     @Query('from') from: string,
+    @Req() request: Request,
   ): Promise<Array<Posicion>> {
-    return this.posicionesService.findByDate(from);
-  }
-  @Post()
-  create(@Body() createPosicioneDto: CreatePosicioneDto) {
-    return this.posicionesService.create(createPosicioneDto);
+    const { accountId } = getJwtPayload(request);
+    return this.posicionesService.findByDate(accountId, from);
   }
 
-  @Get()
-  findAll() {
-    return this.posicionesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.posicionesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updatePosicioneDto: UpdatePosicioneDto,
-  ) {
-    return this.posicionesService.update(+id, updatePosicioneDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.posicionesService.remove(+id);
+  @Get('cash-position-by-dates')
+  public async getCashPositionByDates(@Req() request: Request) {
+    const { accountId } = getJwtPayload(request);
+    return this.posicionesService.getCashPositionByDates(accountId);
   }
 }

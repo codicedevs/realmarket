@@ -1,5 +1,4 @@
-//TODO: Deberíamos moverlo a posiciones/interfaces/posicion.interface.ts
-export interface Posicion {
+export class Posicion {
   cuenta: string;
   fecha: string;
   tipoTitulo: string;
