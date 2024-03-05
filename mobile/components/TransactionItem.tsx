@@ -12,9 +12,9 @@ import { useNavigation } from "@react-navigation/native";
 // ----------------------------- Components && Elements -----------------------
 
 import dayjs from "dayjs";
+import theme from "../utils/theme";
 import LayoutCustom from "./LayoutCustom";
 import Text from "./Text";
-import theme from "../utils/theme";
 
 interface ITransactionItemProps {
   image?: ImageSourcePropType | undefined;
@@ -35,21 +35,21 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps,selectTransaction:
   return (
     <LayoutCustom onPress={() => selectTransaction(data)} style={styles.container} horizontal>
       <LayoutCustom horizontal gap={12} itemsCenter>
-        <LayoutCustom style={styles.image}>
-          <Text fontSize={10}>
-            {dayjs(data.created_at).format("MM/DD/YY")}
-          </Text>
-        </LayoutCustom>
-        <LayoutCustom gap={1}>
+        <LayoutCustom  gap={1}>
+          <LayoutCustom horizontal>
           <Text style={themedStyles.darkerText}>{data.title}</Text>
           {
             data.receivedBy ?
-              <Text style={themedStyles.darkerText}>
+            <Text style={themedStyles.darkerText}>
                 {data.receivedBy}
               </Text>
               :
               null
-          }
+            }
+            </LayoutCustom>
+            <Text fontSize={10}>
+            {dayjs(data.created_at).format("MM/DD/YY")}
+          </Text>
           <Text>{data.total}</Text>
         </LayoutCustom>
       </LayoutCustom>

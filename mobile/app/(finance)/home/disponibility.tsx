@@ -1,14 +1,14 @@
-import React, { useState } from "react"
-import { ImageSourcePropType, Modal, Pressable, View } from "react-native"
-import Container from "../../../components/Container"
 import { StyleService, TopNavigation } from "@ui-kitten/components"
+import React, { useState } from "react"
+import { ImageSourcePropType, Modal, Pressable } from "react-native"
 import RoundedButton from "../../../components/Buttons/RoundedButton"
-import LayoutCustom from "../../../components/LayoutCustom"
-import theme from "../../../utils/theme"
+import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
-import BalanceCard from "../../../components/cards/BalanceCard"
-import TransactionItem from "../../../components/TransactionItem"
+import LayoutCustom from "../../../components/LayoutCustom"
 import Text from "../../../components/Text"
+import TransactionItem from "../../../components/TransactionItem"
+import BalanceCard from "../../../components/cards/BalanceCard"
+import theme from "../../../utils/theme"
 
 export interface ITransactionItemProps {
     image?: ImageSourcePropType | undefined;
@@ -68,13 +68,13 @@ const Disponibility = () => {
                     accessoryRight={() => <RoundedButton icon="person-outline" />}
                 />
                 <LayoutCustom style={themedStyles.content}>
-                    <LayoutCustom mt={theme.margins.large} mb={theme.margins.small}>
+                    <LayoutCustom mv={theme.margins.large}>
                         <LayoutCustom alignSelfCenter mb={theme.margins.medium}>
                             <CurrencyToggle changeCurrency={setCurrency} />
                         </LayoutCustom>
                         <BalanceCard balance={233004.91} grow={12.2} />
                     </LayoutCustom>
-                    <LayoutCustom overflow="scroll" gap={15} mh={theme.margins.medium}>
+                    <LayoutCustom overflow="scroll" gap={15} ph={theme.paddings.medium} >
                         {SAMPLE_TRANSACTION.map((transaction, index) => {
                             return <TransactionItem data={transaction} key={index} selectTransaction={selectTransaction}  />;
                         })}

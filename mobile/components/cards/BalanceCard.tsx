@@ -3,9 +3,9 @@ import { Dimensions, ImageBackground } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import { StyleService, useStyleSheet } from "@ui-kitten/components";
 // ----------------------------- Components && Elements -----------------------
+import theme from "../../utils/theme";
 import LayoutCustom from "../LayoutCustom";
 import Text from "../Text";
-import theme from "../../utils/theme";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -44,7 +44,7 @@ const themedStyles = StyleService.create({
         marginHorizontal: theme.margins.small,
         overflow: "hidden",
         height: windowHeight * 0.15,
-        width: windowWidth * 0.8,
+        width: windowWidth * 0.9,
     },
     infoContainer: {
         padding: theme.paddings.medium
