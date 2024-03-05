@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "Ezcode",
-    "slug": "Ezcode",
-    "version": "1.1.0",
+    "name": "probandoEstructural",
+    "slug": "probandoEstructural",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "probandoEstructural",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -21,13 +22,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.brightteam.Ezcode"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
     },
     "plugins": [
       "expo-router"
