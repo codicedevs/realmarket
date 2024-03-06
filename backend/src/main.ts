@@ -10,6 +10,7 @@ import { getProtocolConfig } from './utils/ssl';
 
 async function bootstrap() {
   const { key, cert, protocol } = getProtocolConfig();
+
   const app = await NestFactory.create(
     AppModule,
     protocol == 'https' ? { httpsOptions: { key, cert } } : undefined,
@@ -25,7 +26,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('documentation', app, document);
+  SwaggerModule.setup('explorer', app, document);
 
   app.useGlobalPipes(
     new ValidationPipe({
