@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 // import Text from '../../../components/Text'
-import LayoutCustom from '../../../components/LayoutCustom'
-import { Dimensions, Image, ImageBackground, Modal, Pressable, Text, TextInput, View } from 'react-native'
 import { Icon, StyleService, TopNavigation } from '@ui-kitten/components';
-import theme from '../../../utils/theme';
+import { Dimensions, Image, ImageBackground, Modal, Pressable, Text, TextInput, View } from 'react-native';
+import ConfigButton from '../../../components/Buttons/ConfigButton';
 import RoundedButton from '../../../components/Buttons/RoundedButton';
 import Container from '../../../components/Container';
-import ConfigButton from '../../../components/Buttons/ConfigButton';
+import LayoutCustom from '../../../components/LayoutCustom';
+import { useSession } from '../../../context/AuthProvider';
+import theme from '../../../utils/theme';
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -19,6 +20,7 @@ const ConfigScreen = () => {
   const whatsapp = require('../../../assets/Icons/whatsappIcon.png')
   const backgroundModal = require('../../../assets/background/backgroundIlustration.png')
   const [open, setOpen] = useState(false)
+  const {signOut} = useSession()
 
   const toggleModal = () => {
     setOpen(!open)
@@ -96,7 +98,7 @@ const ConfigScreen = () => {
             <ConfigButton onPress={toggleModal} title={"Cambiar contraseña"} icon={password} />
             <ConfigButton onPress={() => console.log(1)} title={"Enviar whatsapp"} icon={whatsapp} />
             <ConfigButton onPress={() => console.log(1)} title={"Enviar email"} icon={mail} />
-            <ConfigButton onPress={() => console.log(1)} title={"Logout"} icon={logOut} />
+            <ConfigButton onPress={signOut} title={"Logout"} icon={logOut} />
           </LayoutCustom>
         </LayoutCustom>
       </Container>
