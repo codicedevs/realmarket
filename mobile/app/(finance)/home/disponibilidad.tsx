@@ -1,5 +1,5 @@
 import { StyleService, TopNavigation } from "@ui-kitten/components"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { ImageSourcePropType, Modal, Pressable } from "react-native"
 import RoundedButton from "../../../components/Buttons/RoundedButton"
 import Container from "../../../components/Container"
@@ -8,6 +8,7 @@ import LayoutCustom from "../../../components/LayoutCustom"
 import Text from "../../../components/Text"
 import TransactionItem from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
+import disponibilidadService from "../../../service/disponibilidad.service"
 import theme from "../../../utils/theme"
 
 export interface ITransactionItemProps {
@@ -24,11 +25,21 @@ const Disponibility = () => {
     const [currency, setCurrency] = useState('ARS')
     const [open,setOpen] = useState(false)
     const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps | {}>({})
+    const [cash, setCash] = useState([])
 
     const selectTransaction = (data: ITransactionItemProps) => {
         setSelectedTransaction(data)
         setOpen(true)
       }
+
+      const getCash = async () => {
+        const res = await disponibilidadService.getCashPositions()
+        console.log(res.data, 'que')
+      }
+
+      useEffect(() => {
+getCash()
+      },[])
 
     return (
         <>
@@ -41,10 +52,10 @@ const Disponibility = () => {
                 <LayoutCustom style={themedStyles.centeredView}>
                     <LayoutCustom style={themedStyles.modalView}>
                         <LayoutCustom mb={theme.margins.large}>
-                            <Text marginBottom={theme.margins.medium} fontSize={20} style={themedStyles.modalText}>Detalle del movimiento</Text>
-                            <Text category="subhead" marginBottom={theme.margins.xSmall} fontSize={16} style={themedStyles.modalText}> Fecha:</Text>
+                            <Text marginBottom={theme.margins.medium} style={{...themedStyles.modalText, fontSize:20}}>Detalle del movimiento</Text>
+                            <Text marginBottom={theme.margins.xSmall}  style={{...themedStyles.modalText, fontSize:26}}> Fecha:</Text>
                             {/* <Text marginBottom={theme.margins.xSmall} fontSize={18} style={themedStyles.modalText}>{selectedTransaction.created_at ?? (selectedTransaction.created_at).toISOString()}</Text> */}
-                            <Text category="subhead" marginBottom={theme.margins.small} fontSize={16} style={themedStyles.modalText}>Importe:</Text>
+                            <Text marginBottom={theme.margins.small}  style={{...themedStyles.modalText, fontSize:26}}>Importe:</Text>
                             {/* <Text marginBottom={theme.margins.xSmall} style={themedStyles.amountText} fontSize={18} status={selectedTransaction.amount[0] !== "-" ? "success-dark" : "danger"}>{selectedTransaction.amount}</Text> */}
                             <Text marginBottom={theme.margins.xSmall} style={themedStyles.modalText}>CAUCION TOMADORA</Text>
                         </LayoutCustom>
