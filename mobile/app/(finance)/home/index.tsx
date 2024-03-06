@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
-import { Button, Dimensions, Image, Pressable, Text, View } from 'react-native'
-import { useSession } from '../../../context/AuthProvider'
-import Container from '../../../components/Container'
-import LayoutCustom from '../../../components/LayoutCustom'
 import { StyleService, TopNavigation } from '@ui-kitten/components'
-import RoundedButton from '../../../components/Buttons/RoundedButton'
-import CurrencyToggle from '../../../components/CurrencyToggle'
-import theme from '../../../utils/theme'
-import TimeCard from '../../../components/cards/TimeCard'
-import IButton from '../../../components/Buttons/IButton'
-import Carousel from 'react-native-reanimated-carousel'
+import { Link, router } from 'expo-router'
+import React, { useState } from 'react'
+import { Dimensions, Image, Pressable, Text } from 'react-native'
 import { useSharedValue } from 'react-native-reanimated'
-import { Link, Redirect, router } from 'expo-router'
+import Carousel from 'react-native-reanimated-carousel'
+import IButton from '../../../components/Buttons/IButton'
+import RoundedButton from '../../../components/Buttons/RoundedButton'
+import Container from '../../../components/Container'
+import CurrencyToggle from '../../../components/CurrencyToggle'
+import LayoutCustom from '../../../components/LayoutCustom'
+import TimeCard from '../../../components/cards/TimeCard'
+import { useSession } from '../../../context/AuthProvider'
+import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -23,13 +23,15 @@ const Home = () => {
     router.replace('config')
   }
 
+  console.log(session,'dalepibe')
+
   const progressValue = useSharedValue<number>(0);
   return (
     <Container style={{ backgroundColor: theme.colors.background }}>
       <LayoutCustom>
         <TopNavigation
           alignment="center"
-          title="Home"
+          title={`Hola ${session.nombre}!`}
           style={themedStyles.topNavigation}
           accessoryLeft={() => (
             <RoundedButton icon="arrow-back-outline" />
@@ -55,7 +57,7 @@ const Home = () => {
           }}
           renderItem={({ item, index }) => {
             return (
-              <Link href={'/home/disponibility'} asChild style={{height:'100%'}}>
+              <Link href={'/home/disponibilidad'} asChild style={{height:'100%'}}>
                 <Pressable>
                   <TimeCard item={item} />
                 </Pressable>
