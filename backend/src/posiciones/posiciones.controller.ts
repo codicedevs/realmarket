@@ -13,10 +13,11 @@ export class PosicionesController {
   @Get('by-date')
   public async getPosiciones(
     @Query('from') from: string,
+    @Query('especie') especie: string,
     @Req() request: Request,
   ): Promise<Array<Posicion>> {
     const { accountId } = getJwtPayload(request);
-    return this.posicionesService.findByDate(accountId, from);
+    return this.posicionesService.findByDate(accountId, from, especie);
   }
 
   @Get('cash-position-by-dates')
