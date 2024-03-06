@@ -47,7 +47,7 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps,selectTransaction:
               null
             }
             </LayoutCustom>
-            <Text fontSize={10}>
+            <Text style={{fontSize:10}}>
             {dayjs(data.created_at).format("MM/DD/YY")}
           </Text>
           <Text>{data.total}</Text>

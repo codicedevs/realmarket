@@ -1,12 +1,11 @@
 // import HttpService from "./http.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useStorageState } from "../hooks/useStorageState";
 import { HttpService } from "./http.service";
 
 interface loginProps {
     token: string,
     refreshToken: string,
-    user: any
+    user: IUser
 }
 
 export class AuthService extends HttpService {
@@ -18,7 +17,6 @@ export class AuthService extends HttpService {
         try{
             const res = await this.post<loginProps>(`/login`, { username: username, pass: password })
             this.saveAccessToken(res.data.token)
-            // setSession('hola')
             return res.data
         }
         catch(err){

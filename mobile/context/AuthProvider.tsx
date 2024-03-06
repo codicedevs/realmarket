@@ -1,12 +1,11 @@
 import React from 'react';
 import { useStorageState } from '../hooks/useStorageState';
-import { BASE_URL } from '../config';
 import authService from '../service/auth.service';
 
 const AuthContext = React.createContext<{
   signIn: (username: string, password: string) => void;
   signOut: () => void;
-  session?: string | null;
+  session?: string |IUser | null;
   isLoading: boolean;
 }>({
   signIn: () => null,
@@ -38,7 +37,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
         signIn: async (username: string, password: string) => {
           const data = await authService.login(username, password)
           if(data){
-            setSession('hola');
+            setSession(data.user);
           }
         },
         signOut: async () => {
