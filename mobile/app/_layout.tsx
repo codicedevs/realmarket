@@ -10,14 +10,14 @@ const RootLayout = () => {
     return (
         <ApplicationProvider {...eva} theme={eva.dark}>
             <IconRegistry icons={EvaIconsPack} />
-            <LoadingProvider>
             <SessionProvider>
+            <LoadingProvider>
                 <Stack>
                     <Stack.Screen name='(finance)' options={{ headerShown: false }} />
                     <Stack.Screen name="auth/index" options={{ headerShown: false }} />
                 </Stack>
-            </SessionProvider>
             </LoadingProvider>
+            </SessionProvider>
         </ApplicationProvider>
     )
 };
