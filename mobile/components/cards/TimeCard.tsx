@@ -1,10 +1,8 @@
-import { StyleService, useStyleSheet } from '@ui-kitten/components';
+import { StyleService } from '@ui-kitten/components';
 import React from 'react';
-import { Image, ImageBackground, Pressable } from 'react-native';
+import { Image, ImageBackground, Text } from 'react-native';
 import theme from '../../utils/theme';
 import LayoutCustom from '../LayoutCustom';
-import Text from '../Text';
-import { Link } from 'expo-router';
 
 interface CreditCardProps {
   color: string;
@@ -19,7 +17,7 @@ const TimeCard = ({ item }: { item: CreditCardProps }) => {
           <ImageBackground style={{ ...themedStyles.imageBack, backgroundColor: item.color }} source={require("../../assets/background/colorful-background.png")}>
             <LayoutCustom alignSelfCenter itemsCenter padding={theme.paddings.medium} style={themedStyles.textContainer}>
               <Image style={themedStyles.image} source={item.icon} />
-              <Text style={{ color: 'white' }} marginTop={theme.margins.small} fontSize={23} category='t5'>$1.323.434,00</Text>
+              <Text style={{ color: 'white', fontSize:33, paddingVertical: theme.margins.small, marginBottom: 15 }} >{item.balance}</Text>
             </LayoutCustom>
           </ImageBackground>
         </LayoutCustom>

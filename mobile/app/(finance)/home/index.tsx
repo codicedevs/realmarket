@@ -1,6 +1,6 @@
 import { StyleService, TopNavigation } from '@ui-kitten/components'
 import { Link, router } from 'expo-router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dimensions, Image, Pressable, Text } from 'react-native'
 import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
@@ -11,6 +11,8 @@ import CurrencyToggle from '../../../components/CurrencyToggle'
 import LayoutCustom from '../../../components/LayoutCustom'
 import TimeCard from '../../../components/cards/TimeCard'
 import { useSession } from '../../../context/AuthProvider'
+import usePromise from '../../../hooks/usePromise'
+import disponibilidadService from '../../../service/disponibilidad.service'
 import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -18,12 +20,27 @@ const windowHeight = Dimensions.get("window").height;
 const Home = () => {
   const { session, signOut } = useSession()
   const [currency, setCurrency] = useState('ARS')
+  const [data, setData] = useState({})
+  const handlePromise = usePromise()
    
   const configRoute = () => {
     router.replace('config')
   }
 
-  console.log(session,'dalepibe')
+  const getCash = async () => {
+    const res = await handlePromise(disponibilidadService.getCashPositions())
+    setData(res.data)
+  }
+
+  const CARDS = [
+    { color: "#009F9F", balance:currency === "ARS"?  data.dispoHoy : data.dispoHoyUsd, card_number: "5282300014453286", icon: require('../../../assets/Icons/todayClock.png') },
+    { color: "#D0682E", balance:currency === "ARS"? data.dispo24 : data.dispo24Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock24.png') },
+    { color: "#701BC4", balance:currency === "ARS"? data.dispo48 : data.dispo48Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock48.png') },
+  ];
+
+  useEffect(() => {
+    getCash()
+  },[])
 
   const progressValue = useSharedValue<number>(0);
   return (
@@ -91,11 +108,7 @@ const Home = () => {
 
 export default Home
 
-const CARDS = [
-  { color: "#009F9F", balance: 15245.9, card_number: "5282300014453286", icon: require('../../../assets/Icons/todayClock.png') },
-  { color: "#D0682E", balance: 24245.9, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock24.png') },
-  { color: "#701BC4", balance: 151245.9, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock48.png') },
-];
+
 
 const themedStyles = StyleService.create({
   container: {
