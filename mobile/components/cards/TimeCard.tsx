@@ -1,6 +1,7 @@
 import { StyleService } from '@ui-kitten/components';
 import React from 'react';
 import { Image, ImageBackground, Text } from 'react-native';
+import { currencyFormat } from '../../utils/number';
 import theme from '../../utils/theme';
 import LayoutCustom from '../LayoutCustom';
 
@@ -17,7 +18,7 @@ const TimeCard = ({ item }: { item: CreditCardProps }) => {
           <ImageBackground style={{ ...themedStyles.imageBack, backgroundColor: item.color }} source={require("../../assets/background/colorful-background.png")}>
             <LayoutCustom alignSelfCenter itemsCenter padding={theme.paddings.medium} style={themedStyles.textContainer}>
               <Image style={themedStyles.image} source={item.icon} />
-              <Text style={{ color: 'white', fontSize:33, paddingVertical: theme.margins.small, marginBottom: 15 }} >{item.balance}</Text>
+              <Text style={{ color: 'white', fontSize:33, paddingVertical: theme.margins.small, marginBottom: 15 }} >{`$ ${currencyFormat(item.balance)}`}</Text>
             </LayoutCustom>
           </ImageBackground>
         </LayoutCustom>
