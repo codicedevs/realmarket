@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 import { formatRosvalDate } from 'src/utils/date';
+import { getDolar } from 'src/utils/dolar';
 import { Posicion } from './entities/posicion.entity';
 
 @Injectable()
@@ -23,6 +24,8 @@ export class PosicionesService extends RosvalHttpService {
       accountId,
       formatRosvalDate(dayjs()),
     );
+
+    const pruebaDolar = getDolar();
 
     const usdPrice = 865;
     const usdPriceBcra = 846.35;
