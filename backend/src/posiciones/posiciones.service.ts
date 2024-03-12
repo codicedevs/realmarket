@@ -18,8 +18,30 @@ export class PosicionesService extends RosvalHttpService {
     return response.data;
   }
 
+  async totalPosition(accountId: string) {
+    const posiciones = await this.findByDate(
+      accountId,
+      formatRosvalDate(dayjs()),
+    );
+
+    const usdPrice = 865;
+    const usdPriceBcra = 846.35;
+
+    const totalPosiciones = posiciones.reduce((acum, pos) => {
+      if (pos.monedaCotizacion === 'USD') {
+        acum += pos.cantidadLiquidada * pos.precioUnitario * usdPrice;
+      } else if (pos.monedaCotizacion === 'USDB') {
+        acum += pos.cantidadLiquidada * pos.precioUnitario * usdPriceBcra;
+      } else acum += pos.cantidadLiquidada * pos.precioUnitario;
+      return acum;
+    }, 0);
+
+    return totalPosiciones;
+  }
+
   async getCashPositionByDates(accountId: string) {
     /**Esta pantalla muestra el SALDO en Efvo PESOS de la cuenta HOY/24Hs/48Hs */
+
     const posicionesHoy = await this.findByDate(
       accountId,
       formatRosvalDate(dayjs()),
@@ -51,24 +73,6 @@ export class PosicionesService extends RosvalHttpService {
       'USD',
     );
 
-    const posiciones = await this.findByDate(
-      accountId,
-      formatRosvalDate(dayjs()),
-    );
-
-    console.log(posiciones24Usd);
-    const usdPrice = 865;
-    const usdPriceBcra = 846.35;
-
-    const totalPosiciones = posiciones.reduce((acum, pos) => {
-      if (pos.monedaCotizacion === 'USD') {
-        acum += pos.cantidadLiquidada * pos.precioUnitario * usdPrice;
-      } else if (pos.monedaCotizacion === 'USDB') {
-        acum += pos.cantidadLiquidada * pos.precioUnitario * usdPriceBcra;
-      } else acum += pos.cantidadLiquidada * pos.precioUnitario;
-      return acum;
-    }, 0);
-
     return {
       dispoHoy: posicionesHoy[0].cantidadLiquidada * -1,
       dispo24: posiciones24[0].cantidadLiquidada * -1,
@@ -76,7 +80,6 @@ export class PosicionesService extends RosvalHttpService {
       dispoHoyUsd: posicionesHoyUsd[0].cantidadLiquidada * -1,
       dispo24Usd: posiciones24Usd[0].cantidadLiquidada * -1,
       dispo48Usd: posiciones48Usd[0].cantidadLiquidada * -1,
-      totalPosiciones: totalPosiciones,
     };
   }
 }
