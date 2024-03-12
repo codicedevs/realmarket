@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 import { formatRosvalDate } from 'src/utils/date';
-import { getDolar } from 'src/utils/dolar';
+import { getDolar, getDolarBcra } from 'src/utils/dolar';
 import { Posicion } from './entities/posicion.entity';
 
 @Injectable()
@@ -25,10 +25,11 @@ export class PosicionesService extends RosvalHttpService {
       formatRosvalDate(dayjs()),
     );
 
-    const pruebaDolar = getDolar();
+    const pruebaDolar = await getDolar();
+    const pruebaDolarBcra = await getDolarBcra();
 
-    const usdPrice = 865;
-    const usdPriceBcra = 846.35;
+    const usdPrice = pruebaDolar.venta;
+    const usdPriceBcra = pruebaDolarBcra.v;
 
     const totalPosiciones = posiciones.reduce((acum, pos) => {
       if (pos.monedaCotizacion === 'USD') {
@@ -39,7 +40,7 @@ export class PosicionesService extends RosvalHttpService {
       return acum;
     }, 0);
 
-    return totalPosiciones;
+    return { totalPosiciones, usdPrice, usdPriceBcra };
   }
 
   async getCashPositionByDates(accountId: string) {
