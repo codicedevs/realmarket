@@ -1,14 +1,13 @@
-import { Redirect } from "expo-router"
-import { TouchableOpacity, Text, View } from "react-native"
-import { useSession } from "../../context/AuthProvider"
-import React, { useCallback, useState } from "react";
-import { Dimensions, Image, ImageBackground, TextInput } from "react-native";
 import { StyleService } from "@ui-kitten/components";
-import theme from "../../utils/theme"
+import { Redirect } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Dimensions, Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from "react-native";
+import * as yup from "yup";
 import Container from "../../components/Container";
 import LayoutCustom from "../../components/LayoutCustom";
-import * as yup from "yup"
-import { Controller, useForm } from "react-hook-form";
+import { useSession } from "../../context/AuthProvider";
+import theme from "../../utils/theme";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -52,7 +51,7 @@ const Auth = () => {
     const resolver = useYupValidationResolver(validationSchema)
     const background = require("../../assets/Login/fondoLogin.png")
     const logo = require("../../assets/Login/rm-logo.png")
-    const { signIn, session } = useSession()
+    const { signIn, session, checkSession } = useSession()
     const [user, setUser] = useState({
         username: "",
         pass: ""
@@ -73,6 +72,10 @@ const Auth = () => {
         signIn(data.username, data.pass)
         // setSubmittedData(data);
     };
+
+    useEffect(() => {
+        checkSession()
+    }, [])
 
     if (session) {
         return <Redirect href="/(finance)" />
@@ -185,6 +188,6 @@ const themedStyles = StyleService.create({
         fontWeight: 'bold'
     },
     errorText: {
-        color:'red'
+        color: 'red'
     }
 });

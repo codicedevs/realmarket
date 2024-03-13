@@ -5,18 +5,20 @@ import authService from '../service/auth.service';
 const AuthContext = React.createContext<{
   signIn: (username: string, password: string) => void;
   signOut: () => void;
-  session?: string |IUser | null;
+  session?: string | IUser | null;
   isLoading: boolean;
+  checkSession: () => void
 }>({
   signIn: () => null,
   signOut: () => null,
   session: null,
   isLoading: false,
+  checkSession: () => null
 });
 
 // This hook can be used to access the user info.
 export function useSession() {
-  
+
   const value = React.useContext(AuthContext);
   if (process.env.NODE_ENV !== 'production') {
     if (!value) {
@@ -36,7 +38,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
       value={{
         signIn: async (username: string, password: string) => {
           const data = await authService.login(username, password)
-          if(data){
+          if (data) {
             setSession(data.user);
           }
         },
@@ -46,6 +48,10 @@ export function SessionProvider(props: React.PropsWithChildren) {
         },
         session,
         isLoading,
+        checkSession: async () => {
+          const res = await authService.loadAccessToken()
+          setSession(res)
+        }
       }}>
       {props.children}
     </AuthContext.Provider>
