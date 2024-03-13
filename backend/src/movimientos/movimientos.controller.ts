@@ -1,5 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { getJwtPayload } from 'src/auth/utils/jwt.utils';
 import { Movimiento } from './entities/movimiento.entity';
 import { MovimientosService } from './movimientos.service';
 
@@ -8,11 +10,20 @@ import { MovimientosService } from './movimientos.service';
 export class MovimientosController {
   constructor(private readonly movimientosService: MovimientosService) {}
 
-  @Get('byDate')
+  @Get('')
   public async getMovimientos(
     @Query('from') from: string,
     @Query('to') to: string,
+    @Query('especie') especie: string,
+    @Req() request: Request,
   ): Promise<Array<Movimiento>> {
-    return this.movimientosService.findByDate(from, to);
+    const { accountId } = getJwtPayload(request);
+    return this.movimientosService.findByDate(accountId, from, to, especie);
+  }
+
+  @Get('pesos')
+  public async movimientosPesos(@Req() request: Request) {
+    const { accountId } = getJwtPayload(request);
+    return this.movimientosService.movimientosPesos(accountId);
   }
 }

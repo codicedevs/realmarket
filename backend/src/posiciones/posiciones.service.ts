@@ -11,10 +11,11 @@ export class PosicionesService extends RosvalHttpService {
   async findByDate(
     accountId: string,
     from: string,
-    especie: string = '',
+    especie?: string,
   ): Promise<Posicion[]> {
     const response = await this.get<Posicion[]>(
-      `cuentas/${accountId}/posiciones?fecha=${from}&especie=${especie}`,
+      `cuentas/${accountId}/posiciones`,
+      { params: { from, especie } },
     );
     return response.data;
   }
@@ -78,12 +79,30 @@ export class PosicionesService extends RosvalHttpService {
     );
 
     return {
-      dispoHoy: posicionesHoy[0].cantidadLiquidada * -1,
-      dispo24: posiciones24[0].cantidadLiquidada * -1,
-      dispo48: posiciones48[0].cantidadLiquidada * -1,
-      dispoHoyUsd: posicionesHoyUsd[0].cantidadLiquidada * -1,
-      dispo24Usd: posiciones24Usd[0].cantidadLiquidada * -1,
-      dispo48Usd: posiciones48Usd[0].cantidadLiquidada * -1,
+      dispoHoy:
+        (posicionesHoy[0].cantidadLiquidada -
+          posicionesHoy[0].cantidadPendienteLiquidar) *
+        -1,
+      dispo24:
+        (posiciones24[0].cantidadLiquidada -
+          posiciones24[0].cantidadPendienteLiquidar) *
+        -1,
+      dispo48:
+        (posiciones48[0].cantidadLiquidada -
+          posiciones48[0].cantidadPendienteLiquidar) *
+        -1,
+      dispoHoyUsd:
+        (posicionesHoyUsd[0].cantidadLiquidada -
+          posicionesHoyUsd[0].cantidadPendienteLiquidar) *
+        -1,
+      dispo24Usd:
+        (posiciones24Usd[0].cantidadLiquidada -
+          posiciones24Usd[0].cantidadPendienteLiquidar) *
+        -1,
+      dispo48Usd:
+        (posiciones48Usd[0].cantidadLiquidada -
+          posiciones48Usd[0].cantidadPendienteLiquidar) *
+        -1,
     };
   }
 }

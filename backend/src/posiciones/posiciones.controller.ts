@@ -10,7 +10,7 @@ import { PosicionesService } from './posiciones.service';
 export class PosicionesController {
   constructor(private readonly posicionesService: PosicionesService) {}
 
-  @Get('by-date')
+  @Get('')
   public async getPosiciones(
     @Query('from') from: string,
     @Query('especie') especie: string,
