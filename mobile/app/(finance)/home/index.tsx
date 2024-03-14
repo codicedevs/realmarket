@@ -21,26 +21,34 @@ const Home = () => {
   const { session, signOut } = useSession()
   const [currency, setCurrency] = useState('ARS')
   const [data, setData] = useState({})
+  const [positions, setPositions] = useState(0)
   const handlePromise = usePromise()
-   
+
   const configRoute = () => {
     router.replace('config')
   }
 
-  const getCash = async () => {
-    const res = await handlePromise(disponibilidadService.getCashPositions())
+  const promises = async () => {
+    const res = await disponibilidadService.getCashPositions()
+    const resPos = await disponibilidadService.totalPositions()
+    console.log(resPos)
     setData(res.data)
+    setPositions(resPos.data.totalPosiciones)
+  }
+
+  const getCash = async () => {
+    await handlePromise(promises())
   }
 
   const CARDS = [
-    { color: "#009F9F", balance:currency === "ARS"?  data.dispoHoy : data.dispoHoyUsd, card_number: "5282300014453286", icon: require('../../../assets/Icons/todayClock.png') },
-    { color: "#D0682E", balance:currency === "ARS"? data.dispo24 : data.dispo24Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock24.png') },
-    { color: "#701BC4", balance:currency === "ARS"? data.dispo48 : data.dispo48Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock48.png') },
+    { color: "#009F9F", balance: currency === "ARS" ? data.dispoHoy : data.dispoHoyUsd, card_number: "5282300014453286", icon: require('../../../assets/Icons/todayClock.png') },
+    { color: "#D0682E", balance: currency === "ARS" ? data.dispo24 : data.dispo24Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock24.png') },
+    { color: "#701BC4", balance: currency === "ARS" ? data.dispo48 : data.dispo48Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock48.png') },
   ];
 
   useEffect(() => {
     getCash()
-  },[])
+  }, [])
 
   const progressValue = useSharedValue<number>(0);
   return (
@@ -74,7 +82,7 @@ const Home = () => {
           }}
           renderItem={({ item, index }) => {
             return (
-              <Link href={'/home/disponibilidad'} asChild style={{height:'100%'}}>
+              <Link href={'/home/disponibilidad'} asChild style={{ height: '100%' }}>
                 <Pressable>
                   <TimeCard item={item} />
                 </Pressable>
@@ -86,7 +94,7 @@ const Home = () => {
           <Image style={themedStyles.img} source={require("../../../assets/Icons/moneyStat.png")} />
           <LayoutCustom ml={theme.margins.medium} style={{ alignItems: "flex-start" }}>
             <Text style={themedStyles.position}>Posiciones</Text>
-            <Text style={themedStyles.moneyText}>$20.455.342,88</Text>
+            <Text style={themedStyles.moneyText}>${positions}</Text>
           </LayoutCustom>
         </LayoutCustom>
         <LayoutCustom
