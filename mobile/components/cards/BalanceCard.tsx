@@ -26,7 +26,7 @@ const BalanceCard = React.memo(({ balance, grow }: IBalanceCardProps) => {
                     </LayoutCustom>
                     <LayoutCustom mt={theme.margins.small} mb={theme.margins.medium} alignSelfCenter>
                         <Text style={styles.moneyText} fontSize={22} category="t2">
-                            $1.345.000,00
+                            ${balance}
                         </Text>
                     </LayoutCustom>
                 </LayoutCustom>
