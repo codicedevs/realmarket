@@ -1,18 +1,23 @@
-import React, { useState } from "react"
-import { Dimensions, Text, View } from "react-native"
-import Container from "../../components/Container"
-import RoundedButton from "../../components/Buttons/RoundedButton"
 import { StyleService, TopNavigation } from "@ui-kitten/components"
-import theme from "../../utils/theme"
-import LayoutCustom from "../../components/LayoutCustom"
-import CurrencyToggle from "../../components/CurrencyToggle"
+import { router } from "expo-router"
+import React, { useState } from "react"
+import { Dimensions, Text } from "react-native"
 import { sample_coin } from "../../assets/sampleData"
+import RoundedButton from "../../components/Buttons/RoundedButton"
+import Container from "../../components/Container"
+import CurrencyToggle from "../../components/CurrencyToggle"
+import LayoutCustom from "../../components/LayoutCustom"
 import TransactionCards from "../../components/cards/TransactionCards"
+import theme from "../../utils/theme"
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const Finance = () => {
     const [currency, setCurrency] = useState('ARS')
+    const configRoute = () => {
+        router.replace('config')
+    }
+
     return (
         <Container style={themedStyles.container}>
             <TopNavigation
@@ -22,14 +27,14 @@ const Finance = () => {
                 accessoryLeft={() => (
                     <RoundedButton icon="arrow-back-outline" />
                 )}
-                accessoryRight={() => <RoundedButton icon="person-outline" />}
+                accessoryRight={() => <RoundedButton onPress={() => configRoute()} icon="person-outline" />}
             />
             <LayoutCustom>
                 <LayoutCustom mt={theme.margins.large} mb={theme.margins.medium} alignSelfCenter>
                     <CurrencyToggle changeCurrency={setCurrency} />
                 </LayoutCustom>
-                <LayoutCustom 
-                 ph={theme.paddings.medium}
+                <LayoutCustom
+                    ph={theme.paddings.medium}
                 >
 
                     <LayoutCustom
@@ -56,8 +61,8 @@ const Finance = () => {
                         </LayoutCustom>
                     </LayoutCustom>
                 </LayoutCustom>
-                <LayoutCustom 
-                ph={theme.paddings.medium}
+                <LayoutCustom
+                    ph={theme.paddings.medium}
                 >
                     {sample_coin.map((coin, index) => {
                         return <TransactionCards data={coin} index={index} key={index} />;
@@ -73,11 +78,11 @@ export default Finance
 const themedStyles = StyleService.create({
     container: {
         flex: 1,
-        backgroundColor:theme.colors.background
+        backgroundColor: theme.colors.background
     },
     topNavigation: {
         paddingHorizontal: theme.paddings.medium,
-        backgroundColor:theme.colors.background
+        backgroundColor: theme.colors.background
     },
     tableTitle: {
         width: '100%'
@@ -93,6 +98,6 @@ const themedStyles = StyleService.create({
         alignItems: "flex-end"
     },
     textColor: {
-        color:"white"
+        color: "white"
     }
 });
