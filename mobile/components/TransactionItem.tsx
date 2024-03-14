@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageSourcePropType } from "react-native";
+import { ImageSourcePropType, Text } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import {
   StyleService,
@@ -11,10 +11,9 @@ import { useNavigation } from "@react-navigation/native";
 // ----------------------------- Assets ---------------------------------------
 // ----------------------------- Components && Elements -----------------------
 
-import dayjs from "dayjs";
 import theme from "../utils/theme";
 import LayoutCustom from "./LayoutCustom";
-import Text from "./Text";
+
 
 interface ITransactionItemProps {
   image?: ImageSourcePropType | undefined;
@@ -25,8 +24,8 @@ interface ITransactionItemProps {
   total?: string
 }
 
-const TransactionItem: React.FC<{ data: ITransactionItemProps,selectTransaction: (data: ITransactionItemProps) => void }> = ({
-  data,selectTransaction
+const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction: (data: ITransactionItemProps) => void }> = ({
+  data, selectTransaction
 }) => {
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
@@ -35,26 +34,26 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps,selectTransaction:
   return (
     <LayoutCustom onPress={() => selectTransaction(data)} style={styles.container} horizontal>
       <LayoutCustom horizontal gap={12} itemsCenter>
-        <LayoutCustom  gap={1}>
+        <LayoutCustom gap={1}>
           <LayoutCustom horizontal>
-          <Text style={themedStyles.darkerText}>{data.title}</Text>
-          {
+            <Text style={themedStyles.darkerText}>{data.informacion.slice(0, 20)}</Text>
+            {/* {
             data.receivedBy ?
             <Text style={themedStyles.darkerText}>
                 {data.receivedBy}
               </Text>
               :
               null
-            }
-            </LayoutCustom>
-            <Text style={{fontSize:10}}>
-            {dayjs(data.created_at).format("MM/DD/YY")}
+            } */}
+          </LayoutCustom>
+          <Text style={{ fontSize: 10, color: 'white' }}>
+            {data.fechaDesde}
           </Text>
-          <Text>{data.total}</Text>
+          <Text style={{ color: 'white' }}>1234</Text>
         </LayoutCustom>
       </LayoutCustom>
-      <Text style={{color:data.amount[0] !== "-" ? "green" : "red" }}>
-        {data.amount}
+      <Text style={{ color: data.cantidad[0] !== "-" ? "green" : "red" }}>
+        {data.cantidad}
       </Text>
     </LayoutCustom>
   );
@@ -67,6 +66,7 @@ const themedStyles = StyleService.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: theme.margins.medium
   },
   content: {},
   image: {
@@ -79,6 +79,6 @@ const themedStyles = StyleService.create({
     borderRadius: theme.borderRadius.medium,
   },
   darkerText: {
-    color: "gray" 
+    color: "gray"
   }
 });
