@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { Image, Text } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import {
   StyleService,
@@ -7,11 +7,10 @@ import {
   useTheme,
 } from "@ui-kitten/components";
 // ----------------------------- Navigation -----------------------------------
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 // ----------------------------- Assets ---------------------------------------
-import LayoutCustom from "../LayoutCustom";
-import Text from "../Text";
 import theme from "../../utils/theme";
+import LayoutCustom from "../LayoutCustom";
 // ----------------------------- Components && Elements -----------------------
 
 interface IButtonProps {
@@ -29,13 +28,10 @@ const IButton = React.memo(({ name, icon, title, onPress }: IButtonProps) => {
   return (
     <LayoutCustom itemsCenter onPress={onPress} style={styles.button}>
       <LayoutCustom style={styles.layoutIcon} >
-        {/* <Icon pack="assets" name={icon} /> */}
-        {/* <LayoutCustom padding={5} style={{backgroundColor:'red'}}> */}
-        {/* Generar nuevo tamanio para las imagenes en theme */}
-          <Image style={{ width: 36, height: 36 }} source={name} />
+        <Image style={{ width: 36, height: 36 }} source={name} />
         {/* </LayoutCustom> */}
       </LayoutCustom>
-      <Text style={{color: 'white'}} fontSize={12} center numberOfLines={2} >
+      <Text style={themedStyles.buttonText} numberOfLines={2} >
         {title}
       </Text>
     </LayoutCustom>
@@ -46,7 +42,7 @@ export default IButton;
 
 const themedStyles = StyleService.create({
   button: {
-    width:'100%',
+    width: '100%',
     backgroundColor: theme.colors.darkBlue,
     borderRadius: 20,
     paddingTop: theme.paddings.small,
@@ -58,6 +54,11 @@ const themedStyles = StyleService.create({
     alignItems: "center",
     justifyContent: "center",
     margin: theme.margins.small,
-
   },
+  buttonText: {
+    color: 'white',
+    fontSize: 12,
+    textAlign: 'center'
+  }
+
 });

@@ -25,7 +25,7 @@ const TabLayout = () => {
         tabBarActiveTintColor: theme.colors.skyBlue,
         tabBarStyle: themedStyles.tabBarStyle,
         tabBarLabelStyle: themedStyles.tabBarLabel,
-        headerShown:false
+        headerShown: false
       }}
     >
       <Tabs.Screen options={{
@@ -49,11 +49,11 @@ const TabLayout = () => {
           </View>
         )
       }} name='positions' />
-      <Tabs.Screen 
-      options={{
-        href: null
-      }}
-      name='config/index'/>
+      <Tabs.Screen
+        options={{
+          href: null
+        }}
+        name='config/index' />
     </Tabs>
   )
 }

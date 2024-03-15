@@ -6,11 +6,10 @@ import {
     useStyleSheet
 } from "@ui-kitten/components";
 // ----------------------------- Lodash -----------------------------------
-import _ from "lodash";
-import LayoutCustom from "../LayoutCustom";
+import { Text } from "react-native";
 import theme from "../../utils/theme";
-import Text from "../Text";
 import AnimatedAppearance, { Animation_Types_Enum } from "../AnimatedAppearance";
+import LayoutCustom from "../LayoutCustom";
 
 export interface ICoinProps {
     ath: number;
@@ -63,14 +62,14 @@ const TransactionCards = memo(
                         <Avatar source={{ uri: data.image }} size="tiny" />
                     </LayoutCustom>
                     <LayoutCustom style={themedStyles.smallerContainer}>
-                        <Text fontSize={12}>AR$</Text>
+                        <Text style={themedStyles.currencyText}>AR$</Text>
                     </LayoutCustom>
                     <LayoutCustom style={themedStyles.smallerContainer}>
-                        <Text fontSize={10}>$98930.81</Text>
+                        <Text style={themedStyles.normalTextSize}>$98930.81</Text>
                     </LayoutCustom>
                     <LayoutCustom pr={theme.paddings.small} style={themedStyles.biggerContainer}>
-                        <Text numberOfLines={1} fontSize={10}>$10.450.000</Text>
-                        <Text category="subhead" fontSize={10}>323</Text>
+                        <Text numberOfLines={1} style={themedStyles.normalTextSize}>$10.450.000</Text>
+                        <Text style={themedStyles.normalTextSize}>323</Text>
                     </LayoutCustom>
                 </LayoutCustom>
             </AnimatedAppearance>
@@ -106,5 +105,13 @@ const themedStyles = StyleService.create({
     biggerContainer: {
         width: '25%',
         alignItems: "flex-end"
+    },
+    currencyText: {
+        fontSize: 12,
+        color: 'white'
+    },
+    normalTextSize: {
+        fontSize: 10,
+        color: 'white'
     }
 });

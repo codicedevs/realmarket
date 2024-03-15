@@ -1,11 +1,11 @@
-import React from 'react'
-import LayoutCustom from '../../components/LayoutCustom'
-import Container from '../../components/Container'
 import { StyleService, TopNavigation } from '@ui-kitten/components'
-import RoundedButton from '../../components/Buttons/RoundedButton'
-import theme from '../../utils/theme'
-import ActionCard from '../../components/cards/ActionsCards'
+import React from 'react'
 import { Dimensions } from 'react-native'
+import RoundedButton from '../../components/Buttons/RoundedButton'
+import Container from '../../components/Container'
+import LayoutCustom from '../../components/LayoutCustom'
+import ActionCard from '../../components/cards/ActionsCards'
+import theme from '../../utils/theme'
 const windowHeight = Dimensions.get("window").height;
 
 const Positions = () => {
@@ -44,9 +44,11 @@ const themedStyles = StyleService.create({
   container: {
     flex: 1,
     paddingBottom: theme.margins.small,
+    backgroundColor: theme.colors.background
   },
   topNavigation: {
     paddingHorizontal: theme.paddings.medium,
+    backgroundColor: theme.colors.background
   },
   content: {
     flex: 1,
