@@ -30,6 +30,7 @@ export class MovimientosService extends RosvalHttpService {
 
     let saldo = 0;
     for (const [i, m] of array.entries()) {
+      if (m.description === 'Acumulado') m.description = 'Saldo Inicial';
       saldo += array[i].amount;
       array[i].balance = saldo;
     }
