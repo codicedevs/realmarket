@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import * as dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
+import { formatRosvalDate } from 'src/utils/date';
 import { Movimiento } from './entities/movimiento.entity';
 
 @Injectable()
@@ -17,14 +19,29 @@ export class MovimientosService extends RosvalHttpService {
     return response.data;
   }
 
+  //esta funcion recibe el objeto con los movimientos agrupados por INFORMACION y lo transforma en un array de objetos listos para el front (y le calcula los saldos para mostrar)
+  async formatArray(objectList: {}) {
+    const array = Object.keys(objectList).map((key) => ({
+      description: key,
+      date: objectList[key].fecha.slice(0, 10),
+      amount: objectList[key].cantidad,
+      balance: 0,
+    }));
+
+    let saldo = 0;
+    for (const [i, m] of array.entries()) {
+      saldo += array[i].amount;
+      array[i].balance = saldo;
+    }
+    return array;
+  }
+  //
+
   async movimientosPesos(accountId: string) {
-    const from = '12/03/2024';
-    // formatRosvalDate(dayjs().subtract(2, 'day'));
-    const to = '14/03/2024';
-    // formatRosvalDate(dayjs());
+    const from = formatRosvalDate(dayjs().subtract(5, 'day'));
+    const to = formatRosvalDate(dayjs());
     const movimientosOrdenados = {};
     const movimientosPesos = await this.findByDate(accountId, from, to, 'ARS');
-    let saldo: number = 0;
 
     for (const mov of movimientosPesos) {
       if (movimientosOrdenados[mov.informacion])
@@ -32,8 +49,24 @@ export class MovimientosService extends RosvalHttpService {
       else {
         movimientosOrdenados[mov.informacion] = mov;
       }
-      saldo += mov.cantidad;
     }
-    return { saldo, movimientosOrdenados };
+
+    return this.formatArray(movimientosOrdenados);
+  }
+  async movimientosUsd(accountId: string) {
+    const from = formatRosvalDate(dayjs().subtract(5, 'day'));
+    const to = formatRosvalDate(dayjs());
+    const movimientosOrdenados = {};
+    const movimientosUsd = await this.findByDate(accountId, from, to, 'USD');
+
+    for (const mov of movimientosUsd) {
+      if (movimientosOrdenados[mov.informacion])
+        movimientosOrdenados[mov.informacion].cantidad += mov.cantidad;
+      else {
+        movimientosOrdenados[mov.informacion] = mov;
+      }
+    }
+
+    return this.formatArray(movimientosOrdenados);
   }
 }

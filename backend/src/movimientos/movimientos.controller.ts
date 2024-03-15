@@ -26,4 +26,9 @@ export class MovimientosController {
     const { accountId } = getJwtPayload(request);
     return this.movimientosService.movimientosPesos(accountId);
   }
+  @Get('usd')
+  public async movimientosUsd(@Req() request: Request) {
+    const { accountId } = getJwtPayload(request);
+    return this.movimientosService.movimientosUsd(accountId);
+  }
 }
