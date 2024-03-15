@@ -13,6 +13,7 @@ import TimeCard from '../../../components/cards/TimeCard'
 import { useSession } from '../../../context/AuthProvider'
 import usePromise from '../../../hooks/usePromise'
 import disponibilidadService from '../../../service/disponibilidad.service'
+import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -84,7 +85,7 @@ const Home = () => {
             return (
               <Link href={'/home/disponibilidad'} asChild style={{ height: '100%' }}>
                 <Pressable>
-                  <TimeCard item={item} />
+                  <TimeCard item={item} currency={currency} />
                 </Pressable>
               </Link>
             )
@@ -94,7 +95,7 @@ const Home = () => {
           <Image style={themedStyles.img} source={require("../../../assets/Icons/moneyStat.png")} />
           <LayoutCustom ml={theme.margins.medium} style={{ alignItems: "flex-start" }}>
             <Text style={themedStyles.position}>Posiciones</Text>
-            <Text style={themedStyles.moneyText}>${positions}</Text>
+            <Text style={themedStyles.moneyText}>{currencyFormat(positions, currency)}</Text>
           </LayoutCustom>
         </LayoutCustom>
         <LayoutCustom
