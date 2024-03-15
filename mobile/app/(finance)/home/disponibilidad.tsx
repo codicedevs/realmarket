@@ -110,14 +110,14 @@ const Disponibility = () => {
                             currency === 'ARS' ?
                                 movementsArs.length !== 0 ?
                                     movementsArs.map((t, i) => {
-                                        return <TransactionItem data={t} key={i} selectTransaction={selectTransaction} />
+                                        return <TransactionItem data={t} key={i} selectTransaction={selectTransaction} currency={currency} />
                                     })
                                     :
                                     null
                                 :
                                 movementsUsd.length !== 0 ?
                                     movementsUsd.map((t, i) => {
-                                        return <TransactionItem data={t} key={i} selectTransaction={selectTransaction} />
+                                        return <TransactionItem data={t} key={i} selectTransaction={selectTransaction} currency={currency} />
                                     })
                                     :
                                     null
