@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 // ----------------------------- Assets ---------------------------------------
 // ----------------------------- Components && Elements -----------------------
 
+import { currencyFormat } from "../utils/number";
 import theme from "../utils/theme";
 import LayoutCustom from "./LayoutCustom";
 
@@ -22,8 +23,8 @@ interface ITransactionItemProps {
   balance?: string
 }
 
-const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction: (data: ITransactionItemProps) => void }> = ({
-  data, selectTransaction
+const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction: (data: ITransactionItemProps) => void, currency: string }> = ({
+  data, selectTransaction, currency
 }) => {
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
@@ -47,11 +48,11 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction
           <Text style={{ fontSize: 10, color: 'white' }}>
             {data.date}
           </Text>
-          <Text style={{ color: 'white' }}>{data.balance}</Text>
+          <Text style={{ color: 'white' }}>{currencyFormat(data.balance, currency)}</Text>
         </LayoutCustom>
       </LayoutCustom>
       <Text style={{ color: data.amount[0] !== "-" ? "green" : "red" }}>
-        {data.amount}
+        {currencyFormat(data.amount, currency)}
       </Text>
     </LayoutCustom>
   );
