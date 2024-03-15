@@ -12,16 +12,16 @@ interface CreditCardProps {
   icon: string
 }
 
-const TimeCard = ({ item }: { item: CreditCardProps }) => {
+const TimeCard = ({ item, currency }: { item: CreditCardProps, currency: string }) => {
   return (
-        <LayoutCustom style={themedStyles.card}>
-          <ImageBackground style={{ ...themedStyles.imageBack, backgroundColor: item.color }} source={require("../../assets/background/colorful-background.png")}>
-            <LayoutCustom alignSelfCenter itemsCenter padding={theme.paddings.medium} style={themedStyles.textContainer}>
-              <Image style={themedStyles.image} source={item.icon} />
-              <Text style={{ color: 'white', fontSize:33, paddingVertical: theme.margins.small, marginBottom: 15 }} >{`$ ${currencyFormat(item.balance)}`}</Text>
-            </LayoutCustom>
-          </ImageBackground>
+    <LayoutCustom style={themedStyles.card}>
+      <ImageBackground style={{ ...themedStyles.imageBack, backgroundColor: item.color }} source={require("../../assets/background/colorful-background.png")}>
+        <LayoutCustom alignSelfCenter itemsCenter padding={theme.paddings.medium} style={themedStyles.textContainer}>
+          <Image style={themedStyles.image} source={item.icon} />
+          <Text style={{ color: 'white', fontSize: 33, paddingVertical: theme.margins.small, marginBottom: 15 }} >{currencyFormat(item.balance, currency)}</Text>
         </LayoutCustom>
+      </ImageBackground>
+    </LayoutCustom>
   )
 }
 
