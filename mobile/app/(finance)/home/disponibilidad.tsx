@@ -1,24 +1,15 @@
 import { StyleService, TopNavigation } from "@ui-kitten/components"
 import React, { useEffect, useState } from "react"
-import { ImageSourcePropType, Modal, Pressable, ScrollView, Text } from "react-native"
+import { Modal, Pressable, ScrollView, Text } from "react-native"
 import RoundedButton from "../../../components/Buttons/RoundedButton"
 import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
 import LayoutCustom from "../../../components/LayoutCustom"
-import TransactionItem from "../../../components/TransactionItem"
+import TransactionItem, { ITransactionItemProps } from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
 import usePromise from "../../../hooks/usePromise"
 import movimientosService from "../../../service/movimientos.service"
 import theme from "../../../utils/theme"
-
-export interface ITransactionItemProps {
-    image?: ImageSourcePropType | undefined;
-    title: string;
-    created_at: Date;
-    amount: string;
-    receivedBy?: string;
-    total?: string
-}
 
 const Disponibility = () => {
     const [currency, setCurrency] = useState('ARS')
@@ -72,10 +63,9 @@ const Disponibility = () => {
                         <LayoutCustom mb={theme.margins.large}>
                             <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalle del movimiento</Text>
                             <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
-                            {/* <Text marginBottom={theme.margins.xSmall} fontSize={18} style={themedStyles.modalText}>{selectedTransaction.created_at ?? (selectedTransaction.created_at).toISOString()}</Text> */}
+                            {/* <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date}</Text> */}
                             <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.small }}>Importe:</Text>
-                            {/* <Text marginBottom={theme.margins.xSmall} style={themedStyles.amountText} fontSize={18} status={selectedTransaction.amount[0] !== "-" ? "success-dark" : "danger"}>{selectedTransaction.amount}</Text> */}
-                            <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall }}>CAUCION TOMADORA</Text>
+                            {/* <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text> */}
                         </LayoutCustom>
                         <Pressable
                             style={[themedStyles.button, themedStyles.buttonClose]}
