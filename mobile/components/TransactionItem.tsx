@@ -16,11 +16,11 @@ import theme from "../utils/theme";
 import LayoutCustom from "./LayoutCustom";
 
 
-interface ITransactionItemProps {
+export interface ITransactionItemProps {
   description: string;
   date: Date;
-  amount: string;
-  balance?: string
+  amount: number;
+  balance?: number
 }
 
 const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction: (data: ITransactionItemProps) => void, currency: string }> = ({
@@ -51,7 +51,7 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction
           <Text style={{ color: 'white' }}>{currencyFormat(data.balance, currency)}</Text>
         </LayoutCustom>
       </LayoutCustom>
-      <Text style={{ color: data.amount[0] !== "-" ? "green" : "red" }}>
+      <Text style={{ color: String(data.amount)[0] !== "-" ? "green" : "red" }}>
         {currencyFormat(data.amount, currency)}
       </Text>
     </LayoutCustom>

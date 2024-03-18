@@ -32,7 +32,6 @@ const Home = () => {
   const promises = async () => {
     const res = await disponibilidadService.getCashPositions()
     const resPos = await disponibilidadService.totalPositions()
-    console.log(resPos)
     setData(res.data)
     setPositions(resPos.data.totalPosiciones)
   }
