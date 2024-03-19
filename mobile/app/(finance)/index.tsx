@@ -1,6 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService, TopNavigation } from "@ui-kitten/components"
-import { router } from "expo-router"
-import React, { useState } from "react"
+import { router, useFocusEffect } from "expo-router"
+import React, { useCallback, useState } from "react"
 import { Dimensions, Text } from "react-native"
 import { sample_coin } from "../../assets/sampleData"
 import RoundedButton from "../../components/Buttons/RoundedButton"
@@ -14,9 +15,25 @@ const windowHeight = Dimensions.get("window").height;
 
 const Finance = () => {
     const [currency, setCurrency] = useState('ARS')
+    const [positions, setPositions] = useState({})
     const configRoute = () => {
         router.replace('config')
     }
+
+    const getData = async () => {
+        const value = await AsyncStorage.getItem('positions')
+        if (value != null) {
+            const positions = JSON.parse(value);
+            const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ")
+            const filteredInfo = positions.filter((position) => position.tipoTitulo !== "ECHEQ")
+        }
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            getData()
+        }, [])
+    )
 
     return (
         <Container style={themedStyles.container}>
