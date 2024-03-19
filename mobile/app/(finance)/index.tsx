@@ -2,8 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService, TopNavigation } from "@ui-kitten/components"
 import { router, useFocusEffect } from "expo-router"
 import React, { useCallback, useState } from "react"
-import { Dimensions, Text } from "react-native"
-import { sample_coin } from "../../assets/sampleData"
+import { Dimensions, ScrollView, Text, View } from "react-native"
 import RoundedButton from "../../components/Buttons/RoundedButton"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
@@ -13,9 +12,52 @@ import theme from "../../utils/theme"
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
+const mockData = [
+    {
+        "cuenta": "423000005",
+        "fecha": null,
+        "tipoTitulo": "Moneda",
+        "tipoTituloAgente": "",
+        "codigoISIN": "",
+        "especie": "ARS",
+        "nombreEspecie": "Peso",
+        "simboloLocal": "",
+        "lugar": "Local",
+        "subCuenta": "GRAL",
+        "estado": "DIS",
+        "cantidadLiquidada": -123781400.62,
+        "cantidadPendienteLiquidar": 0,
+        "precio": 1,
+        "precioUnitario": 1,
+        "monedaCotizacion": "ARS",
+        "fechaPrecio": "19/03/2024",
+        "parking": null
+    },
+    {
+        "cuenta": "423000005",
+        "fecha": null,
+        "tipoTitulo": "Acciones",
+        "tipoTituloAgente": "",
+        "codigoISIN": "ARP331091024",
+        "especie": "00274",
+        "nombreEspecie": "CRESUD S.A. ORD. 1 VOTO ESCRIT.",
+        "simboloLocal": "CRES",
+        "lugar": "CV",
+        "subCuenta": "CVCUS",
+        "estado": "DIS",
+        "cantidadLiquidada": -4050,
+        "cantidadPendienteLiquidar": 0,
+        "precio": 897.05,
+        "precioUnitario": 897.05,
+        "monedaCotizacion": "ARS",
+        "fechaPrecio": "18/03/2024",
+        "parking": null
+    }
+]
+
 const Finance = () => {
     const [currency, setCurrency] = useState('ARS')
-    const [positions, setPositions] = useState({})
+    const [positions, setPositions] = useState([])
     const configRoute = () => {
         router.replace('config')
     }
@@ -24,9 +66,17 @@ const Finance = () => {
         const value = await AsyncStorage.getItem('positions')
         if (value != null) {
             const positions = JSON.parse(value);
-            const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ")
+            //const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ")
             const filteredInfo = positions.filter((position) => position.tipoTitulo !== "ECHEQ")
+            setPositions(filteredInfo)
         }
+    }
+
+    const checkData = () => {
+        if (positions.length !== 0) {
+            return positions
+        }
+        return mockData
     }
 
     useFocusEffect(
@@ -78,14 +128,15 @@ const Finance = () => {
                         </LayoutCustom>
                     </LayoutCustom>
                 </LayoutCustom>
-                <LayoutCustom
-                    ph={theme.paddings.medium}
-                >
-                    {sample_coin.map((coin, index) => {
-                        return <TransactionCards data={coin} index={index} key={index} />;
-                    })}
-                </LayoutCustom>
             </LayoutCustom>
+            <View style={themedStyles.scrollContainer}
+            >
+                <ScrollView>
+                    {checkData().map((coin, index) => {
+                        return <TransactionCards data={coin} index={index} key={index} currency={currency} />;
+                    })}
+                </ScrollView>
+            </View>
         </Container>
     )
 }
@@ -116,5 +167,9 @@ const themedStyles = StyleService.create({
     },
     textColor: {
         color: "white"
+    },
+    scrollContainer: {
+        flex: 1,
+        marginHorizontal: theme.paddings.medium
     }
 });
