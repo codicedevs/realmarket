@@ -20,6 +20,12 @@ export class PosicionesService extends RosvalHttpService {
     return response.data;
   }
 
+  // async positionsWithoutEchecks(accountId: string) {
+  //   const posiciones = await this.findByDate(
+  //     accountId,
+
+  // }
+
   async totalPosition(accountId: string) {
     const posiciones = await this.findByDate(
       accountId,
@@ -41,7 +47,7 @@ export class PosicionesService extends RosvalHttpService {
       return acum;
     }, 0);
 
-    return { totalPosiciones, usdPrice, usdPriceBcra };
+    return { totalPosiciones, usdPrice, usdPriceBcra, posiciones };
   }
 
   async getCashPositionByDates(accountId: string) {

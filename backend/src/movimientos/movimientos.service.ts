@@ -39,8 +39,8 @@ export class MovimientosService extends RosvalHttpService {
   //
 
   async movimientosPesos(accountId: string) {
-    const from = formatRosvalDate(dayjs().subtract(5, 'day'));
-    const to = formatRosvalDate(dayjs());
+    const from = formatRosvalDate(dayjs().subtract(15, 'day'));
+    const to = formatRosvalDate(dayjs().add(2, 'day'));
     const movimientosOrdenados = {};
     const movimientosPesos = await this.findByDate(accountId, from, to, 'ARS');
 
@@ -54,8 +54,9 @@ export class MovimientosService extends RosvalHttpService {
 
     return this.formatArray(movimientosOrdenados);
   }
+
   async movimientosUsd(accountId: string) {
-    const from = formatRosvalDate(dayjs().subtract(5, 'day'));
+    const from = formatRosvalDate(dayjs().subtract(15, 'day'));
     const to = formatRosvalDate(dayjs());
     const movimientosOrdenados = {};
     const movimientosUsd = await this.findByDate(accountId, from, to, 'USD');
