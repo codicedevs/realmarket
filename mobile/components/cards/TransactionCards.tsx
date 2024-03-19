@@ -1,53 +1,43 @@
 import React, { memo } from "react";
 // ----------------------------- UI kitten -----------------------------------
 import {
-    Avatar,
     StyleService,
     useStyleSheet
 } from "@ui-kitten/components";
 // ----------------------------- Lodash -----------------------------------
 import { Text } from "react-native";
+import { currencyFormat } from "../../utils/number";
 import theme from "../../utils/theme";
 import AnimatedAppearance, { Animation_Types_Enum } from "../AnimatedAppearance";
 import LayoutCustom from "../LayoutCustom";
 
-export interface ICoinProps {
-    ath: number;
-    ath_change_percentage: number;
-    ath_date: string;
-    atl: number;
-    atl_change_percentage: number;
-    atl_date: string;
-    circulating_supply: number;
-    current_price: number;
-    fully_diluted_valuation: number | null;
-    high_24h: number;
-    id: string;
-    image: string;
-    last_updated: string;
-    low_24h: number;
-    market_cap: number;
-    max_supply: number | null;
-    market_cap_change_24h: number;
-    market_cap_change_percentage_24h: number;
-    market_cap_rank: number | null;
-    name: string;
-    price_change_24h: number;
-    price_change_percentage_24h: number;
-    roi: {
-        currency: string;
-        percentage: number;
-        times: number;
-    } | null;
-    symbol: string;
-    total_supply: number;
-    total_volume: number;
-    sparkline_in_7d: { price: Array<number> };
+export interface IPosition {
+    cuenta: string;
+    fecha: string | null;
+    tipoTitulo: string;
+    tipoTituloAgente: string;
+    codigoISIN: string;
+    especie: string;
+    nombreEspecie: string;
+    simboloLocal: string;
+    lugar: string;
+    subCuenta: string;
+    estado: string;
+    cantidadLiquidada: number;
+    cantidadPendienteLiquidar: number;
+    precio: number;
+    precioUnitario: number;
+    monedaCotizacion: string;
+    fechaPrecio: string;
+    parking: any | null; // Utiliza un tipo más específico si es posible
 }
 
 const TransactionCards = memo(
-    ({ data, index }: { data: ICoinProps; index: number }) => {
+    ({ data, index, currency }: { data: IPosition; index: number; currency: string }) => {
         const styles = useStyleSheet(themedStyles);
+        const amount = data.cantidadPendienteLiquidar - data.cantidadLiquidada
+        const total = amount * data.precioUnitario
+
         return (
             <AnimatedAppearance type={Animation_Types_Enum.SlideInLeft} index={index}>
                 <LayoutCustom
@@ -59,17 +49,17 @@ const TransactionCards = memo(
                     ph={theme.paddings.xSmall}
                 >
                     <LayoutCustom style={themedStyles.avatarContainer}>
-                        <Avatar source={{ uri: data.image }} size="tiny" />
+                        {/* <Avatar source={{ uri: data.image }} size="tiny" /> */}
                     </LayoutCustom>
                     <LayoutCustom style={themedStyles.smallerContainer}>
-                        <Text style={themedStyles.currencyText}>AR$</Text>
+                        <Text style={themedStyles.currencyText}>{data.simboloLocal}</Text>
                     </LayoutCustom>
                     <LayoutCustom style={themedStyles.smallerContainer}>
-                        <Text style={themedStyles.normalTextSize}>$98930.81</Text>
+                        <Text style={themedStyles.normalTextSize}>{currencyFormat(data.precioUnitario, currency)}</Text>
                     </LayoutCustom>
                     <LayoutCustom pr={theme.paddings.small} style={themedStyles.biggerContainer}>
-                        <Text numberOfLines={1} style={themedStyles.normalTextSize}>$10.450.000</Text>
-                        <Text style={themedStyles.normalTextSize}>323</Text>
+                        <Text numberOfLines={1} style={themedStyles.normalTextSize}>{currencyFormat(total, currency)}</Text>
+                        <Text style={themedStyles.normalTextSize}>{amount}</Text>
                     </LayoutCustom>
                 </LayoutCustom>
             </AnimatedAppearance>
