@@ -48,7 +48,7 @@ const TabLayout = () => {
             <Image style={themedStyles.imageStyle} source={actionsIcon} />
           </View>
         )
-      }} name='positions' />
+      }} name='Orders' />
       <Tabs.Screen
         options={{
           href: null
