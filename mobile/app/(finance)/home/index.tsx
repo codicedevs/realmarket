@@ -57,8 +57,6 @@ const Home = () => {
   const getCash = async () => {
     try {
       setLoading(true)
-      // const res = await disponibilidadService.getCashPositions()
-      // const resPos = await disponibilidadService.totalPositions()
       const [res, resPos] = await Promise.all([
         disponibilidadService.getCashPositions(),
         disponibilidadService.totalPositions()
