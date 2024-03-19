@@ -6,9 +6,13 @@ export class MovimientosService extends HttpService {
         super("movimientos")
     }
 
-   async getMovementsArs() {
-    return this.get(`/pesos`)
-   }
+    async getMovementsArs() {
+        return this.get(`/pesos`)
+    }
+
+    async getMovementsUsd() {
+        return this.get('/usd')
+    }
 }
 
 export default new MovimientosService()

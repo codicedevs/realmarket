@@ -7,11 +7,9 @@ import { StyleService, useStyleSheet } from "@ui-kitten/components";
 // ----------------------------- Components && Elements -----------------------
 
 // ----------------------------- Types ---------------------------------------
-import { ImageBackground } from "react-native";
-import LayoutCustom from "../LayoutCustom";
-// import Text from "../Text";
+import { ImageBackground, Text } from "react-native";
 import theme from "../../utils/theme";
-import Text from "../Text";
+import LayoutCustom from "../LayoutCustom";
 
 const ActionCard = React.memo(({ title, color }: { title: string, color: string }) => {
   const styles = useStyleSheet(themedStyles);
@@ -21,7 +19,7 @@ const ActionCard = React.memo(({ title, color }: { title: string, color: string 
       {/* @ts-ignore */}
       <ImageBackground style={{ ...styles.imageCard, backgroundColor: color }} source={require("../../assets/background/illustration.png")}>
         <LayoutCustom itemsCenter style={styles.infoContainer}>
-          <Text fontSize={17} status="basic">{title}</Text>
+          <Text style={themedStyles.text}>{title}</Text>
         </LayoutCustom>
       </ImageBackground>
     </LayoutCustom>
@@ -58,5 +56,9 @@ const themedStyles = StyleService.create({
   },
   moneyText: {
     color: '#009F9F'
+  },
+  text: {
+    fontSize: 17,
+    color: 'white'
   }
 });

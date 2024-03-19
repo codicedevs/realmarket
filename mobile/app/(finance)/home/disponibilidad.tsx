@@ -1,45 +1,56 @@
 import { StyleService, TopNavigation } from "@ui-kitten/components"
 import React, { useEffect, useState } from "react"
-import { ImageSourcePropType, Modal, Pressable } from "react-native"
+import { Modal, Pressable, ScrollView, Text } from "react-native"
 import RoundedButton from "../../../components/Buttons/RoundedButton"
 import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
 import LayoutCustom from "../../../components/LayoutCustom"
-import Text from "../../../components/Text"
-import TransactionItem from "../../../components/TransactionItem"
+import TransactionItem, { ITransactionItemProps } from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
-import disponibilidadService from "../../../service/disponibilidad.service"
+import usePromise from "../../../hooks/usePromise"
+import movimientosService from "../../../service/movimientos.service"
 import theme from "../../../utils/theme"
-
-export interface ITransactionItemProps {
-    image?: ImageSourcePropType | undefined;
-    title: string;
-    created_at: Date;
-    amount: string;
-    receivedBy?: string;
-    total?: string
-  }
-  
 
 const Disponibility = () => {
     const [currency, setCurrency] = useState('ARS')
-    const [open,setOpen] = useState(false)
+    const [open, setOpen] = useState(false)
     const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps | {}>({})
-    const [cash, setCash] = useState([])
+    const [movementsArs, setMovementsArs] = useState([])
+    const [movementsUsd, setMovementsUsd] = useState([])
+    const handlePromise = usePromise()
 
     const selectTransaction = (data: ITransactionItemProps) => {
         setSelectedTransaction(data)
         setOpen(true)
-      }
+    }
 
-      const getCash = async () => {
-        const res = await disponibilidadService.getCashPositions()
-        console.log(res.data, 'que')
-      }
+    const promises = async () => {
+        const [res, resUsd] = await Promise.all([
+            movimientosService.getMovementsArs(),
+            movimientosService.getMovementsUsd()
+        ])
+        setMovementsArs(res.data.reverse())
+        setMovementsUsd(resUsd.data.reverse())
+    }
 
-      useEffect(() => {
-getCash()
-      },[])
+    const getInfo = async () => {
+        await handlePromise(promises())
+    }
+
+    const checkBalanceCurrency = () => {
+        if (movementsArs.length === 0) return
+        if (movementsUsd.length === 0) return
+        if (currency === 'ARS') {
+            const initialValue = movementsArs.find(transaction => transaction.description === "Saldo Inicial");
+            return initialValue.balance
+        }
+        const initialValue = movementsUsd.find(transaction => transaction.description === "Saldo Inicial");
+        return initialValue.balance
+    }
+
+    useEffect(() => {
+        getInfo()
+    }, [])
 
     return (
         <>
@@ -52,12 +63,11 @@ getCash()
                 <LayoutCustom style={themedStyles.centeredView}>
                     <LayoutCustom style={themedStyles.modalView}>
                         <LayoutCustom mb={theme.margins.large}>
-                            <Text marginBottom={theme.margins.medium} style={{...themedStyles.modalText, fontSize:20}}>Detalle del movimiento</Text>
-                            <Text marginBottom={theme.margins.xSmall}  style={{...themedStyles.modalText, fontSize:26}}> Fecha:</Text>
-                            {/* <Text marginBottom={theme.margins.xSmall} fontSize={18} style={themedStyles.modalText}>{selectedTransaction.created_at ?? (selectedTransaction.created_at).toISOString()}</Text> */}
-                            <Text marginBottom={theme.margins.small}  style={{...themedStyles.modalText, fontSize:26}}>Importe:</Text>
-                            {/* <Text marginBottom={theme.margins.xSmall} style={themedStyles.amountText} fontSize={18} status={selectedTransaction.amount[0] !== "-" ? "success-dark" : "danger"}>{selectedTransaction.amount}</Text> */}
-                            <Text marginBottom={theme.margins.xSmall} style={themedStyles.modalText}>CAUCION TOMADORA</Text>
+                            <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalle del movimiento</Text>
+                            <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
+                            {/* <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date}</Text> */}
+                            <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.small }}>Importe:</Text>
+                            {/* <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text> */}
                         </LayoutCustom>
                         <Pressable
                             style={[themedStyles.button, themedStyles.buttonClose]}
@@ -83,13 +93,28 @@ getCash()
                         <LayoutCustom alignSelfCenter mb={theme.margins.medium}>
                             <CurrencyToggle changeCurrency={setCurrency} />
                         </LayoutCustom>
-                        <BalanceCard balance={233004.91} grow={12.2} />
+                        <BalanceCard balance={checkBalanceCurrency()} grow={12.2} />
                     </LayoutCustom>
-                    <LayoutCustom overflow="scroll" gap={15} ph={theme.paddings.medium} >
-                        {SAMPLE_TRANSACTION.map((transaction, index) => {
-                            return <TransactionItem data={transaction} key={index} selectTransaction={selectTransaction}  />;
-                        })}
-                    </LayoutCustom>
+                </LayoutCustom>
+                <LayoutCustom overflow="scroll" gap={15} ph={theme.paddings.medium} >
+                    <ScrollView>
+                        {
+                            currency === 'ARS' ?
+                                movementsArs.length !== 0 ?
+                                    movementsArs.map((t, i) => {
+                                        return <TransactionItem data={t} key={i} selectTransaction={selectTransaction} currency={currency} />
+                                    })
+                                    :
+                                    null
+                                :
+                                movementsUsd.length !== 0 ?
+                                    movementsUsd.map((t, i) => {
+                                        return <TransactionItem data={t} key={i} selectTransaction={selectTransaction} currency={currency} />
+                                    })
+                                    :
+                                    null
+                        }
+                    </ScrollView>
                 </LayoutCustom>
             </Container>
         </>
@@ -112,76 +137,45 @@ const themedStyles = StyleService.create({
         overflow: 'scroll'
     },
     centeredView: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
     modalView: {
-      margin: 20,
-      backgroundColor: 'white',
-      borderRadius: 20,
-      padding: 35,
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
     button: {
-      borderRadius: 25,
-      padding: 15,
-      elevation: 2,
-      paddingHorizontal: theme.paddings.large
+        borderRadius: 25,
+        padding: 15,
+        elevation: 2,
+        paddingHorizontal: theme.paddings.large
     },
     buttonClose: {
-      backgroundColor: '#009F9F',
+        backgroundColor: '#009F9F',
     },
     textStyle: {
-      color: 'white',
-      fontWeight: 'bold',
-      textAlign: 'center',
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
     modalText: {
-      textAlign: 'center',
-      color: 'black'
+        textAlign: 'center',
+        color: 'black'
     },
     amountText: {
-      textAlign: "center"
+        textAlign: "center"
     }
 });
-
-const SAMPLE_TRANSACTION = [
-    {
-        image: require("../../../assets/img_prime.png"),
-        title: "Venta",
-        created_at: new Date(new Date().setHours(new Date().getHours())),
-        amount: "-$5000",
-        receivedBy: '[MRCAO]',
-        total: "$1.345.000,00"
-    },
-    {
-        image: require("../../../assets/img_nike.png"),
-        title: "Caución tomadora",
-        created_at: new Date(new Date().setHours(new Date().getHours()) - 1),
-        amount: "-$50.000",
-        receivedBy: '2023065826',
-        total: "1.350.000,00"
-    },
-    {
-        title: "male",
-        created_at: new Date(new Date().setHours(new Date().getHours()) - 2),
-        amount: "$50.000",
-        total: "$1.400.000,00"
-    },
-    {
-        title: 'Ret. gcias. s/CL',
-        created_at: new Date(new Date().setHours(new Date().getHours()) - 4),
-        amount: "$15000",
-        total: "1.350.000,00"
-    }
-];

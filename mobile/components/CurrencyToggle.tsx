@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useLoading } from '../context/LoadingProvider';
 const windowWidth = Dimensions.get("window").width;
 
 const CurrencyToggle = ({ changeCurrency }: { changeCurrency: React.Dispatch<React.SetStateAction<string>> }) => {
   const [currency, setCurrency] = useState('ARS');
+  const { setIsLoading } = useLoading()
 
   const toggleCurrency = () => {
+    setIsLoading(true)
     const newCurrency = currency === 'ARS' ? 'USD' : 'ARS'
     setCurrency(newCurrency);
     changeCurrency(newCurrency)
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 1000);
   };
 
   return (

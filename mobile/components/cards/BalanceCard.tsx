@@ -1,11 +1,10 @@
 import React from "react";
-import { Dimensions, ImageBackground } from "react-native";
+import { Dimensions, ImageBackground, Text } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import { StyleService, useStyleSheet } from "@ui-kitten/components";
 // ----------------------------- Components && Elements -----------------------
 import theme from "../../utils/theme";
 import LayoutCustom from "../LayoutCustom";
-import Text from "../Text";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -22,10 +21,10 @@ const BalanceCard = React.memo(({ balance, grow }: IBalanceCardProps) => {
             <ImageBackground style={styles.imageCard} source={require("../../assets/background/illustration.png")}>
                 <LayoutCustom style={styles.infoContainer}>
                     <LayoutCustom alignSelfCenter >
-                        <Text fontSize={17}>Saldo</Text>
+                        <Text style={themedStyles.title}>Saldo</Text>
                     </LayoutCustom>
                     <LayoutCustom mt={theme.margins.small} mb={theme.margins.medium} alignSelfCenter>
-                        <Text style={styles.moneyText} fontSize={22} category="t2">
+                        <Text style={styles.moneyText}>
                             ${balance}
                         </Text>
                     </LayoutCustom>
@@ -62,6 +61,11 @@ const themedStyles = StyleService.create({
         paddingVertical: 2,
     },
     moneyText: {
-        color: '#009F9F'
+        color: '#009F9F',
+        fontSize: 22
+    },
+    title: {
+        fontSize: 17,
+        color: 'white'
     }
 });

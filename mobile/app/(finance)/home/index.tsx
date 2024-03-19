@@ -1,7 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StyleService, TopNavigation } from '@ui-kitten/components'
 import { Link, router } from 'expo-router'
 import React, { useEffect, useState } from 'react'
-import { Dimensions, Image, Pressable, Text } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, Pressable, Text } from 'react-native'
 import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
 import IButton from '../../../components/Buttons/IButton'
@@ -13,37 +14,72 @@ import TimeCard from '../../../components/cards/TimeCard'
 import { useSession } from '../../../context/AuthProvider'
 import usePromise from '../../../hooks/usePromise'
 import disponibilidadService from '../../../service/disponibilidad.service'
+import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
+
+const mockData = {
+  "dispoHoy": 10000.1,
+  "dispo24": 10000.1,
+  "dispo48": 10000.1,
+  "dispoHoyUsd": 500.83,
+  "dispo24Usd": 500.83,
+  "dispo48Usd": 500.83
+}
 
 const Home = () => {
   const { session, signOut } = useSession()
   const [currency, setCurrency] = useState('ARS')
   const [data, setData] = useState({})
-  const [positions, setPositions] = useState(0)
+  const [positions, setPositions] = useState(1000)
+  const [loading, setLoading] = useState(false)
   const handlePromise = usePromise()
 
   const configRoute = () => {
     router.replace('config')
   }
 
+  const checkData = () => {
+    if (Object.keys(data).length !== 0) {
+      return data
+    }
+    return mockData
+  }
+
   const promises = async () => {
     const res = await disponibilidadService.getCashPositions()
     const resPos = await disponibilidadService.totalPositions()
-    console.log(resPos)
     setData(res.data)
     setPositions(resPos.data.totalPosiciones)
   }
 
   const getCash = async () => {
-    await handlePromise(promises())
+    try {
+      setLoading(true)
+      const [res, resPos] = await Promise.all([
+        disponibilidadService.getCashPositions(),
+        disponibilidadService.totalPositions()
+      ]);
+      setData(res.data)
+      setPositions(resPos.data.totalPosiciones)
+      if (Object.keys(resPos.data).length !== 0) {
+        const jsonValue = JSON.stringify(resPos.data.posiciones)
+        await AsyncStorage.setItem('positions', jsonValue)
+      }
+    }
+    catch (err) {
+      console.log(err)
+    }
+    finally {
+      setLoading(false)
+    }
   }
 
   const CARDS = [
-    { color: "#009F9F", balance: currency === "ARS" ? data.dispoHoy : data.dispoHoyUsd, card_number: "5282300014453286", icon: require('../../../assets/Icons/todayClock.png') },
-    { color: "#D0682E", balance: currency === "ARS" ? data.dispo24 : data.dispo24Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock24.png') },
-    { color: "#701BC4", balance: currency === "ARS" ? data.dispo48 : data.dispo48Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock48.png') },
+    { color: "#009F9F", balance: currency === "ARS" ? checkData().dispoHoy : checkData().dispoHoyUsd, card_number: "5282300014453286", icon: require('../../../assets/Icons/todayClock.png') },
+    { color: "#D0682E", balance: currency === "ARS" ? checkData().dispo24 : checkData().dispo24Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock24.png') },
+    { color: "#701BC4", balance: currency === "ARS" ? checkData().dispo48 : checkData().dispo48Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock48.png') },
   ];
 
   useEffect(() => {
@@ -66,6 +102,15 @@ const Home = () => {
         <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
           <CurrencyToggle changeCurrency={setCurrency} />
         </LayoutCustom>
+        <LayoutCustom horizontal ph={theme.paddings.medium}>
+          {
+            loading ?
+              <ActivityIndicator size={'small'} />
+              :
+              null
+          }
+          <Text style={themedStyles.lastUpdateText}>Ultima actualizacion: 17/03</Text>
+        </LayoutCustom>
         <Carousel
           data={CARDS}
           width={windowWidth * 0.9}
@@ -84,7 +129,7 @@ const Home = () => {
             return (
               <Link href={'/home/disponibilidad'} asChild style={{ height: '100%' }}>
                 <Pressable>
-                  <TimeCard item={item} />
+                  <TimeCard item={item} currency={currency} />
                 </Pressable>
               </Link>
             )
@@ -94,7 +139,7 @@ const Home = () => {
           <Image style={themedStyles.img} source={require("../../../assets/Icons/moneyStat.png")} />
           <LayoutCustom ml={theme.margins.medium} style={{ alignItems: "flex-start" }}>
             <Text style={themedStyles.position}>Posiciones</Text>
-            <Text style={themedStyles.moneyText}>${positions}</Text>
+            <Text style={themedStyles.moneyText}>{currencyFormat(positions, currency)}</Text>
           </LayoutCustom>
         </LayoutCustom>
         <LayoutCustom
@@ -146,5 +191,9 @@ const themedStyles = StyleService.create({
     fontSize: theme.fontSizes.header,
     marginBottom: theme.margins.xSmall,
     color: 'white'
+  },
+  lastUpdateText: {
+    color: 'white',
+    fontSize: 15,
   }
 });
