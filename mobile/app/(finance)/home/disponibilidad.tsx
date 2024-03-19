@@ -25,8 +25,10 @@ const Disponibility = () => {
     }
 
     const promises = async () => {
-        const res = await movimientosService.getMovementsArs()
-        const resUsd = await movimientosService.getMovementsUsd()
+        const [res, resUsd] = await Promise.all([
+            movimientosService.getMovementsArs(),
+            movimientosService.getMovementsUsd()
+        ])
         setMovementsArs(res.data.reverse())
         setMovementsUsd(resUsd.data.reverse())
     }
