@@ -4,5 +4,6 @@ export enum financial {
   OBG = 'Obligaciones Negociables',
   TIT = 'Títulos Públicos',
   PAG = 'Pagarés',
-  MON = 'Monedas'
+  MON = 'Monedas',
+  ECH = "Echeqs"
 }

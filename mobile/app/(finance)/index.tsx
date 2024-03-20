@@ -40,7 +40,7 @@ const Finance = () => {
         const value = await AsyncStorage.getItem('positions')
         if (value) {
             const positions = JSON.parse(value);
-            //const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ")
+            const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ")
             const acciones = positions.filter((position) => position.tipoTitulo === "Acciones" && position.monedaCotizacion.includes(currency))
             const cedears = positions.filter((position) => position.tipoTitulo === "Cedears" && position.monedaCotizacion.includes(currency))
             const obligaciones = positions.filter((position) => position.tipoTitulo === "Obligaciones Negociables" && position.monedaCotizacion.includes(currency))
@@ -54,7 +54,8 @@ const Finance = () => {
                 OBG: obligaciones,
                 TIT: formatPublicTitles(titulos),
                 PAG: pagare,
-                MON: monedas
+                MON: monedas,
+                ECH: echeqs
             })
         }
     }
