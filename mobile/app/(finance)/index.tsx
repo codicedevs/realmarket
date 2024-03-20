@@ -1,13 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService, TopNavigation } from "@ui-kitten/components"
 import { router, useFocusEffect } from "expo-router"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useContext, useState } from "react"
 import { Dimensions, ScrollView, Text, View } from "react-native"
 import RoundedButton from "../../components/Buttons/RoundedButton"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
 import LayoutCustom from "../../components/LayoutCustom"
-import TransactionCards from "../../components/cards/TransactionCards"
+import FolderCard from "../../components/cards/FolderCard"
+import { IPosition } from "../../components/cards/TransactionCards"
+import { AppContext } from "../../context/AppContext"
 import theme from "../../utils/theme"
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -56,19 +58,42 @@ const mockData = [
 ]
 
 const Finance = () => {
-    const [currency, setCurrency] = useState('ARS')
     const [positions, setPositions] = useState([])
+    const [info, setInfo] = useState({})
+    const { currency } = useContext(AppContext)
     const configRoute = () => {
         router.replace('config')
     }
 
+    const formatPublicTitles = (data: IPosition[]) => {
+        const newData = data.map((d) => ({
+            ...d,
+            simboloLocal: d.simboloLocal.concat(d.lugar)
+        }))
+
+        return newData
+    }
+
     const getData = async () => {
         const value = await AsyncStorage.getItem('positions')
-        if (value != null) {
+        if (value) {
             const positions = JSON.parse(value);
             //const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ")
-            const filteredInfo = positions.filter((position) => position.tipoTitulo !== "ECHEQ")
-            setPositions(filteredInfo)
+            const acciones = positions.filter((position) => position.tipoTitulo === "Acciones" && position.monedaCotizacion.includes(currency))
+            const cedears = positions.filter((position) => position.tipoTitulo === "Cedears" && position.monedaCotizacion.includes(currency))
+            const obligaciones = positions.filter((position) => position.tipoTitulo === "Obligaciones Negociables" && position.monedaCotizacion.includes(currency))
+            const titulos = positions.filter((position) => position.tipoTitulo === "Títulos Públicos" && position.monedaCotizacion.includes(currency))
+            const pagare = positions.filter((position) => position.tipoTitulo === "Pagarés" && position.monedaCotizacion.includes(currency))
+            const monedas = positions.filter((position) => position.tipoTitulo === "Moneda" && position.monedaCotizacion.includes(currency))
+            formatPublicTitles(titulos)
+            setInfo({
+                ACC: acciones,
+                CED: cedears,
+                OBG: obligaciones,
+                TIT: formatPublicTitles(titulos),
+                PAG: pagare,
+                MON: monedas
+            })
         }
     }
 
@@ -98,12 +123,11 @@ const Finance = () => {
             />
             <LayoutCustom>
                 <LayoutCustom mt={theme.margins.large} mb={theme.margins.medium} alignSelfCenter>
-                    <CurrencyToggle changeCurrency={setCurrency} />
+                    <CurrencyToggle onChange={getData} />
                 </LayoutCustom>
                 <LayoutCustom
                     ph={theme.paddings.medium}
                 >
-
                     <LayoutCustom
                         horizontal
                         justify="space-between"
@@ -129,12 +153,16 @@ const Finance = () => {
                     </LayoutCustom>
                 </LayoutCustom>
             </LayoutCustom>
-            <View style={themedStyles.scrollContainer}
-            >
+            <View style={themedStyles.scrollContainer}>
                 <ScrollView>
-                    {checkData().map((coin, index) => {
-                        return <TransactionCards data={coin} index={index} key={index} currency={currency} />;
-                    })}
+                    {
+                        Object.keys(info).length !== 0 ?
+                            Object.keys(info).map((i, index) => {
+                                return <FolderCard title={i} data={info[i]} currency={currency} key={index} />
+                            })
+                            :
+                            null
+                    }
                 </ScrollView>
             </View>
         </Container>
