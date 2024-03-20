@@ -6,7 +6,7 @@ import theme from '../../utils/theme'
 import LayoutCustom from '../LayoutCustom'
 import TransactionCards, { IPosition } from './TransactionCards'
 
-const FolderCard = ({ title, data, currency }: { title: string, data: IPosition[], currency: string }) => {
+const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPosition[], selectAsset: (data: IPosition) => void }) => {
   const [open, setOpen] = useState(false)
 
   const toggle = () => {
@@ -24,7 +24,7 @@ const FolderCard = ({ title, data, currency }: { title: string, data: IPosition[
       {
         open ?
           data.map((d, index) => {
-            return <TransactionCards data={d} index={index} key={index} currency={currency} />
+            return <TransactionCards data={d} index={index} selectAsset={selectAsset} key={index} />
           })
           :
           null
