@@ -80,21 +80,21 @@ const Finance = () => {
                             {
                                 Object.keys(selectedAsset).length !== 0 &&
                                 <>
-                                    <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalles</Text>
-                                    <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.xSmall }}> Tipo:</Text>
-                                    <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 16 }}>{selectedAsset?.tipoTitulo}</Text>
-                                    <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small }}>Nombre:</Text>
-                                    <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 16 }}>{selectedAsset?.nombreEspecie.slice(0, 20)}</Text>
-                                    <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small }}>Codigo:</Text>
-                                    <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 16 }}>{selectedAsset?.simboloLocal}</Text>
-                                    <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small }}>Lugar:</Text>
-                                    <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 16 }}>{selectedAsset?.lugar}</Text>
-                                    <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small }}>Estado:</Text>
-                                    <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 16 }}>{selectedAsset?.estado}</Text>
-                                    <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small }}>Cantidad:</Text>
-                                    <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 16 }}>{selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada}</Text>
-                                    <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small }}>Importe:</Text>
-                                    <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 16 }}>{(selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada) * selectedAsset.precioUnitario}</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextTitle]}>Detalles</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}> Tipo:</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextInfo]}>{selectedAsset?.tipoTitulo}</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Nombre:</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextInfo]}>{selectedAsset?.nombreEspecie.slice(0, 20)}</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Codigo:</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextInfo]}>{selectedAsset?.simboloLocal}</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Lugar:</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextInfo]}>{selectedAsset?.lugar}</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Estado:</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextInfo]}>{selectedAsset?.estado}</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Cantidad:</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextInfo]}>{selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada}</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Importe:</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextInfo]}>{(selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada) * selectedAsset.precioUnitario}</Text>
                                 </>
                             }
                         </LayoutCustom>
@@ -231,6 +231,18 @@ const themedStyles = StyleService.create({
     modalText: {
         textAlign: 'center',
         color: 'black'
+    },
+    modalTextTitle: {
+        fontSize: 20,
+        marginBottom: theme.margins.medium
+    },
+    modalTextSubTitle: {
+        fontSize: 20,
+        marginBottom: theme.margins.xSmall
+    },
+    modalTextInfo: {
+        fontSize: 16,
+        marginBottom: theme.margins.medium
     },
     textStyle: {
         color: 'white',
