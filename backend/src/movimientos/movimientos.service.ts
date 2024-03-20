@@ -38,7 +38,7 @@ export class MovimientosService extends RosvalHttpService {
   }
   //
 
-  async movimientosPesos(accountId: string) {
+  async getMovimientosPesos(accountId: string) {
     const from = formatRosvalDate(dayjs().subtract(15, 'day'));
     const to = formatRosvalDate(dayjs().add(2, 'day'));
     const movimientosOrdenados = {};

@@ -20,13 +20,7 @@ export class PosicionesService extends RosvalHttpService {
     return response.data;
   }
 
-  // async positionsWithoutEchecks(accountId: string) {
-  //   const posiciones = await this.findByDate(
-  //     accountId,
-
-  // }
-
-  async totalPosition(accountId: string) {
+  async getTotalPosition(accountId: string) {
     const posiciones = await this.findByDate(
       accountId,
       formatRosvalDate(dayjs()),

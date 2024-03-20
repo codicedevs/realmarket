@@ -29,6 +29,6 @@ export class PosicionesController {
   @Get('total-position')
   public async totalPosition(@Req() request: Request) {
     const { accountId } = getJwtPayload(request);
-    return this.posicionesService.totalPosition(accountId);
+    return this.posicionesService.getTotalPosition(accountId);
   }
 }
