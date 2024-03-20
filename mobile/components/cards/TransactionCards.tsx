@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 // ----------------------------- UI kitten -----------------------------------
 import {
+    Avatar,
     StyleService,
     useStyleSheet
 } from "@ui-kitten/components";
@@ -49,7 +50,7 @@ const TransactionCards = memo(
                     ph={theme.paddings.xSmall}
                 >
                     <LayoutCustom style={themedStyles.avatarContainer}>
-                        {/* <Avatar source={{ uri: data.image }} size="tiny" /> */}
+                        <Avatar source={{ uri: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579" }} size="tiny" />
                     </LayoutCustom>
                     <LayoutCustom style={themedStyles.smallerContainer}>
                         <Text style={themedStyles.currencyText}>{data.simboloLocal}</Text>
