@@ -1,33 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useLoading } from '../context/LoadingProvider';
+import useCurrency from '../hooks/useCurrency';
 const windowWidth = Dimensions.get("window").width;
 
-const CurrencyToggle = ({ changeCurrency }: { changeCurrency: React.Dispatch<React.SetStateAction<string>> }) => {
-  const [currency, setCurrency] = useState('ARS');
-  const { setIsLoading } = useLoading()
-
-  const toggleCurrency = () => {
-    setIsLoading(true)
-    const newCurrency = currency === 'ARS' ? 'USD' : 'ARS'
-    setCurrency(newCurrency);
-    changeCurrency(newCurrency)
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1000);
-  };
+const CurrencyToggle = ({ onChange }: { onChange?: () => void }) => {
+  const [currency, toggleCurrency] = useCurrency({ onChange: onChange })
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={[styles.button, currency === 'ARS' && styles.buttonActive]}
-        onPress={toggleCurrency}
+        onPress={() => toggleCurrency()}
       >
         <Text style={[styles.text, currency === 'ARS' && styles.textActive]}>AR$</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.button, currency === 'USD' && styles.buttonActive]}
-        onPress={toggleCurrency}
+        onPress={() => toggleCurrency()}
       >
         <Text style={[styles.text, currency === 'USD' && styles.textActive]}>US$</Text>
       </TouchableOpacity>
