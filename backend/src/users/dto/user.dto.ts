@@ -47,3 +47,12 @@ export class UpdateUserDto {
   @IsString()
   telefono: string;
 }
+
+export class ChangeUserPassDto {
+  @IsNotEmpty()
+  @IsString()
+  currentPass: string;
+  @IsNotEmpty()
+  @IsString()
+  newPass: string;
+}

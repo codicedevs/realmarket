@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { ObjectId } from 'mongodb';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
@@ -47,6 +47,22 @@ export class UsersService {
     );
     if (!result.affected) throw new NotFoundException('Usuario no encontrado');
     return this.findById(new ObjectId(id));
+  }
+
+  async changePass(
+    username: string,
+    currentPass: string,
+    newPass: string,
+  ): Promise<UpdateResult> {
+    const user = await this.findByUsername(username);
+    const isActualPass = await compare(currentPass, user.pass);
+    if (!isActualPass)
+      throw new NotFoundException('La contraseña provista no es correcta');
+    const hashedPass = await hash(newPass, 10);
+
+    return this.userRepository.update(new ObjectId(user._id), {
+      pass: hashedPass,
+    });
   }
 
   async deleteById(id: string): Promise<DeleteResult | undefined> {

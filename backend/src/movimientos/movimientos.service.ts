@@ -20,7 +20,7 @@ export class MovimientosService extends RosvalHttpService {
   }
 
   //esta funcion recibe el objeto con los movimientos agrupados por INFORMACION y lo transforma en un array de objetos listos para el front (y le calcula los saldos para mostrar)
-  async formatArray(objectList: {}) {
+  async formatArray(objectList: {}, from: string) {
     const array = Object.keys(objectList).map((key) => ({
       description: key,
       date: objectList[key].fecha.slice(0, 10),
@@ -29,6 +29,13 @@ export class MovimientosService extends RosvalHttpService {
     }));
 
     let saldo = 0;
+    if (!array.find((elem) => elem.description === 'Acumulado'))
+      array.unshift({
+        description: 'Acumulado',
+        amount: 0,
+        balance: 0,
+        date: from,
+      });
     for (const [i, m] of array.entries()) {
       if (m.description === 'Acumulado') m.description = 'Saldo Inicial';
       saldo += array[i].amount;
@@ -38,9 +45,9 @@ export class MovimientosService extends RosvalHttpService {
   }
   //
 
-  async movimientosPesos(accountId: string) {
-    const from = formatRosvalDate(dayjs().subtract(5, 'day'));
-    const to = formatRosvalDate(dayjs());
+  async getMovimientosPesos(accountId: string) {
+    const from = formatRosvalDate(dayjs().subtract(15, 'day'));
+    const to = formatRosvalDate(dayjs().add(2, 'day'));
     const movimientosOrdenados = {};
     const movimientosPesos = await this.findByDate(accountId, from, to, 'ARS');
 
@@ -52,10 +59,11 @@ export class MovimientosService extends RosvalHttpService {
       }
     }
 
-    return this.formatArray(movimientosOrdenados);
+    return this.formatArray(movimientosOrdenados, from);
   }
+
   async movimientosUsd(accountId: string) {
-    const from = formatRosvalDate(dayjs().subtract(5, 'day'));
+    const from = formatRosvalDate(dayjs().subtract(15, 'day'));
     const to = formatRosvalDate(dayjs());
     const movimientosOrdenados = {};
     const movimientosUsd = await this.findByDate(accountId, from, to, 'USD');
@@ -68,6 +76,6 @@ export class MovimientosService extends RosvalHttpService {
       }
     }
 
-    return this.formatArray(movimientosOrdenados);
+    return this.formatArray(movimientosOrdenados, from);
   }
 }

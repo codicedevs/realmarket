@@ -24,7 +24,7 @@ export class MovimientosController {
   @Get('pesos')
   public async movimientosPesos(@Req() request: Request) {
     const { accountId } = getJwtPayload(request);
-    return this.movimientosService.movimientosPesos(accountId);
+    return this.movimientosService.getMovimientosPesos(accountId);
   }
   @Get('usd')
   public async movimientosUsd(@Req() request: Request) {

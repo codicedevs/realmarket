@@ -6,10 +6,17 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { getJwtPayload } from 'src/auth/utils/jwt.utils';
 import { ObjectId } from 'typeorm';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import {
+  ChangeUserPassDto,
+  CreateUserDto,
+  UpdateUserDto,
+} from './dto/user.dto';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 
@@ -32,6 +39,15 @@ export class UsersController {
     @Body() body: UpdateUserDto,
   ): Promise<User> {
     return this.usersService.updateById(id, body);
+  }
+
+  @Post('changePass')
+  public async changePass(
+    @Req() request: Request,
+    @Body() { currentPass, newPass }: ChangeUserPassDto,
+  ) {
+    const { username } = getJwtPayload(request);
+    return this.usersService.changePass(username, currentPass, newPass);
   }
 
   @Post('register')
