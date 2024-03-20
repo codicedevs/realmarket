@@ -20,7 +20,7 @@ export class MovimientosService extends RosvalHttpService {
   }
 
   //esta funcion recibe el objeto con los movimientos agrupados por INFORMACION y lo transforma en un array de objetos listos para el front (y le calcula los saldos para mostrar)
-  async formatArray(objectList: {}) {
+  async formatArray(objectList: {}, from: string) {
     const array = Object.keys(objectList).map((key) => ({
       description: key,
       date: objectList[key].fecha.slice(0, 10),
@@ -29,6 +29,13 @@ export class MovimientosService extends RosvalHttpService {
     }));
 
     let saldo = 0;
+    if (!array.find((elem) => elem.description === 'Acumulado'))
+      array.unshift({
+        description: 'Acumulado',
+        amount: 0,
+        balance: 0,
+        date: from,
+      });
     for (const [i, m] of array.entries()) {
       if (m.description === 'Acumulado') m.description = 'Saldo Inicial';
       saldo += array[i].amount;
@@ -52,7 +59,7 @@ export class MovimientosService extends RosvalHttpService {
       }
     }
 
-    return this.formatArray(movimientosOrdenados);
+    return this.formatArray(movimientosOrdenados, from);
   }
 
   async movimientosUsd(accountId: string) {
@@ -69,6 +76,6 @@ export class MovimientosService extends RosvalHttpService {
       }
     }
 
-    return this.formatArray(movimientosOrdenados);
+    return this.formatArray(movimientosOrdenados, from);
   }
 }
