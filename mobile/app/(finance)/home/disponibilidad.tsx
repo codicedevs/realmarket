@@ -1,5 +1,5 @@
 import { StyleService, TopNavigation } from "@ui-kitten/components"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Modal, Pressable, ScrollView, Text } from "react-native"
 import RoundedButton from "../../../components/Buttons/RoundedButton"
 import Container from "../../../components/Container"
@@ -7,12 +7,14 @@ import CurrencyToggle from "../../../components/CurrencyToggle"
 import LayoutCustom from "../../../components/LayoutCustom"
 import TransactionItem, { ITransactionItemProps } from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
+import { AppContext } from "../../../context/AppContext"
 import usePromise from "../../../hooks/usePromise"
 import movimientosService from "../../../service/movimientos.service"
+import { currencyFormat } from "../../../utils/number"
 import theme from "../../../utils/theme"
 
 const Disponibility = () => {
-    const [currency, setCurrency] = useState('ARS')
+    const { currency } = useContext(AppContext)
     const [open, setOpen] = useState(false)
     const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps | {}>({})
     const [movementsArs, setMovementsArs] = useState([])
@@ -60,23 +62,26 @@ const Disponibility = () => {
                 transparent={true}
                 onRequestClose={() => setOpen(false)}
             >
-                <LayoutCustom style={themedStyles.centeredView}>
-                    <LayoutCustom style={themedStyles.modalView}>
-                        <LayoutCustom mb={theme.margins.large}>
-                            <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalle del movimiento</Text>
-                            <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
-                            {/* <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date}</Text> */}
-                            <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.small }}>Importe:</Text>
-                            {/* <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text> */}
+                {
+                    Object.keys(selectedTransaction).length !== 0 &&
+                    <LayoutCustom style={themedStyles.centeredView}>
+                        <LayoutCustom style={themedStyles.modalView}>
+                            <LayoutCustom mb={theme.margins.large}>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalle del movimiento</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
+                                <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date}</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.small }}>Importe:</Text>
+                                <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
+                            </LayoutCustom>
+                            <Pressable
+                                style={[themedStyles.button, themedStyles.buttonClose]}
+                                onPress={() => setOpen(false)}
+                            >
+                                <Text style={themedStyles.textStyle}>Volver</Text>
+                            </Pressable>
                         </LayoutCustom>
-                        <Pressable
-                            style={[themedStyles.button, themedStyles.buttonClose]}
-                            onPress={() => setOpen(false)}
-                        >
-                            <Text style={themedStyles.textStyle}>Volver</Text>
-                        </Pressable>
                     </LayoutCustom>
-                </LayoutCustom>
+                }
             </Modal>
             <Container style={themedStyles.container}>
                 <TopNavigation
@@ -91,7 +96,7 @@ const Disponibility = () => {
                 <LayoutCustom style={themedStyles.content}>
                     <LayoutCustom mv={theme.margins.large}>
                         <LayoutCustom alignSelfCenter mb={theme.margins.medium}>
-                            <CurrencyToggle changeCurrency={setCurrency} />
+                            <CurrencyToggle />
                         </LayoutCustom>
                         <BalanceCard balance={checkBalanceCurrency()} grow={12.2} />
                     </LayoutCustom>

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StyleService, TopNavigation } from '@ui-kitten/components'
 import { Link, router } from 'expo-router'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ActivityIndicator, Dimensions, Image, Pressable, Text } from 'react-native'
 import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
@@ -11,6 +11,7 @@ import Container from '../../../components/Container'
 import CurrencyToggle from '../../../components/CurrencyToggle'
 import LayoutCustom from '../../../components/LayoutCustom'
 import TimeCard from '../../../components/cards/TimeCard'
+import { AppContext } from '../../../context/AppContext'
 import { useSession } from '../../../context/AuthProvider'
 import usePromise from '../../../hooks/usePromise'
 import disponibilidadService from '../../../service/disponibilidad.service'
@@ -30,7 +31,7 @@ const mockData = {
 
 const Home = () => {
   const { session, signOut } = useSession()
-  const [currency, setCurrency] = useState('ARS')
+  const { currency } = useContext(AppContext)
   const [data, setData] = useState({})
   const [positions, setPositions] = useState(1000)
   const [loading, setLoading] = useState(false)
@@ -100,7 +101,7 @@ const Home = () => {
           accessoryRight={() => <RoundedButton onPress={() => configRoute()} icon="person-outline" />}
         />
         <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
-          <CurrencyToggle changeCurrency={setCurrency} />
+          <CurrencyToggle />
         </LayoutCustom>
         <LayoutCustom horizontal ph={theme.paddings.medium}>
           {
