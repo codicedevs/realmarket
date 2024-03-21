@@ -25,7 +25,8 @@ const TabLayout = () => {
         tabBarActiveTintColor: theme.colors.skyBlue,
         tabBarStyle: themedStyles.tabBarStyle,
         tabBarLabelStyle: themedStyles.tabBarLabel,
-        headerShown: false
+        headerShown: false,
+        
       }}
     >
       <Tabs.Screen options={{

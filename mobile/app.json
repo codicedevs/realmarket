@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "probandoEstructural",
-    "slug": "probandoEstructural",
+    "name": "realmarket",
+    "slug": "realmarket",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "scheme": "probandoEstructural",
+    "icon": "./assets/rm-logo.png",
+    "scheme": "realmarket",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -22,13 +22,22 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mativant.realmarket"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8df63fe9-b786-482f-b438-3e76cc8e8a9e"
+      }
+    }
   }
 }
