@@ -41,7 +41,7 @@ const TabLayout = () => {
             <Image style={themedStyles.imageStyle} source={positionIcon} />
           </View>
         )
-      }} name='index' />
+      }} name='position' />
       <Tabs.Screen options={{
         title: "Ordenes", tabBarIcon: ({ focused }) => (
           <View style={{ ...themedStyles.singleTabStyle, backgroundColor: focused ? theme.colors.activeLabel : theme.colors.background }}>
@@ -54,6 +54,7 @@ const TabLayout = () => {
           href: null
         }}
         name='config/index' />
+    <Tabs.Screen options={{href: null}} name='index' />
     </Tabs>
   )
 }
