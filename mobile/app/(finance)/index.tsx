@@ -10,6 +10,7 @@ import LayoutCustom from "../../components/LayoutCustom"
 import FolderCard from "../../components/cards/FolderCard"
 import { IPosition } from "../../components/cards/TransactionCards"
 import { AppContext } from "../../context/AppContext"
+import { currencyFormat } from "../../utils/number"
 import theme from "../../utils/theme"
 const windowWidth = Dimensions.get("window").width;
 
@@ -18,6 +19,7 @@ const Finance = () => {
     const [open, setOpen] = useState(false)
     const [selectedAsset, setSelectedAsset] = useState<IPosition | {}>({})
     const { currency } = useContext(AppContext)
+    const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
     const configRoute = () => {
         router.replace('config')
     }
@@ -81,28 +83,30 @@ const Finance = () => {
                                 Object.keys(selectedAsset).length !== 0 &&
                                 <>
                                     <Text style={[themedStyles.modalText, themedStyles.modalTextTitle]}>Detalles</Text>
-                                    <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Nombre:</Text>
-                                    <Text style={[themedStyles.modalText, themedStyles.modalTextInfo]}>{selectedAsset?.nombreEspecie.slice(0, 20)}</Text>
-                                    <LayoutCustom alignSelfCenter horizontal>
+                                    <LayoutCustom horizontal itemsCenter>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Nombre:</Text>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset?.nombreEspecie.slice(0, 20)}</Text>
+                                    </LayoutCustom>
+                                    <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Codigo:</Text>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset?.simboloLocal}</Text>
                                     </LayoutCustom>
-                                    <LayoutCustom alignSelfCenter horizontal>
+                                    <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Lugar:</Text>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset?.lugar}</Text>
                                     </LayoutCustom>
-                                    <LayoutCustom alignSelfCenter horizontal>
+                                    <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Estado:</Text>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset?.estado}</Text>
                                     </LayoutCustom>
-                                    <LayoutCustom alignSelfCenter horizontal>
+                                    <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Cantidad:</Text>
-                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada}</Text>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{amount}</Text>
                                     </LayoutCustom>
-                                    <LayoutCustom>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Importe:</Text>
-                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo]}>{(selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada) * selectedAsset.precioUnitario}</Text>
-                                    </LayoutCustom>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{currencyFormat((selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada) * selectedAsset.precioUnitario, currency)}</Text>
+                                    </View>
                                 </>
                             }
                         </LayoutCustom>
@@ -212,7 +216,7 @@ const themedStyles = StyleService.create({
         paddingHorizontal: theme.paddings.large
     },
     buttonClose: {
-        backgroundColor: '#009F9F',
+        backgroundColor: theme.colors.background,
     },
     centeredView: {
         flex: 1,
@@ -241,7 +245,7 @@ const themedStyles = StyleService.create({
         color: 'black'
     },
     modalTextTitle: {
-        fontSize: 20,
+        fontSize: 22,
         marginBottom: theme.margins.medium,
         fontWeight: 'bold'
     },
@@ -252,7 +256,7 @@ const themedStyles = StyleService.create({
     },
     modalTextInfo: {
         fontSize: 16,
-        marginBottom: theme.margins.medium
+        marginBottom: theme.margins.xSmall
     },
     withMargin: {
         marginLeft: theme.margins.xSmall
