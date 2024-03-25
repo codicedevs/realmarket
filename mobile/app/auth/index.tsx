@@ -78,7 +78,7 @@ const Auth = () => {
     };
 
     useEffect(() => {
-        checkSession()
+        // checkSession()
     }, [])
 
     if (session) {
