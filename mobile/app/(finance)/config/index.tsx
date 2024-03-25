@@ -8,6 +8,7 @@ import RoundedButton from '../../../components/Buttons/RoundedButton';
 import Container from '../../../components/Container';
 import LayoutCustom from '../../../components/LayoutCustom';
 import { useSession } from '../../../context/AuthProvider';
+import userService from '../../../service/user.service';
 import theme from '../../../utils/theme';
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -20,14 +21,25 @@ const ConfigScreen = () => {
   const mail = require('../../../assets/Icons/mailIcon.png')
   const whatsapp = require('../../../assets/Icons/whatsappIcon.png')
   const backgroundModal = require('../../../assets/background/backgroundIlustration.png')
-  const [open, setOpen] = useState(false)
-  const {signOut, session} = useSession()
+  const [open, setOpen] = useState(true)
+  const { signOut, session } = useSession()
   const name = session.nombre.split(' ')[0]
   const lastName = session.nombre.split(' ')[1]
+  const [changePasswordInfo, setChangePasswordInfo] = useState({
+    newPass: '',
+    currentPass: ''
+  })
 
   const toggleModal = () => {
     setOpen(!open)
   }
+
+  const handleChange = name => text => {
+    setChangePasswordInfo(prevState => ({
+      ...prevState,
+      [name]: text
+    }));
+  };
 
   const sendWhatsapp = () => {
     Linking.openURL('https://wa.me/3413110700')
@@ -35,6 +47,11 @@ const ConfigScreen = () => {
 
   const sendEmail = () => {
     Linking.openURL('mailto:mtrovant@gmail.com')
+  }
+
+  const changePassword = async () => {
+    await userService.ChangePassword(changePasswordInfo)
+    toggleModal()
   }
 
   return (
@@ -49,20 +66,29 @@ const ConfigScreen = () => {
           <ImageBackground source={backgroundModal} style={themedStyles.modalView}>
             <LayoutCustom mb={theme.margins.large}>
               <Text style={themedStyles.modalTitle}>Cambiar contraseña</Text>
-              <Text style={themedStyles.modalSubtitle}>Nueva contraseña</Text>
-              <View style={themedStyles.inputIconWrapper}>
-                <TextInput style={themedStyles.modalInput} />
-                <Icon
-                  pack="eva"
-                  name={'eye'}
-                  style={themedStyles.inputIcon}
-                />
+              <View style={{ justifyContent: 'space-between', height: windowHeight * 0.13 }}>
+                <View style={themedStyles.inputIconWrapper}>
+                  <TextInput value={changePasswordInfo.currentPass} onChangeText={handleChange('currentPass')} placeholder='Contraseña actual' style={themedStyles.modalInput} />
+                  <Icon
+                    pack="eva"
+                    name={'eye'}
+                    style={themedStyles.inputIcon}
+                  />
+                </View>
+                <View style={themedStyles.inputIconWrapper}>
+                  <TextInput value={changePasswordInfo.newPass} onChangeText={handleChange('newPass')} placeholder='Nueva contraseña' style={themedStyles.modalInput} />
+                  <Icon
+                    pack="eva"
+                    name={'eye'}
+                    style={themedStyles.inputIcon}
+                  />
+                </View>
               </View>
             </LayoutCustom>
             <LayoutCustom>
               <Pressable
                 style={[themedStyles.button, themedStyles.buttonConfirm]}
-                onPress={toggleModal}
+                onPress={changePassword}
               >
                 <Text style={themedStyles.textStyle}>Confirmar</Text>
               </Pressable>
@@ -149,6 +175,7 @@ const themedStyles = StyleService.create({
     flex: 1
   },
   modalView: {
+    height: windowHeight * 0.4,
     width: windowWidth * 0.85,
     backgroundColor: 'white',
     borderRadius: theme.borderRadius.medium,
@@ -181,7 +208,7 @@ const themedStyles = StyleService.create({
   modalTitle: {
     textAlign: 'center',
     color: 'black',
-    margin: theme.margins.xSmall,
+    margin: theme.margins.small,
     fontSize: theme.fontSizes.caption
   },
   modalSubtitle: {
@@ -221,7 +248,7 @@ const themedStyles = StyleService.create({
     backgroundColor: theme.colors.background,
     alignItems: "center",
     justifyContent: "center",
-    flexDirection:'row'
+    flexDirection: 'row'
   },
   initials: {
     fontSize: 50,
