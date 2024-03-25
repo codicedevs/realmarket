@@ -52,3 +52,4 @@ Thumbs.db
 
 *.env
 mobile/yarn.lock
+mobile/package-lock.json
