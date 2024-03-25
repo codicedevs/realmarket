@@ -20,6 +20,15 @@ import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
+interface CifrasDisponibilidad {
+  dispoHoy: string;
+  dispo24: string;
+  dispo48: string;
+  dispoHoyUsd: string;
+  dispo24Usd: string;
+  dispo48Usd: string
+}
+
 const mockData = {
   "dispoHoy": 10000.1,
   "dispo24": 10000.1,
@@ -32,7 +41,7 @@ const mockData = {
 const Home = () => {
   const { session, signOut } = useSession()
   const { currency } = useContext(AppContext)
-  const [data, setData] = useState({})
+  const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
   const [positions, setPositions] = useState(1000)
   const [loading, setLoading] = useState(false)
   const handlePromise = usePromise()
@@ -42,8 +51,8 @@ const Home = () => {
   }
 
   const checkData = () => {
-    if (Object.keys(data).length !== 0) {
-      return data
+    if (cifrasDisponibilidad) {
+      return cifrasDisponibilidad
     }
     return mockData
   }
@@ -51,7 +60,7 @@ const Home = () => {
   const promises = async () => {
     const res = await disponibilidadService.getCashPositions()
     const resPos = await disponibilidadService.totalPositions()
-    setData(res.data)
+    setCifrasDisponibilidad(res.data)
     setPositions(resPos.data.totalPosiciones)
   }
 
@@ -62,7 +71,7 @@ const Home = () => {
         disponibilidadService.getCashPositions(),
         disponibilidadService.totalPositions()
       ]);
-      setData(res.data)
+      setCifrasDisponibilidad(res.data)
       setPositions(resPos.data.totalPosiciones)
       if (Object.keys(resPos.data).length !== 0) {
         const jsonValue = JSON.stringify(resPos.data.posiciones)
