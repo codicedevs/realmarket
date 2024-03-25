@@ -4,6 +4,7 @@
   },
   "build": {
     "development": {
+      "env": {"BASE_URL" : "http://codice.dev:3011"},
       "developmentClient": true,
       "distribution": "internal"
     },

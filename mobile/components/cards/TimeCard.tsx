@@ -1,6 +1,6 @@
 import { StyleService } from '@ui-kitten/components';
 import React from 'react';
-import { Image, ImageBackground, Text } from 'react-native';
+import { Image, ImageBackground, ImageSourcePropType, Text } from 'react-native';
 import { currencyFormat } from '../../utils/number';
 import theme from '../../utils/theme';
 import LayoutCustom from '../LayoutCustom';
@@ -9,7 +9,7 @@ interface CreditCardProps {
   color: string;
   balance: number;
   card_number: string;
-  icon: string
+  icon: ImageSourcePropType
 }
 
 const TimeCard = ({ item, currency }: { item: CreditCardProps, currency: string }) => {
