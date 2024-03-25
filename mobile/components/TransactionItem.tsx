@@ -46,7 +46,7 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction
             } */}
           </LayoutCustom>
           <Text style={{ fontSize: 10, color: 'white' }}>
-            {data.date}
+            {data.date.toDateString()}
           </Text>
           <Text style={{ color: 'white' }}>{currencyFormat(data.balance, currency)}</Text>
         </LayoutCustom>

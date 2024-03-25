@@ -1,4 +1,4 @@
-import { createContext, FC, ReactNode, useState } from "react";
+import React, { createContext, FC, ReactNode, useState } from "react";
 
 interface AppContextProps {
   currency: string;

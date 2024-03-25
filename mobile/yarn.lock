@@ -1579,10 +1579,10 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
-"@codice-arg/http-service@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@codice-arg/http-service/-/http-service-1.0.3.tgz#41c8fc1df8038b29f9909b282f4436332d47836b"
-  integrity sha512-w5auzLrtgFW+p5mAPPaHkNZF2KyEu/ZeNRL0H3h3A+8cwxuYVdvU8WHPngfJ/wotRFl/nU8NkfTp+Fl6agVafg==
+"@codice-arg/http-service@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@codice-arg/http-service/-/http-service-1.0.6.tgz#0091fd4ca0881ffcb68a1205103749b0c93ff2cf"
+  integrity sha512-0Can8ru5kfx9iOiCxgnXNzQX7jKYHDI6/j3+kDXVHdYLXapfrnkR0Rm9vKgsywkQOvr8R2rnSDUXaZpoaSpX2w==
   dependencies:
     axios "^1.6.7"
 
@@ -3250,6 +3250,15 @@ axios@^1.6.7:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
+axios@^1.6.8:
+  version "1.6.8"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.8.tgz#66d294951f5d988a00e87a0ffb955316a619ea66"
+  integrity sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==
+  dependencies:
+    follow-redirects "^1.15.6"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
+
 babel-core@^7.0.0-bridge.0:
   version "7.0.0-bridge.0"
   resolved "https://registry.yarnpkg.com/babel-core/-/babel-core-7.0.0-bridge.0.tgz#95a492ddd90f9b4e9a4a1da14eb335b87b634ece"
@@ -4540,6 +4549,11 @@ follow-redirects@^1.15.4:
   version "1.15.5"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.5.tgz#54d4d6d062c0fa7d9d17feb008461550e3ba8020"
   integrity sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==
+
+follow-redirects@^1.15.6:
+  version "1.15.6"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.6.tgz#7f815c0cda4249c74ff09e95ef97c23b5fd0399b"
+  integrity sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==
 
 fontfaceobserver@^2.1.0:
   version "2.3.0"

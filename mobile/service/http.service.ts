@@ -1,42 +1,46 @@
-import { HttpBase } from "@codice-arg/http-service";
+import { HttpBase } from "@codice-arg/http-service/dist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 import { BASE_URL } from "../config";
 
 export class HttpService extends HttpBase {
+
     constructor(recurso = "") {
         super(`${BASE_URL}/${recurso}`)
     }
+    
+    getAccessToken(): string | Promise<string> {
+        return AsyncStorage.getItem('access');
+    }
 
-    loadRefreshToken(): string | Promise<string | null> | null {
+    protected getRefreshToken(): string | Promise<string> {
+        
         return AsyncStorage.getItem('refresh');
     }
 
     saveRefreshToken(refreshToken: string | null): void | Promise<void> {
         return AsyncStorage.setItem('refresh', refreshToken ?? '');
     }
-
-    loadAccessToken(): string | Promise<string | null> | null {
-        return AsyncStorage.getItem('access');
-    }
+    
 
     saveAccessToken(accessToken: string | null): void | Promise<void> {
         return AsyncStorage.setItem('access', accessToken ?? '');
     }
 
-    async refreshAccessToken(refreshToken: string): Promise<string | null> {
-        try {
+    async refreshAccessToken(): Promise<string | null> {
+        
+            const refreshToken = await this.getRefreshToken()
             const resp = await this.post<{ accessToken: string }>(`${BASE_URL}/auth/refresh`, undefined, { headers: { "refresh-token": refreshToken } })
             return resp.data.accessToken
-        }
-        catch (err) {
-            console.error(err)
-            return null
-        }
+        
     }
 
-    protected onUnauthorized(): void | Promise<void> {
+    protected onUnauthorized(err: any): void | Promise<void> {
+
+        if(err.response.data.url === 'auth/login') Alert.alert(err.response.data.message)
         Alert.alert("Se cerro sesion")
     }
+
+    //REVISAR ERROR DE 401
 
 }

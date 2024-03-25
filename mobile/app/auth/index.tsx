@@ -31,7 +31,7 @@ const useYupValidationResolver = (validationSchema) =>
                             ...allErrors,
                             [currentError.path]: {
                                 type: currentError.type ?? "validation",
-                                message: currentError.message,
+                                message: currentError?.message,
                             },
                         }),
                         {}
@@ -68,9 +68,13 @@ const Auth = () => {
     }
 
     const onSubmit = (data) => {
-        console.log('Submitted Data:', data);
-        signIn(data.username, data.pass)
-        // setSubmittedData(data);
+        console.log(data.pass, data.username)
+        try {
+
+            console.log('Submitted Data:', data);
+            signIn(data.username, data.pass)
+            // setSubmittedData(data);
+        } catch (err){console.error(err)}
     };
 
     useEffect(() => {
@@ -102,7 +106,7 @@ const Auth = () => {
                             name="username"
                         />
                         <View style={{ minHeight: 10 }}>
-                            {errors.username && <Text style={themedStyles.errorText}>{errors.username.message} </Text>}
+                            {errors.username && <Text style={themedStyles.errorText}>{errors.username?.message} </Text>}
                         </View>
                         <Controller
                             control={control}
@@ -113,7 +117,7 @@ const Auth = () => {
                             name="pass"
                         />
                         <View style={{ minHeight: 10 }}>
-                            {errors.username && <Text style={themedStyles.errorText}>{errors.pass.message} </Text>}
+                            {errors.username && <Text style={themedStyles.errorText}>{errors.pass?.message} </Text>}
                         </View>
                     </LayoutCustom>
                     <LayoutCustom mt={theme.margins.xSmall}>

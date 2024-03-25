@@ -4,11 +4,11 @@
     "slug": "realmarket",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/rm-logo.png",
+    "icon": "./assets/rm-negro.png",
     "scheme": "realmarket",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/rm-negro.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -36,7 +36,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "8df63fe9-b786-482f-b438-3e76cc8e8a9e"
+        "projectId": "8de08f8c-c74f-440e-9667-ddd00f0362c3"
       }
     }
   }
