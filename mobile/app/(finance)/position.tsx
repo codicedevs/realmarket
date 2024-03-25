@@ -17,7 +17,7 @@ const windowWidth = Dimensions.get("window").width;
 const Finance = () => {
     const [assetsInfo, setAssetsInfo] = useState({})
     const [open, setOpen] = useState(false)
-    const [selectedAsset, setSelectedAsset] = useState<IPosition | {}>({})
+    const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
     const { currency } = useContext(AppContext)
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
     const configRoute = () => {
@@ -80,24 +80,24 @@ const Finance = () => {
                     <LayoutCustom style={themedStyles.modalView}>
                         <LayoutCustom mb={theme.margins.large}>
                             {
-                                Object.keys(selectedAsset).length !== 0 &&
+                                selectedAsset &&
                                 <>
                                     <Text style={[themedStyles.modalText, themedStyles.modalTextTitle]}>Detalles</Text>
                                     <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Nombre:</Text>
-                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset?.nombreEspecie.slice(0, 20)}</Text>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset.nombreEspecie.slice(0, 20)}</Text>
                                     </LayoutCustom>
                                     <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Codigo:</Text>
-                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset?.simboloLocal}</Text>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset.simboloLocal}</Text>
                                     </LayoutCustom>
                                     <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Lugar:</Text>
-                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset?.lugar}</Text>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset.lugar}</Text>
                                     </LayoutCustom>
                                     <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Estado:</Text>
-                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset?.estado}</Text>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset.estado}</Text>
                                     </LayoutCustom>
                                     <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Cantidad:</Text>
@@ -105,7 +105,7 @@ const Finance = () => {
                                     </LayoutCustom>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Importe:</Text>
-                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{currencyFormat((selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada) * selectedAsset.precioUnitario, currency)}</Text>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{currencyFormat((selectedAsset.cantidadPendienteLiquidar - selectedAsset.cantidadLiquidada) * selectedAsset.precioUnitario, currency)}</Text>
                                     </View>
                                 </>
                             }
