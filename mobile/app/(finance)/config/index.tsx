@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 // import Text from '../../../components/Text'
 import { Icon, StyleService, TopNavigation } from '@ui-kitten/components';
+import * as Linking from 'expo-linking';
 import { Dimensions, Image, ImageBackground, Modal, Pressable, Text, TextInput, View } from 'react-native';
 import ConfigButton from '../../../components/Buttons/ConfigButton';
 import RoundedButton from '../../../components/Buttons/RoundedButton';
@@ -20,10 +21,20 @@ const ConfigScreen = () => {
   const whatsapp = require('../../../assets/Icons/whatsappIcon.png')
   const backgroundModal = require('../../../assets/background/backgroundIlustration.png')
   const [open, setOpen] = useState(false)
-  const {signOut} = useSession()
+  const {signOut, session} = useSession()
+  const name = session.nombre.split(' ')[0]
+  const lastName = session.nombre.split(' ')[1]
 
   const toggleModal = () => {
     setOpen(!open)
+  }
+
+  const sendWhatsapp = () => {
+    Linking.openURL('https://wa.me/3413110700')
+  }
+
+  const sendEmail = () => {
+    Linking.openURL('mailto:mtrovant@gmail.com')
   }
 
   return (
@@ -68,7 +79,7 @@ const ConfigScreen = () => {
       <Container style={{ flex: 1 }}>
         <TopNavigation
           alignment="center"
-          title="Home"
+          title="Configuración"
           style={themedStyles.topNavigation}
           accessoryLeft={() => (
             <RoundedButton icon="arrow-back-outline" />
@@ -76,12 +87,13 @@ const ConfigScreen = () => {
           accessoryRight={() => <RoundedButton icon="person-outline" />}
         />
         <ImageBackground style={themedStyles.initialsContainer} source={iniciales}>
-          <Text style={themedStyles.initials}>PT</Text>
+          <Text style={themedStyles.initials}>{name[0]}</Text>
+          <Text style={themedStyles.initials}>{lastName[0]}</Text>
         </ImageBackground>
         <LayoutCustom pt={5} itemsCenter style={themedStyles.infoContainer}>
-          <Text style={themedStyles.nameText}>Rodrigo guiterrez</Text>
-          <Text style={themedStyles.userName}>#Rodrigo </Text>
-          <Text style={themedStyles.account}>0129</Text>
+          <Text style={themedStyles.nameText}>{name} {lastName}</Text>
+          <Text style={themedStyles.userName}>#{session.username} </Text>
+          <Text style={themedStyles.account}>Cta: {session.accountId}</Text>
         </LayoutCustom>
         <View style={themedStyles.imageContainer}>
           <Image
@@ -91,13 +103,13 @@ const ConfigScreen = () => {
         </View>
         <LayoutCustom ph={theme.paddings.large} style={themedStyles.buttonsContainer}>
           <LayoutCustom>
-            <TextInput placeholder="Email" placeholderTextColor={"gray"} style={themedStyles.input} />
-            <TextInput placeholder="Nombre de usuario" placeholderTextColor={"gray"} style={themedStyles.input} />
+            <TextInput value={session.email} placeholder="Email" placeholderTextColor={"gray"} style={themedStyles.input} />
+            <TextInput value={session.telefono} placeholder="Telefono" placeholderTextColor={"gray"} style={themedStyles.input} />
           </LayoutCustom>
           <LayoutCustom mt={theme.margins.medium}>
             <ConfigButton onPress={toggleModal} title={"Cambiar contraseña"} icon={password} />
-            <ConfigButton onPress={() => console.log(1)} title={"Enviar whatsapp"} icon={whatsapp} />
-            <ConfigButton onPress={() => console.log(1)} title={"Enviar email"} icon={mail} />
+            <ConfigButton onPress={sendWhatsapp} title={"Enviar whatsapp"} icon={whatsapp} />
+            <ConfigButton onPress={sendEmail} title={"Enviar email"} icon={mail} />
             <ConfigButton onPress={signOut} title={"Logout"} icon={logOut} />
           </LayoutCustom>
         </LayoutCustom>
@@ -208,10 +220,11 @@ const themedStyles = StyleService.create({
     height: windowHeight * 0.15,
     backgroundColor: theme.colors.background,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    flexDirection:'row'
   },
   initials: {
-    fontSize: 60,
+    fontSize: 50,
     color: 'white'
   },
   infoContainer: {
