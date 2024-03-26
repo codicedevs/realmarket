@@ -21,7 +21,7 @@ const ConfigScreen = () => {
   const mail = require('../../../assets/Icons/mailIcon.png')
   const whatsapp = require('../../../assets/Icons/whatsappIcon.png')
   const backgroundModal = require('../../../assets/background/backgroundIlustration.png')
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const { signOut, session } = useSession()
   const name = session.nombre.split(' ')[0]
   const lastName = session.nombre.split(' ')[1]
