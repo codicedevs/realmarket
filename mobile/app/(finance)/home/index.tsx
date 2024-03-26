@@ -13,7 +13,6 @@ import LayoutCustom from '../../../components/LayoutCustom'
 import TimeCard from '../../../components/cards/TimeCard'
 import { AppContext } from '../../../context/AppContext'
 import { useSession } from '../../../context/AuthProvider'
-import usePromise from '../../../hooks/usePromise'
 import disponibilidadService from '../../../service/disponibilidad.service'
 import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
@@ -21,12 +20,12 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 interface CifrasDisponibilidad {
-  dispoHoy: string;
-  dispo24: string;
-  dispo48: string;
-  dispoHoyUsd: string;
-  dispo24Usd: string;
-  dispo48Usd: string
+  dispoHoy: number;
+  dispo24: number;
+  dispo48: number;
+  dispoHoyUsd: number;
+  dispo24Usd: number;
+  dispo48Usd: number
 }
 
 const mockData = {
@@ -44,7 +43,6 @@ const Home = () => {
   const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
   const [positions, setPositions] = useState(1000)
   const [loading, setLoading] = useState(false)
-  const handlePromise = usePromise()
 
   const configRoute = () => {
     router.replace('config')
@@ -55,13 +53,6 @@ const Home = () => {
       return cifrasDisponibilidad
     }
     return mockData
-  }
-
-  const promises = async () => {
-    const res = await disponibilidadService.getCashPositions()
-    const resPos = await disponibilidadService.totalPositions()
-    setCifrasDisponibilidad(res.data)
-    setPositions(resPos.data.totalPosiciones)
   }
 
   const getCash = async () => {
@@ -87,9 +78,22 @@ const Home = () => {
   }
 
   const CARDS = [
-    { color: "#009F9F", balance: currency === "ARS" ? checkData().dispoHoy : checkData().dispoHoyUsd, card_number: "5282300014453286", icon: require('../../../assets/Icons/todayClock.png') },
-    { color: "#D0682E", balance: currency === "ARS" ? checkData().dispo24 : checkData().dispo24Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock24.png') },
-    { color: "#701BC4", balance: currency === "ARS" ? checkData().dispo48 : checkData().dispo48Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock48.png') },
+    {
+      color: "#009F9F",
+      balance: currency === "ARS" ? checkData().dispoHoy : checkData().dispoHoyUsd,
+      card_number: "5282300014453286",
+      icon: require('../../../assets/Icons/todayClock.png')
+    },
+    {
+      color: "#D0682E",
+      balance: currency === "ARS" ? checkData().dispo24 : checkData().dispo24Usd, card_number: "5282300014453286",
+      icon: require('../../../assets/Icons/clock24.png')
+    },
+    {
+      color: "#701BC4", balance: currency === "ARS" ? checkData().dispo48 : checkData().dispo48Usd,
+      card_number: "5282300014453286",
+      icon: require('../../../assets/Icons/clock48.png')
+    },
   ];
 
   useEffect(() => {
@@ -135,7 +139,7 @@ const Home = () => {
             parallaxScrollingScale: 0.96,
             parallaxScrollingOffset: 10,
           }}
-          renderItem={({ item, index }) => {
+          renderItem={({ item }) => {
             return (
               <Link href={'/home/disponibilidad'} asChild style={{ height: '100%' }}>
                 <Pressable>

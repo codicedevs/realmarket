@@ -29,8 +29,6 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
   const { goBack } = useNavigation();
-  console.log(data.date)
-
   return (
     <LayoutCustom onPress={() => selectTransaction(data)} style={styles.container} horizontal>
       <LayoutCustom horizontal gap={12} itemsCenter>

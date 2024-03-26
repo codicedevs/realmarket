@@ -106,7 +106,7 @@ const Auth = () => {
                             name="username"
                         />
                         <View style={{ minHeight: 10 }}>
-                            {errors.username && <Text style={themedStyles.errorText}>{errors.username?.message} </Text>}
+                            {errors.username && <Text style={themedStyles.errorText}>{errors.username?.message as string} </Text>}
                         </View>
                         <Controller
                             control={control}
@@ -117,7 +117,7 @@ const Auth = () => {
                             name="pass"
                         />
                         <View style={{ minHeight: 10 }}>
-                            {errors.username && <Text style={themedStyles.errorText}>{errors.pass?.message} </Text>}
+                            {errors.pass && <Text style={themedStyles.errorText}>{errors.pass?.message as string} </Text>}
                         </View>
                     </LayoutCustom>
                     <LayoutCustom mt={theme.margins.xSmall}>

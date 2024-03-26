@@ -16,7 +16,7 @@ import theme from "../../../utils/theme"
 const Disponibility = () => {
     const { currency } = useContext(AppContext)
     const [open, setOpen] = useState(false)
-    const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps | {}>({})
+    const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps | null>(null)
     const [movementsArs, setMovementsArs] = useState([])
     const [movementsUsd, setMovementsUsd] = useState([])
     const handlePromise = usePromise()
@@ -63,13 +63,13 @@ const Disponibility = () => {
                 onRequestClose={() => setOpen(false)}
             >
                 {
-                    Object.keys(selectedTransaction).length !== 0 &&
+                    selectedTransaction &&
                     <LayoutCustom style={themedStyles.centeredView}>
                         <LayoutCustom style={themedStyles.modalView}>
                             <LayoutCustom mb={theme.margins.large}>
                                 <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalle del movimiento</Text>
                                 <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
-                                <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date}</Text>
+                                <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date.toString()}</Text>
                                 <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.small }}>Importe:</Text>
                                 <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
                             </LayoutCustom>
