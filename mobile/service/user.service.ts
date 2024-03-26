@@ -10,7 +10,7 @@ export class UserService extends HttpService {
     console.log(currentPass)
     console.log(newPass)
     return this.post(`/changePass`, {
-      currentPast: currentPass,
+      currentPass: currentPass,
       newPass: newPass
     })
   }
