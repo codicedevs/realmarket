@@ -29,6 +29,7 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
   const { goBack } = useNavigation();
+  console.log(data.date)
 
   return (
     <LayoutCustom onPress={() => selectTransaction(data)} style={styles.container} horizontal>
@@ -46,7 +47,7 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction
             } */}
           </LayoutCustom>
           <Text style={{ fontSize: 10, color: 'white' }}>
-            {data.date.toDateString()}
+            {data.date.toString()}
           </Text>
           <Text style={{ color: 'white' }}>{currencyFormat(data.balance, currency)}</Text>
         </LayoutCustom>
