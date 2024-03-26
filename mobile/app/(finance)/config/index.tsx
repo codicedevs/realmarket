@@ -21,7 +21,7 @@ const ConfigScreen = () => {
   const whatsapp = require('../../../assets/Icons/whatsappIcon.png')
   const backgroundModal = require('../../../assets/background/backgroundIlustration.png')
   const [open, setOpen] = useState(false)
-  const {signOut, session} = useSession()
+  const { signOut, session } = useSession()
   const name = session.nombre.split(' ')[0]
   const lastName = session.nombre.split(' ')[1]
 
@@ -104,13 +104,13 @@ const ConfigScreen = () => {
         <LayoutCustom ph={theme.paddings.large} style={themedStyles.buttonsContainer}>
           <LayoutCustom>
             <TextInput value={session.email} placeholder="Email" placeholderTextColor={"gray"} style={themedStyles.input} />
-            <TextInput value={session.telefono} placeholder="Telefono" placeholderTextColor={"gray"} style={themedStyles.input} />
+            <TextInput value={session.telefono} placeholder="Teléfono" placeholderTextColor={"gray"} style={themedStyles.input} />
           </LayoutCustom>
           <LayoutCustom mt={theme.margins.medium}>
             <ConfigButton onPress={toggleModal} title={"Cambiar contraseña"} icon={password} />
-            <ConfigButton onPress={sendWhatsapp} title={"Enviar whatsapp"} icon={whatsapp} />
+            <ConfigButton onPress={sendWhatsapp} title={"Enviar WhatsApp"} icon={whatsapp} />
             <ConfigButton onPress={sendEmail} title={"Enviar email"} icon={mail} />
-            <ConfigButton onPress={signOut} title={"Logout"} icon={logOut} />
+            <ConfigButton onPress={signOut} title={"Cerrar sesión"} icon={logOut} />
           </LayoutCustom>
         </LayoutCustom>
       </Container>
@@ -221,7 +221,7 @@ const themedStyles = StyleService.create({
     backgroundColor: theme.colors.background,
     alignItems: "center",
     justifyContent: "center",
-    flexDirection:'row'
+    flexDirection: 'row'
   },
   initials: {
     fontSize: 50,
