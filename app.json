@@ -1,3 +1,12 @@
 {
-  "expo": {}
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "75594b29-4b0c-4377-bb4d-c1efb26af14c"
+      }
+    },
+    "android": {
+      "package": "com.mtrovant.realmarket"
+    }
+  }
 }
