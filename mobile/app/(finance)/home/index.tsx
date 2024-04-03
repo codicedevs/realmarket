@@ -39,7 +39,7 @@ const mockData = {
 }
 
 const Home = () => {
-  const { session, signOut } = useSession()
+  const { session } = useSession()
   const { currency } = useContext(AppContext)
   const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
   const [positions, setPositions] = useState(1000)
