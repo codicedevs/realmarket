@@ -8,7 +8,6 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { jwtSettings } from 'src/settings';
-import { IS_PUBLIC_KEY } from '../skip-auth';
 
 @Injectable()
 export class RefreshAuthGuard implements CanActivate {
@@ -18,13 +17,6 @@ export class RefreshAuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
-    if (isPublic) {
-      return true;
-    }
 
     const request = context.switchToHttp().getRequest();
     const token = RefreshAuthGuard.extractTokenFromHeader(request);
@@ -46,7 +38,7 @@ export class RefreshAuthGuard implements CanActivate {
   }
 
   static extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Refresh' ? token : undefined;
+    const refresh = request.header("refresh-token")
+    return refresh
   }
 }
