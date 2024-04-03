@@ -6,19 +6,25 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Request,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
 import { SignInUserDto } from './dto/auth.dto';
 import { RefreshAuthGuard } from './guards/refresh.guards';
 import { Public } from './skip-auth';
+import { getJwtPayload } from './utils/jwt.utils';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UsersService,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @Public()
@@ -35,8 +41,14 @@ export class AuthController {
     return await this.authService.refreshToken(refreshToken);
   }
 
-  @Get('users')
-  getProfile(@Request() req) {
-    return req.user;
+  // @UseGuards(RefreshAuthGuard)
+  @Get('whoami')
+  async whoamiUser(@Req() request: Request) {
+    const { username } = getJwtPayload(request);
+    return this.userService.findByUsername(username);
   }
+  // @Get('users')
+  // getProfile(@Request() req) {
+  //   return req.user;
+  // }
 }
