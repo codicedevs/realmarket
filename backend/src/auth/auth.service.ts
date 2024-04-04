@@ -60,4 +60,8 @@ export class AuthService {
       accessToken: await this.jwtService.signAsync(payload),
     };
   }
+  async getConfigToken(refreshToken) {
+    const payload = await this.jwtService.verifyAsync<JWTPayload>(refreshToken);
+    return payload.username;
+  }
 }
