@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AxiosResponse } from 'axios';
 import * as dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 import { formatRosvalDate } from 'src/utils/date';
@@ -20,9 +21,10 @@ export class MovimientosService extends RosvalHttpService {
   }
 
   //esta funcion recibe el objeto con los movimientos agrupados por INFORMACION y lo transforma en un array de objetos listos para el front (y le calcula los saldos para mostrar)
-  async formatArray(objectList: {}, from: string) {
+  formatArray(objectList: {}, from: string) {
     const array = Object.keys(objectList).map((key) => ({
       description: key,
+      comprobante: objectList[key].comprobante,
       date: objectList[key].fecha.slice(0, 10),
       amount: objectList[key].cantidad,
       balance: 0,
@@ -32,6 +34,7 @@ export class MovimientosService extends RosvalHttpService {
     if (!array.find((elem) => elem.description === 'Acumulado'))
       array.unshift({
         description: 'Acumulado',
+        comprobante: 'S/N',
         amount: 0,
         balance: 0,
         date: from,
@@ -58,8 +61,8 @@ export class MovimientosService extends RosvalHttpService {
         movimientosOrdenados[mov.informacion] = mov;
       }
     }
-
-    return this.formatArray(movimientosOrdenados, from);
+    const res = this.formatArray(movimientosOrdenados, from);
+    return res;
   }
 
   async movimientosUsd(accountId: string) {
@@ -77,5 +80,15 @@ export class MovimientosService extends RosvalHttpService {
     }
 
     return this.formatArray(movimientosOrdenados, from);
+  }
+
+  async comprobanteOperacion(
+    idComprobante: string,
+  ): Promise<AxiosResponse<any, any>> {
+    const resp = await this.get(`/comprobantes/${idComprobante}`, {
+      params: { formato: 'PDF' },
+      responseType: 'stream',
+    });
+    return resp;
   }
 }
