@@ -49,12 +49,11 @@ const Finance = () => {
             const titulos = positions.filter((position) => position.tipoTitulo === "Títulos Públicos" && position.monedaCotizacion.includes(currency))
             const pagare = positions.filter((position) => position.tipoTitulo === "Pagarés" && position.monedaCotizacion.includes(currency))
             const monedas = positions.filter((position) => position.tipoTitulo === "Moneda" && position.monedaCotizacion.includes(currency))
-            formatPublicTitles(titulos)
             setAssetsInfo({
                 ACC: acciones,
                 CED: cedears,
                 OBG: obligaciones,
-                TIT: formatPublicTitles(titulos),
+                TIT: titulos,
                 PAG: pagare,
                 MON: monedas,
                 ECH: echeqs
