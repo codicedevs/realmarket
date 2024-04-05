@@ -41,11 +41,10 @@ export class AuthController {
     return await this.authService.refreshToken(refreshToken);
   }
 
-  // @UseGuards(RefreshAuthGuard)
   @Get('whoami')
   async whoamiUser(@Req() request: Request) {
-    const { username } = getJwtPayload(request);
-    return this.userService.findByUsername(username);
+    const { sub } = getJwtPayload(request);
+    return this.userService.findById(sub);
   }
   // @Get('users')
   // getProfile(@Request() req) {

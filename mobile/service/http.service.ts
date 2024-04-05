@@ -1,5 +1,6 @@
 import { HttpBase } from "@codice-arg/http-service/dist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import { Alert } from "react-native";
 import { BASE_URL } from "../config";
 
@@ -28,16 +29,22 @@ export class HttpService extends HttpBase {
     }
 
     async refreshAccessToken(): Promise<string | null> {
-        
+        try{
             const refreshToken = await this.getRefreshToken()
-            const resp = await this.post<{ accessToken: string }>(`${BASE_URL}/auth/refresh`, undefined, { headers: { "refresh-token": refreshToken } })
+            console.log(refreshToken,'refresco')
+            const resp = await axios.post<{ accessToken: string }>(`${BASE_URL}/auth/refresh`, undefined, { headers: { "refresh-token": refreshToken } })
             return resp.data.accessToken
-        
+        }
+        catch(err) {
+            console.error(err)
+            return null
+        }
     }
 
     protected onUnauthorized(err: any): void | Promise<void> {
 
         if(err.response.data.url === 'auth/login') Alert.alert(err.response.data.message)
+        // this.refreshAccessToken()
         Alert.alert("Se cerro sesion")
     }
 
