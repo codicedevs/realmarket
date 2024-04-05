@@ -68,17 +68,14 @@ const Auth = () => {
     }
 
     const onSubmit = (data) => {
-        console.log(data.pass, data.username)
         try {
-
-            console.log('Submitted Data:', data);
             signIn(data.username, data.pass)
             // setSubmittedData(data);
-        } catch (err){console.error(err)}
+        } catch (err) { console.error(err) }
     };
 
     useEffect(() => {
-        // checkSession()
+        checkSession()
     }, [])
 
     if (session) {

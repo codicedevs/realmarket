@@ -29,7 +29,7 @@ const Finance = () => {
             ...d,
             simboloLocal: d.simboloLocal.concat(d.lugar)
         }))
-
+        //ACA FIJARTE SI SE VA A USAR O BORRARs
         return newData
     }
 
@@ -42,19 +42,18 @@ const Finance = () => {
         const value = await AsyncStorage.getItem('positions')
         if (value) {
             const positions = JSON.parse(value);
-            const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ")
+            const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ" && position.monedaCotizacion.includes(currency))
             const acciones = positions.filter((position) => position.tipoTitulo === "Acciones" && position.monedaCotizacion.includes(currency))
             const cedears = positions.filter((position) => position.tipoTitulo === "Cedears" && position.monedaCotizacion.includes(currency))
             const obligaciones = positions.filter((position) => position.tipoTitulo === "Obligaciones Negociables" && position.monedaCotizacion.includes(currency))
             const titulos = positions.filter((position) => position.tipoTitulo === "Títulos Públicos" && position.monedaCotizacion.includes(currency))
             const pagare = positions.filter((position) => position.tipoTitulo === "Pagarés" && position.monedaCotizacion.includes(currency))
             const monedas = positions.filter((position) => position.tipoTitulo === "Moneda" && position.monedaCotizacion.includes(currency))
-            formatPublicTitles(titulos)
             setAssetsInfo({
                 ACC: acciones,
                 CED: cedears,
                 OBG: obligaciones,
-                TIT: formatPublicTitles(titulos),
+                TIT: titulos,
                 PAG: pagare,
                 MON: monedas,
                 ECH: echeqs
