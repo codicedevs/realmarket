@@ -73,12 +73,19 @@ const Disponibility = () => {
                                 <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.small }}>Importe:</Text>
                                 <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
                             </LayoutCustom>
-                            <Pressable
-                                style={[themedStyles.button, themedStyles.buttonClose]}
-                                onPress={() => setOpen(false)}
-                            >
-                                <Text style={themedStyles.textStyle}>Volver</Text>
-                            </Pressable>
+                            <LayoutCustom>
+                                <Pressable
+                                    style={[themedStyles.button, themedStyles.buttonConfirm]}
+                                >
+                                    <Text style={themedStyles.textStyle}>Ver</Text>
+                                </Pressable>
+                                <Pressable
+                                    style={[themedStyles.button, themedStyles.buttonClose]}
+                                    onPress={() => setOpen(false)}
+                                >
+                                    <Text style={themedStyles.textStyle}>Volver</Text>
+                                </Pressable>
+                            </LayoutCustom>
                         </LayoutCustom>
                     </LayoutCustom>
                 }
@@ -169,7 +176,11 @@ const themedStyles = StyleService.create({
         paddingHorizontal: theme.paddings.large
     },
     buttonClose: {
-        backgroundColor: '#009F9F',
+        backgroundColor: '#009F9F'
+    },
+    buttonConfirm: {
+        marginBottom: 5,
+        backgroundColor: '#D0682E'
     },
     textStyle: {
         color: 'white',
