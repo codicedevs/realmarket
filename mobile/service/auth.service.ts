@@ -19,8 +19,8 @@ export class AuthService extends HttpService {
         let loginProps : LoginProps | null = null
         try{
             const res = await axios.post<LoginProps>(`${BASE_URL}/auth/login`, { username: username, pass: password })
-            console.log(res, "Respuesta Login")
             this.saveAccessToken(res.data.token)
+            this.saveRefreshToken(res.data.refreshToken)
             loginProps = res.data
         }
         catch(err){
@@ -34,6 +34,10 @@ export class AuthService extends HttpService {
 
     async signOut() {
         return AsyncStorage.removeItem('access')
+    } 
+
+    async whoami () {
+        return this.get("whoami")
     }
 }
 

@@ -37,10 +37,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
     <AuthContext.Provider
       value={{
         signIn: async (username: string, password: string) => {
-          console.log(username, password);
 
           const data = await authService.login(username, password)
-          console.log(data)
           if (data) {
             setSession(data.user);
           }
@@ -52,8 +50,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
         session,
         isLoading,
         checkSession: async () => {
-          const res = await authService.getAccessToken()
-          setSession(res)
+          const res = await authService.whoami()
+          setSession(res.data)
         }
       }}>
       {props.children}
