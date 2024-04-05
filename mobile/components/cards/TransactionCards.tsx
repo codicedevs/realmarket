@@ -53,7 +53,7 @@ const TransactionCards = memo(
                         ph={theme.paddings.xSmall}
                     >
                         <LayoutCustom style={themedStyles.avatarContainer}>
-                            <Avatar source={{ uri: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579" }} size="tiny" />
+                            <Avatar source={{ uri: "https://us.123rf.com/450wm/ahasoft2000/ahasoft20001712/ahasoft2000171204678/92468343-icono-de-moneda-de-plata-d%C3%B3lar-americano-el-estilo-de-trama-es-un-s%C3%ADmbolo-de-moneda-plana-gris.jpg" }} size="tiny" />
                         </LayoutCustom>
                         <LayoutCustom style={themedStyles.smallerContainer}>
                             <Text style={themedStyles.currencyText}>{data.simboloLocal}</Text>
