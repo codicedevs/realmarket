@@ -1,6 +1,6 @@
-import { Controller, Get, Query, Req } from '@nestjs/common';
+import { Controller, Get, Query, Req, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { getJwtPayload } from 'src/auth/utils/jwt.utils';
 import { Movimiento } from './entities/movimiento.entity';
 import { MovimientosService } from './movimientos.service';
@@ -30,5 +30,18 @@ export class MovimientosController {
   public async movimientosUsd(@Req() request: Request) {
     const { accountId } = getJwtPayload(request);
     return this.movimientosService.movimientosUsd(accountId);
+  }
+
+  @Get('comprobante')
+  public async comprobanteOperacion(
+    @Res() res: Response,
+    @Query('id') idComprobante: string,
+  ) {
+    const rosvalRes =
+      await this.movimientosService.comprobanteOperacion(idComprobante);
+    res.set({
+      'Content-Type': 'application/pdf',
+    });
+    return rosvalRes.data.pipe(res); //
   }
 }
