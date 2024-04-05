@@ -29,7 +29,7 @@ const Finance = () => {
             ...d,
             simboloLocal: d.simboloLocal.concat(d.lugar)
         }))
-
+        //ACA FIJARTE SI SE VA A USAR O BORRARs
         return newData
     }
 
