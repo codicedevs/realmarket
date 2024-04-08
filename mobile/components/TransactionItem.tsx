@@ -20,7 +20,8 @@ export interface ITransactionItemProps {
   description: string;
   date: Date;
   amount: number;
-  balance?: number
+  balance?: number,
+  comprobante: string
 }
 
 const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction: (data: ITransactionItemProps) => void, currency: string }> = ({
