@@ -1,4 +1,6 @@
 import { StyleService, TopNavigation } from "@ui-kitten/components"
+import * as FileSystem from 'expo-file-system'
+import * as MediaLibrary from 'expo-media-library'
 import React, { useContext, useEffect, useState } from "react"
 import { Modal, Pressable, ScrollView, Text } from "react-native"
 import RoundedButton from "../../../components/Buttons/RoundedButton"
@@ -7,8 +9,10 @@ import CurrencyToggle from "../../../components/CurrencyToggle"
 import LayoutCustom from "../../../components/LayoutCustom"
 import TransactionItem, { ITransactionItemProps } from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
+import { BASE_URL } from "../../../config"
 import { AppContext } from "../../../context/AppContext"
 import usePromise from "../../../hooks/usePromise"
+import authService from "../../../service/auth.service"
 import movimientosService from "../../../service/movimientos.service"
 import { currencyFormat } from "../../../utils/number"
 import theme from "../../../utils/theme"
@@ -19,11 +23,50 @@ const Disponibility = () => {
     const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps | {}>({})
     const [movementsArs, setMovementsArs] = useState([])
     const [movementsUsd, setMovementsUsd] = useState([])
+    const [progress, setProgress] = useState<any>()
     const handlePromise = usePromise()
 
     const selectTransaction = (data: ITransactionItemProps) => {
         setSelectedTransaction(data)
         setOpen(true)
+    }
+    const getReceipt = async (id: string) => {
+        const callback = downloadProgress => {
+            const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
+            setProgress({
+                downloadProgress: progress,
+            });
+        };
+        const accessToken = await authService.getAccessToken()
+        const downloadResumable = FileSystem.createDownloadResumable(
+            `${BASE_URL}/movimientos/comprobante/${id}`,
+            FileSystem.documentDirectory + 'comprobante.jpg',
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            },
+            callback
+        );
+
+        try {
+            const { uri } = await downloadResumable.downloadAsync();
+            console.log('Finished downloading to ', uri);
+            if (uri) {
+                const { status } = await MediaLibrary.requestPermissionsAsync();
+                if (status === 'granted') {
+                    const asset = await MediaLibrary.createAssetAsync(uri);
+                    const album = await MediaLibrary.getAlbumAsync('Documentos');
+                    if (album) {
+                        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+                    } else {
+                        await MediaLibrary.createAlbumAsync('Documentos', asset, false);
+                    }
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     const promises = async () => {
@@ -76,6 +119,7 @@ const Disponibility = () => {
                             <LayoutCustom>
                                 <Pressable
                                     style={[themedStyles.button, themedStyles.buttonConfirm]}
+                                    onPress={() => getReceipt(selectedTransaction?.comprobante)}
                                 >
                                     <Text style={themedStyles.textStyle}>Ver</Text>
                                 </Pressable>
