@@ -20,7 +20,7 @@ import theme from "../../../utils/theme"
 const Disponibility = () => {
     const { currency } = useContext(AppContext)
     const [open, setOpen] = useState(false)
-    const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps | {}>({})
+    const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps | null>(null)
     const [movementsArs, setMovementsArs] = useState([])
     const [movementsUsd, setMovementsUsd] = useState([])
     const [progress, setProgress] = useState<any>()
@@ -37,19 +37,18 @@ const Disponibility = () => {
                 downloadProgress: progress,
             });
         };
-        const accessToken = await authService.getAccessToken()
-        const downloadResumable = FileSystem.createDownloadResumable(
-            `${BASE_URL}/movimientos/comprobante/${id}`,
-            FileSystem.documentDirectory + 'comprobante.jpg',
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            },
-            callback
-        );
-
         try {
+            const accessToken = await authService.getAccessToken()
+            const downloadResumable = FileSystem.createDownloadResumable(
+                `${BASE_URL}/movimientos/comprobante/${id}`,
+                FileSystem.documentDirectory + 'comprobante.jpg',
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                },
+                callback
+            );
             const { uri } = await downloadResumable.downloadAsync();
             console.log('Finished downloading to ', uri);
             if (uri) {
@@ -112,7 +111,7 @@ const Disponibility = () => {
                             <LayoutCustom mb={theme.margins.large}>
                                 <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalle del movimiento</Text>
                                 <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
-                                <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date}</Text>
+                                <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date.toString()}</Text>
                                 <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.small }}>Importe:</Text>
                                 <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
                             </LayoutCustom>

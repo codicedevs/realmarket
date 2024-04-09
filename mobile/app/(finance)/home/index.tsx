@@ -21,12 +21,12 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 interface CifrasDisponibilidad {
-  dispoHoy: string;
-  dispo24: string;
-  dispo48: string;
-  dispoHoyUsd: string;
-  dispo24Usd: string;
-  dispo48Usd: string
+  dispoHoy: number;
+  dispo24: number;
+  dispo48: number;
+  dispoHoyUsd: number;
+  dispo24Usd: number;
+  dispo48Usd: number
 }
 
 const mockData = {
