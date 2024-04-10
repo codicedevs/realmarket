@@ -1,6 +1,4 @@
 import { StyleService, TopNavigation } from "@ui-kitten/components"
-import * as FileSystem from 'expo-file-system'
-import * as MediaLibrary from 'expo-media-library'
 import React, { useContext, useEffect, useState } from "react"
 import { Modal, Pressable, ScrollView, Text } from "react-native"
 import RoundedButton from "../../../components/Buttons/RoundedButton"
@@ -9,18 +7,17 @@ import CurrencyToggle from "../../../components/CurrencyToggle"
 import LayoutCustom from "../../../components/LayoutCustom"
 import TransactionItem, { ITransactionItemProps } from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
-import { BASE_URL } from "../../../config"
 import { AppContext } from "../../../context/AppContext"
 import usePromise from "../../../hooks/usePromise"
-import authService from "../../../service/auth.service"
 import movimientosService from "../../../service/movimientos.service"
 import { currencyFormat } from "../../../utils/number"
+import { saveFile } from "../../../utils/saveFile"
 import theme from "../../../utils/theme"
 
 const Disponibility = () => {
     const { currency } = useContext(AppContext)
     const [open, setOpen] = useState(false)
-    const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps | null>(null)
+    const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps>(null)
     const [movementsArs, setMovementsArs] = useState([])
     const [movementsUsd, setMovementsUsd] = useState([])
     const [progress, setProgress] = useState<any>()
@@ -30,41 +27,14 @@ const Disponibility = () => {
         setSelectedTransaction(data)
         setOpen(true)
     }
+
     const getReceipt = async (id: string) => {
-        const callback = downloadProgress => {
-            const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
-            setProgress({
-                downloadProgress: progress,
-            });
-        };
         try {
-            const accessToken = await authService.getAccessToken()
-            const downloadResumable = FileSystem.createDownloadResumable(
-                `${BASE_URL}/movimientos/comprobante/${id}`,
-                FileSystem.documentDirectory + 'comprobante.jpg',
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                },
-                callback
-            );
-            const { uri } = await downloadResumable.downloadAsync();
-            console.log('Finished downloading to ', uri);
-            if (uri) {
-                const { status } = await MediaLibrary.requestPermissionsAsync();
-                if (status === 'granted') {
-                    const asset = await MediaLibrary.createAssetAsync(uri);
-                    const album = await MediaLibrary.getAlbumAsync('Documentos');
-                    if (album) {
-                        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-                    } else {
-                        await MediaLibrary.createAlbumAsync('Documentos', asset, false);
-                    }
-                }
-            }
+            const base64Image = await movimientosService.getReceipt(id)
+            const filename = `comprobante_${id}.jpg`;
+            saveFile(base64Image, filename)
         } catch (e) {
-            console.error(e);
+            console.error('error', e);
         }
     }
 
@@ -105,7 +75,7 @@ const Disponibility = () => {
                 onRequestClose={() => setOpen(false)}
             >
                 {
-                    Object.keys(selectedTransaction).length !== 0 &&
+                    selectedTransaction &&
                     <LayoutCustom style={themedStyles.centeredView}>
                         <LayoutCustom style={themedStyles.modalView}>
                             <LayoutCustom mb={theme.margins.large}>
