@@ -1,4 +1,5 @@
 import * as FileSystem from 'expo-file-system';
+import * as IntentLauncher from 'expo-intent-launcher';
 import * as MediaLibrary from 'expo-media-library';
 
 export async function saveFile(base64: string, filename: string) {
@@ -14,7 +15,15 @@ export async function saveFile(base64: string, filename: string) {
       } else {
         await MediaLibrary.createAlbumAsync('Documentos', asset, false);
       }
-      console.log('guardado')
+      FileSystem.getContentUriAsync(path).then(cUri => {
+        IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
+          data: cUri,
+          flags: 1,
+          type: 'application/pdf'
+        });
+      });
+
+      return `${FileSystem.documentDirectory}${filename}`
     }
   } catch (e) {
     console.error(e)
