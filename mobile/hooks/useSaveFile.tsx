@@ -1,6 +1,7 @@
 import * as FileSystem from 'expo-file-system';
 import * as IntentLauncher from 'expo-intent-launcher';
 import * as MediaLibrary from 'expo-media-library';
+import * as Sharing from 'expo-sharing';
 import { Alert } from 'react-native';
 import { useLoading } from '../context/LoadingProvider';
 import { HttpService } from '../service/http.service';
@@ -37,6 +38,7 @@ export function useSaveFile() {
       } else {
         console.error('Permission not granted')
       }
+      await Sharing.shareAsync(path);
     } catch (e) {
       console.error(e);
     } finally {
