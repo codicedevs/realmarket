@@ -1,4 +1,6 @@
 import { StyleService, TopNavigation } from "@ui-kitten/components"
+import * as Linking from 'expo-linking'
+import * as Notifications from 'expo-notifications'
 import React, { useContext, useEffect, useState } from "react"
 import { Modal, Pressable, ScrollView, Text } from "react-native"
 import RoundedButton from "../../../components/Buttons/RoundedButton"
@@ -8,10 +10,11 @@ import LayoutCustom from "../../../components/LayoutCustom"
 import TransactionItem, { ITransactionItemProps } from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
 import { AppContext } from "../../../context/AppContext"
+import { useLoading } from "../../../context/LoadingProvider"
 import usePromise from "../../../hooks/usePromise"
+import { useSaveFile } from "../../../hooks/useSaveFile"
 import movimientosService from "../../../service/movimientos.service"
 import { currencyFormat } from "../../../utils/number"
-import { saveFile } from "../../../utils/saveFile"
 import theme from "../../../utils/theme"
 
 const Disponibility = () => {
@@ -20,8 +23,26 @@ const Disponibility = () => {
     const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps>(null)
     const [movementsArs, setMovementsArs] = useState([])
     const [movementsUsd, setMovementsUsd] = useState([])
-    const [progress, setProgress] = useState<any>()
     const handlePromise = usePromise()
+    const { saveFile } = useSaveFile()
+    const { setIsLoading } = useLoading()
+
+    Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: false,
+        }),
+    });
+
+    Notifications.addNotificationResponseReceivedListener(response => {
+        const { filename, path } = response.notification.request.content.data;
+        console.log(response.notification.request.content)
+
+        Linking.openURL(path)
+
+        //Notification- falta estilizar
+    });
 
     const selectTransaction = (data: ITransactionItemProps) => {
         setSelectedTransaction(data)
@@ -29,12 +50,25 @@ const Disponibility = () => {
     }
 
     const getReceipt = async (id: string) => {
+        setIsLoading(true)
         try {
+            const url = `movimientos/comprobante/${id}`
             const base64Image = await movimientosService.getReceipt(id)
             const filename = `comprobante_${id}.jpg`;
-            saveFile(base64Image, filename)
+            saveFile(base64Image, filename, url)
+            //  saveFile(base64Image, filename)
+            Notifications.scheduleNotificationAsync({
+                content: {
+                    title: "Descarga Completa 📥",
+                    body: `${filename} ha sido guardado exitosamente.`,
+
+                },
+                trigger: null,
+            });
         } catch (e) {
             console.error('error', e);
+        } finally {
+            setIsLoading(false)
         }
     }
 
