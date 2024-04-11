@@ -14,7 +14,7 @@ const Positions = () => {
     <Container style={themedStyles.container}>
       <TopNavigation
         alignment="center"
-        title="Ordenes"
+        title="Órdenes"
         style={themedStyles.topNavigation}
         accessoryLeft={() => (
           <RoundedButton icon="arrow-back-outline" />

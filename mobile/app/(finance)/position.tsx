@@ -87,7 +87,7 @@ const Finance = () => {
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset.nombreEspecie.slice(0, 20)}</Text>
                                     </LayoutCustom>
                                     <LayoutCustom horizontal itemsCenter>
-                                        <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Codigo:</Text>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Código:</Text>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset.simboloLocal}</Text>
                                     </LayoutCustom>
                                     <LayoutCustom horizontal itemsCenter>

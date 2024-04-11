@@ -119,7 +119,7 @@ const Home = () => {
               :
               null
           }
-          <Text style={themedStyles.lastUpdateText}>Ultima actualizacion: 17/03</Text>
+          <Text style={themedStyles.lastUpdateText}>Última actualización: 17/03</Text>
         </LayoutCustom>
         <Carousel
           data={CARDS}
