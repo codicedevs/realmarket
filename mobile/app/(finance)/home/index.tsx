@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StyleService } from '@ui-kitten/components'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, Dimensions, Image, Pressable, Text } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, Pressable, Text, TouchableOpacity } from 'react-native'
 import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
 import IButton from '../../../components/Buttons/IButton'
@@ -49,6 +49,10 @@ const Home = () => {
       return cifrasDisponibilidad
     }
     return mockData
+  }
+
+  const positionRoute = () => {
+    router.replace('position')
   }
 
   const promises = async () => {
@@ -131,13 +135,15 @@ const Home = () => {
             )
           }}
         />
-        <LayoutCustom horizontal itemsCenter justify='flex-start' mv={theme.margins.medium} pl={theme.paddings.large}>
-          <Image style={themedStyles.img} source={require("../../../assets/Icons/moneyStat.png")} />
-          <LayoutCustom ml={theme.margins.small} style={{ alignItems: "flex-start" }}>
-            <Text style={themedStyles.position}>Posiciones</Text>
-            <Text style={themedStyles.moneyText}>{currencyFormat(positions, currency)}</Text>
+        <TouchableOpacity activeOpacity={1} onPress={positionRoute}>
+          <LayoutCustom horizontal itemsCenter justify='flex-start' mv={theme.margins.medium} pl={theme.paddings.large}>
+            <Image style={themedStyles.img} source={require("../../../assets/Icons/moneyStat.png")} />
+            <LayoutCustom ml={theme.margins.small} style={{ alignItems: "flex-start" }}>
+              <Text style={themedStyles.position}>Posiciones</Text>
+              <Text style={themedStyles.moneyText}>{currencyFormat(positions, currency)}</Text>
+            </LayoutCustom>
           </LayoutCustom>
-        </LayoutCustom>
+        </TouchableOpacity>
         <LayoutCustom
           horizontal
           itemsCenter
