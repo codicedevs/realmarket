@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService } from "@ui-kitten/components"
-import { router, useFocusEffect } from "expo-router"
+import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useState } from "react"
 import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native"
 import Container from "../../components/Container"
@@ -20,9 +20,6 @@ const Finance = () => {
     const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
     const { currency } = useContext(AppContext)
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
-    const configRoute = () => {
-        router.replace('config')
-    }
 
     const formatPublicTitles = (data: IPosition[]) => {
         const newData = data.map((d) => ({
@@ -64,7 +61,7 @@ const Finance = () => {
     useFocusEffect(
         useCallback(() => {
             fetchAndOrganizePositions()
-        }, [])
+        }, [currency])
     )
 
     return (
@@ -119,15 +116,6 @@ const Finance = () => {
                 </LayoutCustom>
             </Modal>
             <Container style={themedStyles.container}>
-                {/* <TopNavigation
-                    alignment="center"
-                    title="Posiciones"
-                    style={themedStyles.topNavigation}
-                    accessoryLeft={() => (
-                        <RoundedButton icon="arrow-back-outline" />
-                    )}
-                    accessoryRight={() => <RoundedButton onPress={() => configRoute()} icon="person-outline" />}
-                /> */}
                 <Header title={'Posiciones'} />
                 <LayoutCustom>
                     <LayoutCustom mt={theme.margins.large} mb={theme.margins.medium} alignSelfCenter>
