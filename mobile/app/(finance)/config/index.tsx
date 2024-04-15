@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Icon, StyleService } from '@ui-kitten/components';
 import * as Linking from 'expo-linking';
 import { Dimensions, Image, ImageBackground, Modal, Pressable, Text, TextInput, View } from 'react-native';
+import Toast from 'react-native-root-toast';
 import ConfigButton from '../../../components/Buttons/ConfigButton';
 import Container from '../../../components/Container';
 import Header from '../../../components/CustomHeader';
@@ -49,9 +50,27 @@ const ConfigScreen = () => {
     Linking.openURL('mailto:mtrovant@gmail.com')
   }
 
+  const notification = (texto: string) => {
+    Toast.show(texto, {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.TOP,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0,
+    });
+  }
+
   const changePassword = async () => {
-    await userService.ChangePassword(changePasswordInfo)
-    toggleModal()
+    try {
+      await userService.ChangePassword(changePasswordInfo)
+      notification('Contraseña cambiada con exito')
+    } catch (e) {
+      console.error(e)
+      notification('Hubo un problema')
+    } finally {
+      toggleModal()
+    }
   }
 
   return (
