@@ -1,9 +1,9 @@
-import { StyleService, TopNavigation } from "@ui-kitten/components"
+import { StyleService } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
 import { Modal, Pressable, ScrollView, Text } from "react-native"
-import RoundedButton from "../../../components/Buttons/RoundedButton"
 import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
+import Header from "../../../components/CustomHeader"
 import LayoutCustom from "../../../components/LayoutCustom"
 import TransactionItem, { ITransactionItemProps } from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
@@ -84,7 +84,7 @@ const Disponibility = () => {
                 }
             </Modal>
             <Container style={themedStyles.container}>
-                <TopNavigation
+                {/* <TopNavigation
                     alignment="center"
                     title="Movimientos"
                     style={themedStyles.topNavigation}
@@ -92,7 +92,8 @@ const Disponibility = () => {
                         <RoundedButton icon="arrow-back-outline" />
                     )}
                     accessoryRight={() => <RoundedButton icon="person-outline" />}
-                />
+                /> */}
+                <Header title={'Movimientos'} />
                 <LayoutCustom style={themedStyles.content}>
                     <LayoutCustom mv={theme.margins.large}>
                         <LayoutCustom alignSelfCenter mb={theme.margins.medium}>

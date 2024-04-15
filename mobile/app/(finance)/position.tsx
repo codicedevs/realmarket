@@ -1,11 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { StyleService, TopNavigation } from "@ui-kitten/components"
+import { StyleService } from "@ui-kitten/components"
 import { router, useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useState } from "react"
 import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native"
-import RoundedButton from "../../components/Buttons/RoundedButton"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
+import Header from "../../components/CustomHeader"
 import LayoutCustom from "../../components/LayoutCustom"
 import FolderCard from "../../components/cards/FolderCard"
 import { IPosition } from "../../components/cards/TransactionCards"
@@ -119,7 +119,7 @@ const Finance = () => {
                 </LayoutCustom>
             </Modal>
             <Container style={themedStyles.container}>
-                <TopNavigation
+                {/* <TopNavigation
                     alignment="center"
                     title="Posiciones"
                     style={themedStyles.topNavigation}
@@ -127,7 +127,8 @@ const Finance = () => {
                         <RoundedButton icon="arrow-back-outline" />
                     )}
                     accessoryRight={() => <RoundedButton onPress={() => configRoute()} icon="person-outline" />}
-                />
+                /> */}
+                <Header title={'Posiciones'} />
                 <LayoutCustom>
                     <LayoutCustom mt={theme.margins.large} mb={theme.margins.medium} alignSelfCenter>
                         <CurrencyToggle onChange={fetchAndOrganizePositions} />

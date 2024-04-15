@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 // import Text from '../../../components/Text'
-import { Icon, StyleService, TopNavigation } from '@ui-kitten/components';
+import { Icon, StyleService } from '@ui-kitten/components';
 import * as Linking from 'expo-linking';
 import { Dimensions, Image, ImageBackground, Modal, Pressable, Text, TextInput, View } from 'react-native';
 import ConfigButton from '../../../components/Buttons/ConfigButton';
-import RoundedButton from '../../../components/Buttons/RoundedButton';
 import Container from '../../../components/Container';
+import Header from '../../../components/CustomHeader';
 import LayoutCustom from '../../../components/LayoutCustom';
 import { useSession } from '../../../context/AuthProvider';
 import userService from '../../../service/user.service';
@@ -103,7 +103,7 @@ const ConfigScreen = () => {
         </LayoutCustom>
       </Modal>
       <Container style={{ flex: 1 }}>
-        <TopNavigation
+        {/* <TopNavigation
           alignment="center"
           title="Configuración"
           style={themedStyles.topNavigation}
@@ -111,7 +111,8 @@ const ConfigScreen = () => {
             <RoundedButton icon="arrow-back-outline" />
           )}
           accessoryRight={() => <RoundedButton icon="person-outline" />}
-        />
+        /> */}
+        <Header title={'Configuración'} />
         <ImageBackground style={themedStyles.initialsContainer} source={iniciales}>
           <Text style={themedStyles.initials}>{name[0]}</Text>
           <Text style={themedStyles.initials}>{lastName[0]}</Text>

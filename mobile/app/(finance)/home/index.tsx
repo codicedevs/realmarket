@@ -1,14 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { StyleService, TopNavigation } from '@ui-kitten/components'
+import { StyleService } from '@ui-kitten/components'
 import { Link, router } from 'expo-router'
 import React, { useContext, useEffect, useState } from 'react'
 import { ActivityIndicator, Dimensions, Image, Pressable, Text } from 'react-native'
 import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
 import IButton from '../../../components/Buttons/IButton'
-import RoundedButton from '../../../components/Buttons/RoundedButton'
 import Container from '../../../components/Container'
 import CurrencyToggle from '../../../components/CurrencyToggle'
+import Header from '../../../components/CustomHeader'
 import LayoutCustom from '../../../components/LayoutCustom'
 import TimeCard from '../../../components/cards/TimeCard'
 import { AppContext } from '../../../context/AppContext'
@@ -100,7 +100,7 @@ const Home = () => {
   return (
     <Container style={{ backgroundColor: theme.colors.background }}>
       <LayoutCustom>
-        <TopNavigation
+        {/* <TopNavigation
           alignment="center"
           title={`Hola ${session.nombre}!`}
           style={themedStyles.topNavigation}
@@ -108,7 +108,8 @@ const Home = () => {
             <RoundedButton icon="arrow-back-outline" />
           )}
           accessoryRight={() => <RoundedButton onPress={() => configRoute()} icon="person-outline" />}
-        />
+        /> */}
+        <Header title={`Hola ${session.nombre}!`} />
         <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
           <CurrencyToggle />
         </LayoutCustom>
