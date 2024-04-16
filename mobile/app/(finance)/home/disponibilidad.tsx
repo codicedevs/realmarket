@@ -44,10 +44,10 @@ const Disponibility = () => {
         if (movementsUsd.length === 0) return
         if (currency === 'ARS') {
             const initialValue = movementsArs.find(transaction => transaction.description === "Saldo Inicial");
-            return initialValue.balance
+            return movementsArs[0].balance
         }
         const initialValue = movementsUsd.find(transaction => transaction.description === "Saldo Inicial");
-        return initialValue.balance
+        return movementsArs[0].balance
     }
 
     useEffect(() => {
@@ -99,7 +99,7 @@ const Disponibility = () => {
                         <LayoutCustom alignSelfCenter mb={theme.margins.medium}>
                             <CurrencyToggle />
                         </LayoutCustom>
-                        <BalanceCard balance={checkBalanceCurrency()} grow={12.2} />
+                        <BalanceCard balance={checkBalanceCurrency()} currency={currency} />
                     </LayoutCustom>
                 </LayoutCustom>
                 <LayoutCustom overflow="scroll" gap={15} ph={theme.paddings.medium} >
