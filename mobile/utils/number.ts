@@ -1,30 +1,33 @@
-
-// export function currencyFormat(number: number, currency: string): string {
-//   const newNumber = number * 1
-//   return new Intl.NumberFormat('es-AR', {
-//     style: 'currency',
-//     currency: currency,
-//     minimumFractionDigits: 2,
-//     maximumFractionDigits: 2
-//   }).format(newNumber);
-// }
-
 export function currencyFormat(number: number, currency: string): string {
   const isNegative = number < 0;
   const absoluteNumber = Math.abs(number);
 
-  let formattedNumber = new Intl.NumberFormat('es-AR', {
+  // Obtiene el símbolo de la moneda usando Intl.NumberFormat
+  const currencySymbol = new Intl.NumberFormat('es-AR', {
     style: 'currency',
     currency: currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(absoluteNumber);
+    minimumFractionDigits: 0
+  }).formatToParts(0).find(part => part.type === 'currency').value;
 
-  if (isNegative) {
-    const currencySymbol = formattedNumber.match(/^\D+/)[0];
-    const numericPart = formattedNumber.slice(currencySymbol.length);
-    formattedNumber = `${currencySymbol}- ${numericPart}`;
+  // Determina el formato del número basado en su magnitud
+  let displayNumber;
+  if (absoluteNumber >= 1e12) { // 1 billón o más
+    displayNumber = `${currencySymbol} ${(absoluteNumber / 1e12).toFixed(2)} B`;
+  } else if (absoluteNumber >= 1e8) { // 100 millones o más
+    displayNumber = `${currencySymbol} ${(absoluteNumber / 1e6).toFixed(2)} M`;
+  } else {
+    displayNumber = new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(absoluteNumber);
   }
 
-  return formattedNumber;
+  // Agrega el signo negativo si es necesario
+  if (isNegative) {
+    displayNumber = `- ${displayNumber}`;
+  }
+
+  return displayNumber;
 }

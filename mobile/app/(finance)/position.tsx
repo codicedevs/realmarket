@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService } from "@ui-kitten/components"
-import { router, useFocusEffect } from "expo-router"
+import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useState } from "react"
 import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native"
 import Container from "../../components/Container"
@@ -20,9 +20,6 @@ const Finance = () => {
     const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
     const { currency } = useContext(AppContext)
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
-    const configRoute = () => {
-        router.replace('config')
-    }
 
     const formatPublicTitles = (data: IPosition[]) => {
         const newData = data.map((d) => ({
@@ -64,7 +61,7 @@ const Finance = () => {
     useFocusEffect(
         useCallback(() => {
             fetchAndOrganizePositions()
-        }, [])
+        }, [currency])
     )
 
     return (
@@ -119,15 +116,6 @@ const Finance = () => {
                 </LayoutCustom>
             </Modal>
             <Container style={themedStyles.container}>
-                {/* <TopNavigation
-                    alignment="center"
-                    title="Posiciones"
-                    style={themedStyles.topNavigation}
-                    accessoryLeft={() => (
-                        <RoundedButton icon="arrow-back-outline" />
-                    )}
-                    accessoryRight={() => <RoundedButton onPress={() => configRoute()} icon="person-outline" />}
-                /> */}
                 <Header title={'Posiciones'} />
                 <LayoutCustom>
                     <LayoutCustom mt={theme.margins.large} mb={theme.margins.medium} alignSelfCenter>
@@ -149,14 +137,14 @@ const Finance = () => {
                             <LayoutCustom style={themedStyles.invisibleTitle}>
                             </LayoutCustom>
                             <LayoutCustom alignSelfCenter style={themedStyles.smallerTitle}>
-                                <Text style={themedStyles.textColor}>Nombre</Text>
+                                <Text style={themedStyles.titleTable}>Nombre</Text>
                             </LayoutCustom>
                             <LayoutCustom alignSelfCenter itemsCenter style={themedStyles.smallerTitle}>
-                                <Text style={themedStyles.textColor}>Valor</Text>
+                                <Text style={themedStyles.titleTable}>Valor</Text>
                             </LayoutCustom>
                             <LayoutCustom style={themedStyles.biggerTitle}>
-                                <Text style={themedStyles.textColor}>Total</Text>
-                                <Text style={themedStyles.textColor}>Cantidad</Text>
+                                <Text style={themedStyles.titleTable}>Total</Text>
+                                <Text style={themedStyles.titleTable}>Cantidad</Text>
                             </LayoutCustom>
                         </LayoutCustom>
                     </LayoutCustom>
@@ -193,7 +181,7 @@ const themedStyles = StyleService.create({
         width: '100%'
     },
     invisibleTitle: {
-        minWidth: '20%'
+        minWidth: '10%'
     },
     smallerTitle: {
         width: "25%"
@@ -204,6 +192,10 @@ const themedStyles = StyleService.create({
     },
     textColor: {
         color: "white"
+    },
+    titleTable: {
+        color: 'white',
+        fontWeight: 'bold'
     },
     scrollContainer: {
         flex: 1,
