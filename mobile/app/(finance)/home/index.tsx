@@ -14,6 +14,7 @@ import TimeCard from '../../../components/cards/TimeCard'
 import { AppContext } from '../../../context/AppContext'
 import { useSession } from '../../../context/AuthProvider'
 import disponibilidadService from '../../../service/disponibilidad.service'
+import movimientosService from '../../../service/movimientos.service'
 import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
@@ -55,34 +56,44 @@ const Home = () => {
     router.replace('position')
   }
 
-  const promises = async () => {
-    const res = await disponibilidadService.getCashPositions()
-    const resPos = await disponibilidadService.totalPositions()
-    setCifrasDisponibilidad(res.data)
-    setPositions(resPos.data.totalPosiciones)
-  }
-
   const getCash = async () => {
     try {
-      setLoading(true)
-      const [res, resPos] = await Promise.all([
+      setLoading(true);
+      const [res, resPos, resArs, resUsd] = await Promise.all([
         disponibilidadService.getCashPositions(),
-        disponibilidadService.totalPositions()
+        disponibilidadService.totalPositions(),
+        movimientosService.getMovementsArs(),
+        movimientosService.getMovementsUsd()
       ]);
-      setCifrasDisponibilidad(res.data)
-      setPositions(resPos.data.totalPosiciones)
-      if (Object.keys(resPos.data).length !== 0) {
-        const jsonValue = JSON.stringify(resPos.data.posiciones)
-        await AsyncStorage.setItem('positions', jsonValue)
-      }
+      handlePositionsData(res, resPos);
+      handleMovementsData(resArs, 'movementsArs');
+      handleMovementsData(resUsd, 'movementsUsd');
+    } catch (err) {
+      console.error('Error fetching data:', err);
+    } finally {
+      setLoading(false);
     }
-    catch (err) {
-      console.log(err)
+  };
+
+  const handlePositionsData = async (res, resPos) => {
+    setCifrasDisponibilidad(res.data)
+    setPositions(resPos.data.totalPosiciones)
+    console.log(resPos.data, 'q')
+    if (Object.keys(res.data).length !== 0) {
+      await AsyncStorage.setItem('figures', JSON.stringify(res.data));
     }
-    finally {
-      setLoading(false)
+    if (Object.keys(resPos.data).length !== 0) {
+      const positionsData = JSON.stringify(resPos.data);
+      await AsyncStorage.setItem('positions', positionsData);
     }
-  }
+  };
+
+  const handleMovementsData = async (res, storageKey) => {
+    if (res.data.length) {
+      const movementsData = JSON.stringify(res.data.reverse());
+      await AsyncStorage.setItem(storageKey, movementsData);
+    }
+  };
 
   const CARDS = [
     { color: "#009F9F", balance: currency === "ARS" ? checkData().dispoHoy : checkData().dispoHoyUsd, card_number: "5282300014453286", icon: require('../../../assets/Icons/todayClock.png') },
@@ -90,7 +101,16 @@ const Home = () => {
     { color: "#701BC4", balance: currency === "ARS" ? checkData().dispo48 : checkData().dispo48Usd, card_number: "5282300014453286", icon: require('../../../assets/Icons/clock48.png') },
   ];
 
+  const retrieveFiguresData = async () => {
+    const value = await AsyncStorage.getItem('figures')
+    const pos = await AsyncStorage.getItem('positions')
+    setCifrasDisponibilidad(JSON.parse(value))
+    console.log(pos)
+    setPositions(JSON.parse(pos).totalPosiciones)
+  }
+
   useEffect(() => {
+    retrieveFiguresData()
     getCash()
   }, [])
 

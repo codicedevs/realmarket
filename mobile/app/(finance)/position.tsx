@@ -38,7 +38,7 @@ const Finance = () => {
     const fetchAndOrganizePositions = async () => {
         const value = await AsyncStorage.getItem('positions')
         if (value) {
-            const positions = JSON.parse(value);
+            const positions = JSON.parse(value).posiciones;
             const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ" && position.monedaCotizacion.includes(currency))
             const acciones = positions.filter((position) => position.tipoTitulo === "Acciones" && position.monedaCotizacion.includes(currency))
             const cedears = positions.filter((position) => position.tipoTitulo === "Cedears" && position.monedaCotizacion.includes(currency))

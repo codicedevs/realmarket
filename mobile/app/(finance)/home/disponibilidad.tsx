@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
 import { Modal, Pressable, ScrollView, Text } from "react-native"
@@ -9,7 +10,6 @@ import TransactionItem, { ITransactionItemProps } from "../../../components/Tran
 import BalanceCard from "../../../components/cards/BalanceCard"
 import { AppContext } from "../../../context/AppContext"
 import usePromise from "../../../hooks/usePromise"
-import movimientosService from "../../../service/movimientos.service"
 import { currencyFormat } from "../../../utils/number"
 import theme from "../../../utils/theme"
 
@@ -27,16 +27,35 @@ const Disponibility = () => {
     }
 
     const promises = async () => {
-        const [res, resUsd] = await Promise.all([
-            movimientosService.getMovementsArs(),
-            movimientosService.getMovementsUsd()
-        ])
-        setMovementsArs(res.data.reverse())
-        setMovementsUsd(resUsd.data.reverse())
+        // const [res, resUsd] = await Promise.all([
+        //     movimientosService.getMovementsArs(),
+        //     movimientosService.getMovementsUsd()
+        // ])
+        // setMovementsArs(res.data.reverse())
+        // setMovementsUsd(resUsd.data.reverse())
+
+    }
+
+    const bringPesos = async () => {
+        console.log(1)
+        const Ars = await AsyncStorage.getItem('movementsArs')
+        console.log(1.5)
+        setMovementsArs(JSON.parse(Ars))
+        console.log(new Date())
+
+    }
+    const bringUsd = async () => {
+        console.log(2)
+        const Usd = await AsyncStorage.getItem('movementsUsd')
+        console.log(2.5)
+        setMovementsUsd(JSON.parse(Usd))
+        console.log(new Date(), 2)
     }
 
     const getInfo = async () => {
-        await handlePromise(promises())
+        bringPesos()
+        bringUsd()
+        // await handlePromise(promises())
     }
 
     const checkBalanceCurrency = () => {
@@ -47,7 +66,7 @@ const Disponibility = () => {
             return movementsArs[0].balance
         }
         const initialValue = movementsUsd.find(transaction => transaction.description === "Saldo Inicial");
-        return movementsArs[0].balance
+        return movementsUsd[0].balance
     }
 
     useEffect(() => {
