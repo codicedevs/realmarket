@@ -9,7 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
@@ -19,6 +19,7 @@ import { Public } from './skip-auth';
 import { getJwtPayload } from './utils/jwt.utils';
 
 @ApiTags('auth')
+@ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
   constructor(

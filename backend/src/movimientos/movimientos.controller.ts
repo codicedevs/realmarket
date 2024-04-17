@@ -1,11 +1,12 @@
 import { Controller, Get, Query, Req, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { getJwtPayload } from 'src/auth/utils/jwt.utils';
 import { Movimiento } from './entities/movimiento.entity';
 import { MovimientosService } from './movimientos.service';
 
 @ApiTags('movimientos')
+@ApiBearerAuth()
 @Controller('movimientos')
 export class MovimientosController {
   constructor(private readonly movimientosService: MovimientosService) {}
