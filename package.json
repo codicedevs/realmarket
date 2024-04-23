@@ -5,8 +5,6 @@
   },
   "scripts": {
     "lint": "eslint . --fix",
-    "mobile/**/*.{js,jsx,ts,tsx}": "eslint --cache --fix",
-    "mobile/**/*.{js,jsx,ts,tsx,json,css,md}": "prettier --write",
     "prepare": "husky"
   },
   "private": true,
