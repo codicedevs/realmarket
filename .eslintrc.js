@@ -23,6 +23,7 @@ module.exports = {
 	rules: {
 		'react/prop-types': 'off',
 		'camelcase': 'off',
+		'react/jsx-uses-react': 1,
 		'react/jsx-key': 'off',
 		"react/jsx-filename-extension": [ "warn", {"extensions": [".tsx"]} ]
 	},
