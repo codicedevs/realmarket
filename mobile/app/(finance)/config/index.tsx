@@ -122,15 +122,6 @@ const ConfigScreen = () => {
         </LayoutCustom>
       </Modal>
       <Container style={{ flex: 1 }}>
-        {/* <TopNavigation
-          alignment="center"
-          title="Configuración"
-          style={themedStyles.topNavigation}
-          accessoryLeft={() => (
-            <RoundedButton icon="arrow-back-outline" />
-          )}
-          accessoryRight={() => <RoundedButton icon="person-outline" />}
-        /> */}
         <Header title={'Configuración'} />
         <ImageBackground style={themedStyles.initialsContainer} source={iniciales}>
           <Text style={themedStyles.initials}>{name[0]}</Text>
