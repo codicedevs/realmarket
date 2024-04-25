@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useRealm } from '@realm/react'
 import { StyleService } from '@ui-kitten/components'
 import { Link, router } from 'expo-router'
 import React, { useContext, useEffect, useState } from 'react'
 import { ActivityIndicator, Dimensions, Image, Pressable, Text, TouchableOpacity } from 'react-native'
 import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
+import { BSON, UpdateMode } from 'realm'
 import IButton from '../../../components/Buttons/IButton'
 import Container from '../../../components/Container'
 import CurrencyToggle from '../../../components/CurrencyToggle'
@@ -14,6 +16,7 @@ import TimeCard from '../../../components/cards/TimeCard'
 import { AppContext } from '../../../context/AppContext'
 import { useSession } from '../../../context/AuthProvider'
 import disponibilidadService from '../../../service/disponibilidad.service'
+import movimientosService from '../../../service/movimientos.service'
 import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
@@ -43,6 +46,13 @@ const Home = () => {
   const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
   const [positions, setPositions] = useState(1000)
   const [loading, setLoading] = useState(false)
+  const realm = useRealm();
+
+  const deleteData = () => {
+    realm.write(() => {
+      realm.deleteAll();
+    })
+  }
 
   const checkData = () => {
     if (cifrasDisponibilidad) {
@@ -55,32 +65,75 @@ const Home = () => {
     router.replace('position')
   }
 
-  const promises = async () => {
-    const res = await disponibilidadService.getCashPositions()
-    const resPos = await disponibilidadService.totalPositions()
-    setCifrasDisponibilidad(res.data)
-    setPositions(resPos.data.totalPosiciones)
+  const settingData = async () => {
+    const totalPositions = await AsyncStorage.getItem('totalPositions')
+    const positionsByDate = await AsyncStorage.getItem('positionsByDate')
+    if (positionsByDate) {
+      setCifrasDisponibilidad(JSON.parse(positionsByDate))
+    }
+    if (totalPositions) {
+      setPositions(Number(totalPositions))
+    }
   }
 
-  const getCash = async () => {
+  const getAllData = async () => {
     try {
-      setLoading(true)
-      const [res, resPos] = await Promise.all([
+      setLoading(true);
+      //Busco todos los datos
+      const [res, resPos, resArs, resUsd] = await Promise.all([
         disponibilidadService.getCashPositions(),
-        disponibilidadService.totalPositions()
+        disponibilidadService.totalPositions(),
+        movimientosService.getMovementsArs(),
+        movimientosService.getMovementsUsd()
       ]);
-      setCifrasDisponibilidad(res.data)
-      setPositions(resPos.data.totalPosiciones)
-      if (Object.keys(resPos.data).length !== 0) {
-        const jsonValue = JSON.stringify(resPos.data.posiciones)
-        await AsyncStorage.setItem('positions', jsonValue)
+      //Manejo todos los datos con estas funciones
+      deleteData()
+      handlePositionsData(res, resPos);
+      handleMovementsData(resArs, 'ContainerArs');
+      handleMovementsData(resUsd, 'ContainerUsd');
+    } catch (err) {
+      console.error('Error fetching data:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleMovementsData = async (res, storageKey) => {
+    if (res.data.length) {
+      if (res.data.length) {
+        try {
+          realm.write(() => {
+            console.log(`Iniciando transacción en Realm para ${storageKey}`);
+            const newContainer = realm.create(storageKey, {
+              movimientos: res.data
+            }, Realm.UpdateMode.All);  // Asumiendo que cada carga es completamente nueva
+            console.log(`Datos de ${storageKey} cargados con éxito.`);
+          });
+        } catch (error) {
+          console.error(`Error al cargar datos en ${storageKey}:`, error);
+        }
       }
     }
-    catch (err) {
-      console.log(err)
-    }
-    finally {
-      setLoading(false)
+  }
+
+  const handlePositionsData = async (res, resPos) => {
+    if (Object.keys(res.data).length !== 0 && Object.keys(resPos.data).length !== 0) {
+      setCifrasDisponibilidad(res.data)
+      setPositions(resPos.data.totalPosiciones)
+      const positionsData = JSON.stringify(resPos.data.totalPosiciones);
+      const positionByDate = JSON.stringify(res.data)
+      await AsyncStorage.setItem('positionsByDate', positionByDate)
+      await AsyncStorage.setItem('totalPositions', positionsData);
+      realm.write(() => {
+        const newPosition = realm.create('Position', {
+          _id: new BSON.UUID(),
+          totalPosiciones: resPos.data.totalPosiciones,
+          usdPrice: resPos.data.usdPrice,
+          usdPriceBcra: resPos.data.usdPriceBcra,
+          posiciones: resPos.data.posiciones
+        }, UpdateMode.Modified);
+        console.log('posiciones cargadas');
+      })
     }
   }
 
@@ -91,7 +144,8 @@ const Home = () => {
   ];
 
   useEffect(() => {
-    getCash()
+    getAllData()
+    settingData()
   }, [])
 
   const progressValue = useSharedValue<number>(0);

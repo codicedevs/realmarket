@@ -1,6 +1,8 @@
+import { useQuery } from "@realm/react"
 import { StyleService } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
-import { Modal, Pressable, ScrollView, Text } from "react-native"
+import { Dimensions, Modal, Pressable, ScrollView, Text } from "react-native"
+import { ContainerArs, ContainerUsd } from "../../../Realm/Schemas"
 import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
 import Header from "../../../components/CustomHeader"
@@ -12,8 +14,11 @@ import usePromise from "../../../hooks/usePromise"
 import movimientosService from "../../../service/movimientos.service"
 import { currencyFormat } from "../../../utils/number"
 import theme from "../../../utils/theme"
+const windowWidth = Dimensions.get("window").width;
 
 const Disponibility = () => {
+    const info3 = useQuery(ContainerUsd)
+    const info2 = useQuery(ContainerArs)
     const { currency } = useContext(AppContext)
     const [open, setOpen] = useState(false)
     const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps | {}>({})
@@ -35,19 +40,43 @@ const Disponibility = () => {
         setMovementsUsd(resUsd.data.reverse())
     }
 
+    const checkMovements = () => {
+        if (info2 !== undefined && info3 !== undefined) {
+            const processInChunks = (movements, setFunction) => {
+                let index = 0;
+                const chunkSize = 10;
+                let buffer = [];
+
+                const interval = setInterval(() => {
+                    const chunk = movements.slice(index, index + chunkSize).map(item => ({ ...item }));
+                    buffer = [...buffer, ...chunk];
+                    index += chunkSize;
+
+                    if (index % 50 === 0 || index >= movements.length) {  // Actualizar cada 50 elementos o al final
+                        setFunction(prevMovements => [...prevMovements, ...buffer]);
+                        buffer = [];
+                    }
+
+                    if (index >= movements.length) clearInterval(interval);
+                }, 100);
+            };
+
+            processInChunks(info2[0].movimientos, setMovementsArs);
+            processInChunks(info3[0].movimientos, setMovementsUsd);
+        }
+    }
+
     const getInfo = async () => {
-        await handlePromise(promises())
+        // await handlePromise(promises())
+        checkMovements()
     }
 
     const checkBalanceCurrency = () => {
-        if (movementsArs.length === 0) return
-        if (movementsUsd.length === 0) return
+        if (movementsArs.length === 0 || movementsUsd.length === 0) return
         if (currency === 'ARS') {
-            const initialValue = movementsArs.find(transaction => transaction.description === "Saldo Inicial");
             return movementsArs[0].balance
         }
-        const initialValue = movementsUsd.find(transaction => transaction.description === "Saldo Inicial");
-        return movementsArs[0].balance
+        return movementsUsd[0].balance
     }
 
     useEffect(() => {
@@ -67,11 +96,13 @@ const Disponibility = () => {
                     <LayoutCustom style={themedStyles.centeredView}>
                         <LayoutCustom style={themedStyles.modalView}>
                             <LayoutCustom mb={theme.margins.large}>
-                                <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalle del movimiento</Text>
-                                <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 25, marginBottom: theme.margins.medium, fontWeight: '400' }}>Detalle del movimiento</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.xSmall, fontWeight: '400' }}> Fecha:</Text>
                                 <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date}</Text>
-                                <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.small }}>Importe:</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small, fontWeight: '400' }}>Importe:</Text>
                                 <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small, fontWeight: '400' }}>Descripcion:</Text>
+                                <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.description.slice(0, 20)}</Text>
                             </LayoutCustom>
                             <Pressable
                                 style={[themedStyles.button, themedStyles.buttonClose]}
@@ -162,6 +193,7 @@ const themedStyles = StyleService.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
+        width: windowWidth * 0.7
     },
     button: {
         borderRadius: 25,

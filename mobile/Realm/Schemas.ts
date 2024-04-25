@@ -9,6 +9,7 @@ export class Movimiento extends Realm.Object {
       date: "string",
       amount: "float",
       balance: "float",
+      comprobante: "string"
     },
   };
 }

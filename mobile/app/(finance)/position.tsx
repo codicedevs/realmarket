@@ -1,8 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useQuery } from "@realm/react"
 import { StyleService } from "@ui-kitten/components"
 import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useState } from "react"
 import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native"
+import { Position } from "../../Realm/Schemas"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
 import Header from "../../components/CustomHeader"
@@ -18,7 +20,9 @@ const Finance = () => {
     const [assetsInfo, setAssetsInfo] = useState({})
     const [open, setOpen] = useState(false)
     const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
+    const [totalPosition, setTotalPosition] = useState(0)
     const { currency } = useContext(AppContext)
+    const info1 = useQuery(Position)
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
 
     const formatPublicTitles = (data: IPosition[]) => {
@@ -30,15 +34,22 @@ const Finance = () => {
         return newData
     }
 
+    const settingData = async () => {
+        const totalPositions = await AsyncStorage.getItem('totalPositions')
+        if (totalPositions) {
+            setTotalPosition(Number(totalPositions))
+        }
+    }
+
     const selectAsset = (data: IPosition) => {
         setSelectedAsset(data)
         setOpen(true)
     }
 
     const fetchAndOrganizePositions = async () => {
-        const value = await AsyncStorage.getItem('positions')
-        if (value) {
-            const positions = JSON.parse(value);
+        if (info1 !== undefined) {
+            const positions = info1[0].posiciones
+            //const positions = JSON.parse(value);
             const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ" && position.monedaCotizacion.includes(currency))
             const acciones = positions.filter((position) => position.tipoTitulo === "Acciones" && position.monedaCotizacion.includes(currency))
             const cedears = positions.filter((position) => position.tipoTitulo === "Cedears" && position.monedaCotizacion.includes(currency))
@@ -61,6 +72,7 @@ const Finance = () => {
     useFocusEffect(
         useCallback(() => {
             fetchAndOrganizePositions()
+            settingData()
         }, [currency])
     )
 
@@ -129,7 +141,7 @@ const Finance = () => {
                             justify="space-between"
                         >
                             <Text style={themedStyles.textColor}>Total general</Text>
-                            <Text style={themedStyles.textColor}>AR$1.456.789,000</Text>
+                            <Text style={themedStyles.textColor}>{currencyFormat(totalPosition, currency)}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                     <LayoutCustom ph={theme.paddings.large}>

@@ -13,7 +13,7 @@ import { LoadingProvider } from "../context/LoadingProvider";
 const RootLayout = () => {
     return (
         <ApplicationProvider {...eva} theme={eva.dark}>
-            <RealmProvider schema={[Movimiento, ContainerUsd, ContainerArs, Position, PositionDetail]} schemaVersion={2}>
+            <RealmProvider schema={[Movimiento, ContainerUsd, ContainerArs, Position, PositionDetail]} schemaVersion={4}>
                 <RootSiblingParent>
                     <IconRegistry icons={EvaIconsPack} />
                     <AppProvider>
