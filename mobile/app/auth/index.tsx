@@ -89,7 +89,7 @@ const Auth = () => {
                     <LayoutCustom itemsCenter>
                         <Image style={themedStyles.img} source={logo} />
                         <LayoutCustom itemsCenter mt={theme.margins.large}>
-                            <Text style={themedStyles.title} >Bienvenido!</Text>
+                            <Text style={themedStyles.title} >¡Bienvenido!</Text>
                             <Text style={themedStyles.subTitle} numberOfLines={2}>Ingrese su nombre de usuario y contraseña</Text>
                         </LayoutCustom>
                     </LayoutCustom>
@@ -122,8 +122,8 @@ const Auth = () => {
                             <Text style={themedStyles.loginText} onPress={handleSubmit(onSubmit)}>LOGIN</Text>
                         </TouchableOpacity>
                         <LayoutCustom mt={theme.margins.small} style={themedStyles.forgotPasswordContainer}>
-                            <Text style={themedStyles.forgottenPasswordText}>Olvido su contraseña?</Text>
-                            <Text style={themedStyles.forgottenPasswordText}>O crear nueva cuenta?</Text>
+                            <Text style={themedStyles.forgottenPasswordText}>¿Olvidó su contraseña?</Text>
+                            <Text style={themedStyles.forgottenPasswordText}>¿O desea crear una nueva cuenta?</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                 </LayoutCustom>

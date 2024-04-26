@@ -3,6 +3,7 @@ import { Dimensions, ImageBackground, Text } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import { StyleService, useStyleSheet } from "@ui-kitten/components";
 // ----------------------------- Components && Elements -----------------------
+import { currencyFormat } from "../../utils/number";
 import theme from "../../utils/theme";
 import LayoutCustom from "../LayoutCustom";
 const windowWidth = Dimensions.get("window").width;
@@ -10,10 +11,10 @@ const windowHeight = Dimensions.get("window").height;
 
 interface IBalanceCardProps {
     balance: number;
-    grow: number;
+    currency: string;
 }
 
-const BalanceCard = React.memo(({ balance, grow }: IBalanceCardProps) => {
+const BalanceCard = React.memo(({ balance, currency }: IBalanceCardProps) => {
     const styles = useStyleSheet(themedStyles);
 
     return (
@@ -25,7 +26,7 @@ const BalanceCard = React.memo(({ balance, grow }: IBalanceCardProps) => {
                     </LayoutCustom>
                     <LayoutCustom mt={theme.margins.small} mb={theme.margins.medium} alignSelfCenter>
                         <Text style={styles.moneyText}>
-                            ${balance}
+                            {currencyFormat(balance, currency)}
                         </Text>
                     </LayoutCustom>
                 </LayoutCustom>

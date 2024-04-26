@@ -92,13 +92,13 @@ const themedStyles = StyleService.create({
         borderBottomWidth: 1
     },
     avatarContainer: {
-        width: '20%'
+        width: '15%'
     },
     smallerContainer: {
         width: '25%'
     },
     biggerContainer: {
-        width: '25%',
+        width: '30%',
         alignItems: "flex-end"
     },
     currencyText: {

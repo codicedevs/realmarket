@@ -1,4 +1,5 @@
 import React from 'react';
+import Toast from 'react-native-root-toast';
 import { useStorageState } from '../hooks/useStorageState';
 import authService from '../service/auth.service';
 
@@ -33,19 +34,33 @@ export function useSession() {
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState('session');
 
+  const notification = (texto: string) => {
+    Toast.show(texto, {
+      duration: Toast.durations.SHORT,
+      position: Toast.positions.TOP,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0,
+    });
+  }
+
   return (
     <AuthContext.Provider
       value={{
         signIn: async (username: string, password: string) => {
-
           const data = await authService.login(username, password)
           if (data) {
             setSession(data.user);
+            notification('Inicio de sesion exitoso')
+          } else {
+            notification('Error en el inicio de sesion')
           }
         },
         signOut: async () => {
           setSession(null);
           await authService.signOut()
+          notification('Se cerro sesion')
         },
         session,
         isLoading,

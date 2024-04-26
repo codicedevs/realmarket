@@ -1,11 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { StyleService, TopNavigation } from "@ui-kitten/components"
-import { router, useFocusEffect } from "expo-router"
+import { StyleService } from "@ui-kitten/components"
+import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useState } from "react"
 import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native"
-import RoundedButton from "../../components/Buttons/RoundedButton"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
+import Header from "../../components/CustomHeader"
 import LayoutCustom from "../../components/LayoutCustom"
 import FolderCard from "../../components/cards/FolderCard"
 import { IPosition } from "../../components/cards/TransactionCards"
@@ -20,9 +20,6 @@ const Finance = () => {
     const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
     const { currency } = useContext(AppContext)
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
-    const configRoute = () => {
-        router.replace('config')
-    }
 
     const formatPublicTitles = (data: IPosition[]) => {
         const newData = data.map((d) => ({
@@ -64,7 +61,7 @@ const Finance = () => {
     useFocusEffect(
         useCallback(() => {
             fetchAndOrganizePositions()
-        }, [])
+        }, [currency])
     )
 
     return (
@@ -87,7 +84,7 @@ const Finance = () => {
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset.nombreEspecie.slice(0, 20)}</Text>
                                     </LayoutCustom>
                                     <LayoutCustom horizontal itemsCenter>
-                                        <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Codigo:</Text>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Código:</Text>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset.simboloLocal}</Text>
                                     </LayoutCustom>
                                     <LayoutCustom horizontal itemsCenter>
@@ -119,15 +116,7 @@ const Finance = () => {
                 </LayoutCustom>
             </Modal>
             <Container style={themedStyles.container}>
-                <TopNavigation
-                    alignment="center"
-                    title="Posiciones"
-                    style={themedStyles.topNavigation}
-                    accessoryLeft={() => (
-                        <RoundedButton icon="arrow-back-outline" />
-                    )}
-                    accessoryRight={() => <RoundedButton onPress={() => configRoute()} icon="person-outline" />}
-                />
+                <Header title={'Posiciones'} />
                 <LayoutCustom>
                     <LayoutCustom mt={theme.margins.large} mb={theme.margins.medium} alignSelfCenter>
                         <CurrencyToggle onChange={fetchAndOrganizePositions} />
@@ -148,14 +137,14 @@ const Finance = () => {
                             <LayoutCustom style={themedStyles.invisibleTitle}>
                             </LayoutCustom>
                             <LayoutCustom alignSelfCenter style={themedStyles.smallerTitle}>
-                                <Text style={themedStyles.textColor}>Nombre</Text>
+                                <Text style={themedStyles.titleTable}>Nombre</Text>
                             </LayoutCustom>
                             <LayoutCustom alignSelfCenter itemsCenter style={themedStyles.smallerTitle}>
-                                <Text style={themedStyles.textColor}>Valor</Text>
+                                <Text style={themedStyles.titleTable}>Valor</Text>
                             </LayoutCustom>
                             <LayoutCustom style={themedStyles.biggerTitle}>
-                                <Text style={themedStyles.textColor}>Total</Text>
-                                <Text style={themedStyles.textColor}>Cantidad</Text>
+                                <Text style={themedStyles.titleTable}>Total</Text>
+                                <Text style={themedStyles.titleTable}>Cantidad</Text>
                             </LayoutCustom>
                         </LayoutCustom>
                     </LayoutCustom>
@@ -192,7 +181,7 @@ const themedStyles = StyleService.create({
         width: '100%'
     },
     invisibleTitle: {
-        minWidth: '20%'
+        minWidth: '10%'
     },
     smallerTitle: {
         width: "25%"
@@ -203,6 +192,10 @@ const themedStyles = StyleService.create({
     },
     textColor: {
         color: "white"
+    },
+    titleTable: {
+        color: 'white',
+        fontWeight: 'bold'
     },
     scrollContainer: {
         flex: 1,

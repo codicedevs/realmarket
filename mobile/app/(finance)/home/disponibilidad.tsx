@@ -1,11 +1,11 @@
-import { StyleService, TopNavigation } from "@ui-kitten/components"
+import { StyleService } from "@ui-kitten/components"
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import React, { useContext, useEffect, useState } from "react"
 import { Modal, Pressable, ScrollView, Text } from "react-native"
-import RoundedButton from "../../../components/Buttons/RoundedButton"
 import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
+import Header from "../../../components/CustomHeader"
 import LayoutCustom from "../../../components/LayoutCustom"
 import TransactionItem, { ITransactionItemProps } from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
@@ -89,10 +89,10 @@ const Disponibility = () => {
         if (movementsUsd.length === 0) return
         if (currency === 'ARS') {
             const initialValue = movementsArs.find(transaction => transaction.description === "Saldo Inicial");
-            return initialValue.balance
+            return movementsArs[0].balance
         }
         const initialValue = movementsUsd.find(transaction => transaction.description === "Saldo Inicial");
-        return initialValue.balance
+        return movementsArs[0].balance
     }
 
     useEffect(() => {
@@ -137,7 +137,7 @@ const Disponibility = () => {
                 }
             </Modal>
             <Container style={themedStyles.container}>
-                <TopNavigation
+                {/* <TopNavigation
                     alignment="center"
                     title="Movimientos"
                     style={themedStyles.topNavigation}
@@ -145,13 +145,14 @@ const Disponibility = () => {
                         <RoundedButton icon="arrow-back-outline" />
                     )}
                     accessoryRight={() => <RoundedButton icon="person-outline" />}
-                />
+                /> */}
+                <Header title={'Movimientos'} />
                 <LayoutCustom style={themedStyles.content}>
                     <LayoutCustom mv={theme.margins.large}>
                         <LayoutCustom alignSelfCenter mb={theme.margins.medium}>
                             <CurrencyToggle />
                         </LayoutCustom>
-                        <BalanceCard balance={checkBalanceCurrency()} grow={12.2} />
+                        <BalanceCard balance={checkBalanceCurrency()} currency={currency} />
                     </LayoutCustom>
                 </LayoutCustom>
                 <LayoutCustom overflow="scroll" gap={15} ph={theme.paddings.medium} >

@@ -22,9 +22,9 @@ async function bootstrap() {
     .setTitle('Real Market API')
     .setDescription('Endpoints')
     .setVersion('1.0')
+    .addBearerAuth()
     .addTag('users')
     .build();
-
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('explorer', app, document);
 

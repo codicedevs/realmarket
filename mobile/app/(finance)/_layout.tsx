@@ -30,7 +30,7 @@ const TabLayout = () => {
       }}
     >
       <Tabs.Screen options={{
-        title: "Home", tabBarIcon: ({ focused }) => (
+        title: "Inicio", tabBarIcon: ({ focused }) => (
           <View style={{ ...themedStyles.singleTabStyle, backgroundColor: focused ? theme.colors.activeLabel : theme.colors.background }}>
             <Image style={themedStyles.imageStyle} source={homeIcon} />
           </View>
@@ -44,7 +44,7 @@ const TabLayout = () => {
         )
       }} name='position' />
       <Tabs.Screen options={{
-        title: "Ordenes", tabBarIcon: ({ focused }) => (
+        title: "Órdenes", tabBarIcon: ({ focused }) => (
           <View style={{ ...themedStyles.singleTabStyle, backgroundColor: focused ? theme.colors.activeLabel : theme.colors.background }}>
             <Image style={themedStyles.imageStyle} source={actionsIcon} />
           </View>

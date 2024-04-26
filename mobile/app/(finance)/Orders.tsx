@@ -1,8 +1,8 @@
-import { StyleService, TopNavigation } from '@ui-kitten/components'
+import { StyleService } from '@ui-kitten/components'
 import React from 'react'
 import { Dimensions } from 'react-native'
-import RoundedButton from '../../components/Buttons/RoundedButton'
 import Container from '../../components/Container'
+import Header from '../../components/CustomHeader'
 import LayoutCustom from '../../components/LayoutCustom'
 import ActionCard from '../../components/cards/ActionsCards'
 import theme from '../../utils/theme'
@@ -12,15 +12,16 @@ const Positions = () => {
 
   return (
     <Container style={themedStyles.container}>
-      <TopNavigation
+      {/* <TopNavigation
         alignment="center"
-        title="Ordenes"
+        title="Órdenes"
         style={themedStyles.topNavigation}
         accessoryLeft={() => (
           <RoundedButton icon="arrow-back-outline" />
         )}
         accessoryRight={() => <RoundedButton icon="person-outline" />}
-      />
+      /> */}
+      <Header title={'Órdenes'} />
       <LayoutCustom style={themedStyles.content}>
         <LayoutCustom style={themedStyles.cardsContainer} justify="space-between">
           <LayoutCustom style={themedStyles.cardSize}>
