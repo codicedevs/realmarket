@@ -1,0 +1,11 @@
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Deploy to Production
+          deployment: production
+          script:
+            - echo "Deploying to production"
+            # Actualiza el c—digo del backend en el host y lo reinicia con pm2 (para lo que hace falta el sourcing de nvm.sh)
+            - ssh $DROPLET_USER@$DROPLET_HOST "cd real-market/backend && git pull origin master && source ~/.nvm/nvm.sh && npx pm2 restart Real-market"
+
