@@ -44,23 +44,24 @@ const Disponibility = () => {
         if (info2 !== undefined && info3 !== undefined) {
             const processInChunks = (movements, setFunction) => {
                 let index = 0;
-                const chunkSize = 10;
-                let buffer = [];
+                const chunkSize = 10; // Procesar de 10 en 10
 
                 const interval = setInterval(() => {
+                    // Tomar un 'chunk' de los movimientos
                     const chunk = movements.slice(index, index + chunkSize).map(item => ({ ...item }));
-                    buffer = [...buffer, ...chunk];
+
+                    // Actualizar el estado con el nuevo 'chunk'
+                    setFunction(prevMovements => [...prevMovements, ...chunk]);
+
+                    // Incrementar el índice para el siguiente chunk
                     index += chunkSize;
 
-                    if (index % 50 === 0 || index >= movements.length) {  // Actualizar cada 50 elementos o al final
-                        setFunction(prevMovements => [...prevMovements, ...buffer]);
-                        buffer = [];
-                    }
-
+                    // Si hemos procesado todos los movimientos, detener el intervalo
                     if (index >= movements.length) clearInterval(interval);
-                }, 100);
+                }, 100); // Esperar 100 ms antes de procesar el siguiente chunk
             };
 
+            // Llamar a processInChunks para cada tipo de movimiento
             processInChunks(info2[0].movimientos, setMovementsArs);
             processInChunks(info3[0].movimientos, setMovementsUsd);
         }
@@ -103,6 +104,8 @@ const Disponibility = () => {
                                 <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
                                 <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small, fontWeight: '400' }}>Descripcion:</Text>
                                 <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.description.slice(0, 20)}</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small, fontWeight: '400' }}>Comprobante:</Text>
+                                <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.comprobante}</Text>
                             </LayoutCustom>
                             <Pressable
                                 style={[themedStyles.button, themedStyles.buttonClose]}
