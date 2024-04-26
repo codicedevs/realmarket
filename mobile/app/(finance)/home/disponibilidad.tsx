@@ -57,14 +57,13 @@ const Disponibility = () => {
             const filename = `comprobante_${id}.jpg`;
             saveFile(base64Image, filename, url)
             //  saveFile(base64Image, filename)
-            Notifications.scheduleNotificationAsync({
-                content: {
-                    title: "Descarga Completa 📥",
-                    body: `${filename} ha sido guardado exitosamente.`,
-
-                },
-                trigger: null,
-            });
+            // Notifications.scheduleNotificationAsync({
+            //     content: {
+            //         title: "Descarga Completa 📥",
+            //         body: `${filename} ha sido guardado exitosamente.`,
+            //     },
+            //     trigger: null,
+            // });
         } catch (e) {
             console.error('error', e);
         } finally {

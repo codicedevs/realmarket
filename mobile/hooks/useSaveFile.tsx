@@ -1,8 +1,6 @@
 import * as FileSystem from 'expo-file-system';
-import * as IntentLauncher from 'expo-intent-launcher';
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
-import { Alert } from 'react-native';
 import { useLoading } from '../context/LoadingProvider';
 import { HttpService } from '../service/http.service';
 import { arrayBufferToBase64 } from '../utils/buffer';
@@ -10,10 +8,7 @@ import { arrayBufferToBase64 } from '../utils/buffer';
 export function useSaveFile() {
 
   const { setIsLoading } = useLoading()
-
   const saveFile = async (base: string, filename: string, url: string) => {
-    // setIsLoading(true)
-    Alert.alert('comenzo la pepa')
     const path = `${FileSystem.documentDirectory}${filename}`;
     try {
       const file = await new HttpService().get(url, { responseType: 'arraybuffer' })
@@ -28,13 +23,13 @@ export function useSaveFile() {
         } else {
           await MediaLibrary.createAlbumAsync('Documentos', asset, false);
         }
-        FileSystem.getContentUriAsync(path).then(cUri => {
-          IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
-            data: cUri,
-            flags: 1,
-            type: 'application/pdf'
-          });
-        });
+        // FileSystem.getContentUriAsync(path).then(cUri => {
+        //   IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
+        //     data: cUri,
+        //     flags: 1,
+        //     type: 'application/jpg'
+        //   });
+        // });
       } else {
         console.error('Permission not granted')
       }
