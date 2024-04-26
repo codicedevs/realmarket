@@ -1,11 +1,12 @@
-import { Controller, Get, Query, Req, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Param, Query, Req, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { getJwtPayload } from 'src/auth/utils/jwt.utils';
 import { Movimiento } from './entities/movimiento.entity';
 import { MovimientosService } from './movimientos.service';
 
 @ApiTags('movimientos')
+@ApiBearerAuth()
 @Controller('movimientos')
 export class MovimientosController {
   constructor(private readonly movimientosService: MovimientosService) {}
@@ -32,15 +33,15 @@ export class MovimientosController {
     return this.movimientosService.movimientosUsd(accountId);
   }
 
-  @Get('comprobante')
+  @Get('comprobante/:id')
   public async comprobanteOperacion(
     @Res() res: Response,
-    @Query('id') idComprobante: string,
+    @Param('id') id: string,
   ) {
     const rosvalRes =
-      await this.movimientosService.comprobanteOperacion(idComprobante);
+      await this.movimientosService.comprobanteOperacion(id);
     res.set({
-      'Content-Type': 'application/pdf',
+      'Content-Type': rosvalRes.headers['content-type'],
     });
     return rosvalRes.data.pipe(res); //
   }

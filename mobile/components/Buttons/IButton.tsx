@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Text } from "react-native";
+import { Image, ImageSourcePropType, Text } from "react-native";
 // ----------------------------- UI kitten -----------------------------------
 import {
   StyleService,
@@ -14,7 +14,7 @@ import LayoutCustom from "../LayoutCustom";
 // ----------------------------- Components && Elements -----------------------
 
 interface IButtonProps {
-  name: string;
+  name: ImageSourcePropType;
   icon: string;
   title: string;
   onPress?(): void;
