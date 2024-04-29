@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as morgan from 'morgan';
+import morgan from 'morgan';
 import { AppModule } from './app.module';
 import { CORS } from './constants';
 import { GlobalExceptionFilter } from './exception-filters/global.exception.filter';

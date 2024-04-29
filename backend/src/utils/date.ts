@@ -1,4 +1,4 @@
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 type AnyDate = dayjs.Dayjs | string | Date;
 
 export function formatRosvalDate(date: AnyDate): string {

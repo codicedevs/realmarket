@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 import { formatRosvalDate } from 'src/utils/date';
 import { getDolar, getDolarBcra } from 'src/utils/dolar';
