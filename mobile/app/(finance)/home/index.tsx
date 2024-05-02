@@ -1,12 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useRealm } from '@realm/react'
+import { useObject, useQuery, useRealm } from '@realm/react'
 import { StyleService } from '@ui-kitten/components'
 import { Link, router } from 'expo-router'
 import React, { useContext, useEffect, useState } from 'react'
 import { ActivityIndicator, Dimensions, Image, Pressable, Text, TouchableOpacity } from 'react-native'
 import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
-import { BSON, UpdateMode } from 'realm'
+import { BSON } from 'realm'
+import { ContainerArs, ContainerUsd, Position } from '../../../Realm/Schemas'
 import IButton from '../../../components/Buttons/IButton'
 import Container from '../../../components/Container'
 import CurrencyToggle from '../../../components/CurrencyToggle'
@@ -47,12 +48,12 @@ const Home = () => {
   const [positions, setPositions] = useState(1000)
   const [loading, setLoading] = useState(false)
   const realm = useRealm();
-
-  const deleteData = () => {
-    realm.write(() => {
-      realm.deleteAll();
-    })
-  }
+  const info3 = useQuery(ContainerUsd)
+  const info2 = useQuery(ContainerArs)
+  const info1 = useQuery(Position)
+  let Usd = info3 ? useObject(ContainerUsd, info3[0].id) : undefined;
+  let Ars = info2 ? useObject(ContainerArs, info2[0].id) : undefined;
+  let position = info1 ? useObject(Position, info1[0]._id) : undefined;
 
   const checkData = () => {
     if (cifrasDisponibilidad) {
@@ -64,6 +65,16 @@ const Home = () => {
   const positionRoute = () => {
     router.replace('position')
   }
+
+  const safeRealmWrite = async (action) => {
+    try {
+      realm.write(() => {
+        action();
+      });
+    } catch (error) {
+      console.error('Error during Realm operation:', error);
+    }
+  };
 
   const settingData = async () => {
     const totalPositions = await AsyncStorage.getItem('totalPositions')
@@ -87,7 +98,6 @@ const Home = () => {
         movimientosService.getMovementsUsd()
       ]);
       //Manejo todos los datos con estas funciones
-      deleteData()
       handlePositionsData(res, resPos);
       handleMovementsData(resArs, 'ContainerArs');
       handleMovementsData(resUsd, 'ContainerUsd');
@@ -98,44 +108,54 @@ const Home = () => {
     }
   }
 
-  const handleMovementsData = async (res, storageKey) => {
-    if (res.data.length) {
-      if (res.data.length) {
-        try {
-          realm.write(() => {
-            console.log(`Iniciando transacción en Realm para ${storageKey}`);
-            const newContainer = realm.create(storageKey, {
-              movimientos: res.data
-            }, Realm.UpdateMode.All);  // Asumiendo que cada carga es completamente nueva
-            console.log(`Datos de ${storageKey} cargados con éxito.`);
-          });
-        } catch (error) {
-          console.error(`Error al cargar datos en ${storageKey}:`, error);
-        }
-      }
+  const handleMovementsData = async (res, containerType) => {
+    const Container = containerType === 'ContainerUsd' ? Usd : Ars;
+
+    if (Container && res.data.length) {
+      console.log(`Updating existing ${containerType} records...`);
+      await safeRealmWrite(() => {
+        Container.movimientos = res.data;
+      });
+    } else if (res.data.length) {
+      console.log(`Starting transaction in Realm for ${containerType}...`);
+      await safeRealmWrite(() => {
+        realm.create(containerType, {
+          id: new BSON.UUID(),
+          movimientos: res.data
+        }, Realm.UpdateMode.All);
+        console.log(`Data for ${containerType} loaded successfully.`);
+      });
     }
-  }
+  };
 
   const handlePositionsData = async (res, resPos) => {
-    if (Object.keys(res.data).length !== 0 && Object.keys(resPos.data).length !== 0) {
-      setCifrasDisponibilidad(res.data)
-      setPositions(resPos.data.totalPosiciones)
+    if (Object.keys(res.data).length && Object.keys(resPos.data).length) {
+      setCifrasDisponibilidad(res.data);
+      setPositions(resPos.data.totalPosiciones);
       const positionsData = JSON.stringify(resPos.data.totalPosiciones);
-      const positionByDate = JSON.stringify(res.data)
-      await AsyncStorage.setItem('positionsByDate', positionByDate)
+      const positionByDate = JSON.stringify(res.data);
+      await AsyncStorage.setItem('positionsByDate', positionByDate);
       await AsyncStorage.setItem('totalPositions', positionsData);
-      realm.write(() => {
-        const newPosition = realm.create('Position', {
-          _id: new BSON.UUID(),
-          totalPosiciones: resPos.data.totalPosiciones,
-          usdPrice: resPos.data.usdPrice,
-          usdPriceBcra: resPos.data.usdPriceBcra,
-          posiciones: resPos.data.posiciones
-        }, UpdateMode.Modified);
-        console.log('posiciones cargadas');
-      })
+
+      // console.log('Checking if position exists...');
+      await safeRealmWrite(() => {
+        if (position) {
+          position.totalPosiciones = resPos.data.totalPosiciones;
+          position.usdPrice = resPos.data.usdPrice;
+          position.usdPriceBcra = resPos.data.usdPriceBcra;
+          position.posiciones = resPos.data.posiciones;
+        } else {
+          realm.create('Position', {
+            _id: new BSON.UUID(),
+            totalPosiciones: resPos.data.totalPosiciones,
+            usdPrice: resPos.data.usdPrice,
+            usdPriceBcra: resPos.data.usdPriceBcra,
+            posiciones: resPos.data.posiciones
+          }, Realm.UpdateMode.Modified);
+        }
+      });
     }
-  }
+  };
 
   const CARDS = [
     { color: "#009F9F", balance: currency === "ARS" ? checkData().dispoHoy : checkData().dispoHoyUsd, card_number: "5282300014453286", icon: require('../../../assets/Icons/todayClock.png') },
