@@ -3,7 +3,7 @@ import { StyleService } from "@ui-kitten/components"
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import React, { useContext, useEffect, useState } from "react"
-import { Dimensions, Modal, Pressable, ScrollView, Text } from "react-native"
+import { Dimensions, FlatList, Modal, Pressable, Text } from "react-native"
 import { ContainerArs, ContainerUsd } from "../../../Realm/Schemas"
 import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
@@ -86,30 +86,8 @@ const Disponibility = () => {
     }
 
     const checkMovements = () => {
-        if (info2 !== undefined && info3 !== undefined) {
-            const processInChunks = (movements, setFunction) => {
-                let index = 0;
-                const chunkSize = 10; // Procesar de 10 en 10
-
-                const interval = setInterval(() => {
-                    // Tomar un 'chunk' de los movimientos
-                    const chunk = movements.slice(index, index + chunkSize).map(item => ({ ...item }));
-
-                    // Actualizar el estado con el nuevo 'chunk'
-                    setFunction(prevMovements => [...prevMovements, ...chunk]);
-
-                    // Incrementar el índice para el siguiente chunk
-                    index += chunkSize;
-
-                    // Si hemos procesado todos los movimientos, detener el intervalo
-                    if (index >= movements.length) clearInterval(interval);
-                }, 100); // Esperar 100 ms antes de procesar el siguiente chunk
-            };
-
-            // Llamar a processInChunks para cada tipo de movimiento
-            processInChunks(info2[0].movimientos, setMovementsArs);
-            processInChunks(info3[0].movimientos, setMovementsUsd);
-        }
+        setMovementsArs(info2[0].movimientos)
+        setMovementsUsd(info3[0].movimientos)
     }
 
     const getInfo = async () => {
@@ -171,15 +149,6 @@ const Disponibility = () => {
                 }
             </Modal>
             <Container style={themedStyles.container}>
-                {/* <TopNavigation
-                    alignment="center"
-                    title="Movimientos"
-                    style={themedStyles.topNavigation}
-                    accessoryLeft={() => (
-                        <RoundedButton icon="arrow-back-outline" />
-                    )}
-                    accessoryRight={() => <RoundedButton icon="person-outline" />}
-                /> */}
                 <Header title={'Movimientos'} />
                 <LayoutCustom style={themedStyles.content}>
                     <LayoutCustom mv={theme.margins.large}>
@@ -190,24 +159,11 @@ const Disponibility = () => {
                     </LayoutCustom>
                 </LayoutCustom>
                 <LayoutCustom overflow="scroll" gap={15} ph={theme.paddings.medium} >
-                    <ScrollView>
-                        {
-                            currency === 'ARS' ?
-                                movementsArs.length !== 0 ?
-                                    movementsArs.map((t, i) => {
-                                        return <TransactionItem data={t} key={i} selectTransaction={selectTransaction} currency={currency} />
-                                    })
-                                    :
-                                    null
-                                :
-                                movementsUsd.length !== 0 ?
-                                    movementsUsd.map((t, i) => {
-                                        return <TransactionItem data={t} key={i} selectTransaction={selectTransaction} currency={currency} />
-                                    })
-                                    :
-                                    null
-                        }
-                    </ScrollView>
+                    <FlatList
+                        data={currency === 'ARS' ? movementsArs : movementsUsd}
+                        renderItem={({ item }) => <TransactionItem data={item} selectTransaction={selectTransaction} currency={currency} />}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
                 </LayoutCustom>
             </Container>
         </>
