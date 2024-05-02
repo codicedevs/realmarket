@@ -17,7 +17,9 @@ export class Movimiento extends Realm.Object {
 export class ContainerUsd extends Realm.Object {
   static schema = {
     name: "ContainerUsd",
+    primaryKey: "id",
     properties: {
+      id:"uuid",
       movimientos: "Movimiento[]", // Lista de movimientos
     },
   };
@@ -26,7 +28,9 @@ export class ContainerUsd extends Realm.Object {
 export class ContainerArs extends Realm.Object {
   static schema = {
     name: "ContainerArs",
+    primaryKey: "id",
     properties: {
+      id:"uuid",
       movimientos: "Movimiento[]", // Lista de movimientos
     },
   };
