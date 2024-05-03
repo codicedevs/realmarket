@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // import Text from '../../../components/Text'
 import { Icon, StyleService } from '@ui-kitten/components';
 import * as Linking from 'expo-linking';
-import { Dimensions, Image, ImageBackground, Modal, Pressable, Text, TextInput, View } from 'react-native';
+import { Dimensions, Image, ImageBackground, Modal, Pressable, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-root-toast';
 import ConfigButton from '../../../components/Buttons/ConfigButton';
 import Container from '../../../components/Container';
@@ -30,6 +30,12 @@ const ConfigScreen = () => {
     newPass: '',
     currentPass: ''
   })
+  const [userInfo, setUserInfo] = useState({
+    email: session.email,
+    telefono: session.telefono
+  })
+  const [editEmail, setEditEmail] = useState(false)
+  const [editPhone, setEditPhone] = useState(false)
 
   const toggleModal = () => {
     setOpen(!open)
@@ -41,6 +47,13 @@ const ConfigScreen = () => {
       [name]: text
     }));
   };
+
+  const handleUserInfoChange = name => text => {
+    setUserInfo(prevState => ({
+      ...prevState,
+      [name]: text
+    }))
+  }
 
   const sendWhatsapp = () => {
     Linking.openURL('https://wa.me/3413110700')
@@ -70,6 +83,18 @@ const ConfigScreen = () => {
       notification('Hubo un problema')
     } finally {
       toggleModal()
+    }
+  }
+
+  const editUserInfo = async (field: keyof IUser) => {
+    try {
+      await userService.editUser({
+        id: session._id,
+        body: { [field]: userInfo[field] }
+      })
+    }
+    catch (e) {
+      console.error(e)
     }
   }
 
@@ -122,15 +147,6 @@ const ConfigScreen = () => {
         </LayoutCustom>
       </Modal>
       <Container style={{ flex: 1 }}>
-        {/* <TopNavigation
-          alignment="center"
-          title="Configuración"
-          style={themedStyles.topNavigation}
-          accessoryLeft={() => (
-            <RoundedButton icon="arrow-back-outline" />
-          )}
-          accessoryRight={() => <RoundedButton icon="person-outline" />}
-        /> */}
         <Header title={'Configuración'} />
         <ImageBackground style={themedStyles.initialsContainer} source={iniciales}>
           <Text style={themedStyles.initials}>{name[0]}</Text>
@@ -138,7 +154,7 @@ const ConfigScreen = () => {
         </ImageBackground>
         <LayoutCustom pt={5} itemsCenter style={themedStyles.infoContainer}>
           <Text style={themedStyles.nameText}>{name} {lastName}</Text>
-          <Text style={themedStyles.userName}>#{session.username} </Text>
+          <Text style={themedStyles.userName}>Usuario: {session.username} </Text>
           <Text style={themedStyles.account}>Cta: {session.accountId}</Text>
         </LayoutCustom>
         <View style={themedStyles.imageContainer}>
@@ -149,8 +165,62 @@ const ConfigScreen = () => {
         </View>
         <LayoutCustom ph={theme.paddings.large} style={themedStyles.buttonsContainer}>
           <LayoutCustom>
-            <TextInput value={session.email} placeholder="Email" placeholderTextColor={"gray"} style={themedStyles.input} />
-            <TextInput value={session.telefono} placeholder="Telefono" placeholderTextColor={"gray"} style={themedStyles.input} />
+            <View style={themedStyles.inputIconWrapper}>
+              <TextInput editable={editEmail} onChangeText={handleUserInfoChange('email')} value={userInfo.email} placeholder="Email" placeholderTextColor={"gray"} style={themedStyles.input} />
+              {
+                !editEmail ?
+                  <TouchableOpacity onPress={() => setEditEmail(!editEmail)}>
+                    <Icon
+                      pack="eva"
+                      name={'edit-2-outline'}
+                      style={themedStyles.inputIcon}
+                    />
+                  </TouchableOpacity>
+                  :
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '15%' }}>
+                    <TouchableOpacity onPress={() => editUserInfo('email')}>
+                      <Icon
+                        pack="eva"
+                        name={'checkmark-circle-outline'}
+                        style={{ ...themedStyles.inputIcon }}
+                      />
+                    </TouchableOpacity>
+                    <Icon
+                      pack="eva"
+                      name={'close-circle-outline'}
+                      style={{ ...themedStyles.inputIcon }}
+                    />
+                  </View>
+              }
+            </View>
+            <View style={themedStyles.inputIconWrapper}>
+              <TextInput editable={editPhone} onChangeText={handleUserInfoChange('telefono')} value={userInfo.telefono} placeholder="Telefono" placeholderTextColor={"gray"} style={themedStyles.input} />
+              {
+                !editPhone ?
+                  <TouchableOpacity onPress={() => setEditPhone(!editPhone)}>
+                    <Icon
+                      pack="eva"
+                      name={'edit-2-outline'}
+                      style={{ ...themedStyles.inputIcon }}
+                    />
+                  </TouchableOpacity>
+                  :
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '15%' }}>
+                    <TouchableOpacity onPress={() => editUserInfo('telefono')}>
+                      <Icon
+                        pack="eva"
+                        name={'checkmark-circle-outline'}
+                        style={{ ...themedStyles.inputIcon }}
+                      />
+                    </TouchableOpacity>
+                    <Icon
+                      pack="eva"
+                      name={'close-circle-outline'}
+                      style={{ ...themedStyles.inputIcon }}
+                    />
+                  </View>
+              }
+            </View>
           </LayoutCustom>
           <LayoutCustom mt={theme.margins.medium}>
             <ConfigButton onPress={toggleModal} title={"Cambiar contraseña"} icon={password} />
@@ -175,21 +245,21 @@ const themedStyles = StyleService.create({
     backgroundColor: theme.colors.background
   },
   input: {
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     height: windowHeight * 0.06,
     borderColor: 'gray',
     color: '#5A5959',
     fontSize: theme.fontSizes.small,
     paddingBottom: theme.paddings.xSmall,
     fontWeight: "bold"
-  }, centeredView: {
+  },
+  centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   modalInput: {
-
     fontSize: theme.fontSizes.small,
     paddingBottom: theme.paddings.xSmall,
     flex: 1
