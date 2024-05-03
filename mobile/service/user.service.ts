@@ -12,6 +12,10 @@ export class UserService extends HttpService {
       newPass: newPass
     })
   }
+
+  async editUser({id, body}: EditUserParams){
+    return this.put(`/edit/${id}`, body)
+  }
 }
 
 export default new UserService()
