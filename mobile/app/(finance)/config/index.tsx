@@ -34,8 +34,10 @@ const ConfigScreen = () => {
     email: session.email,
     telefono: session.telefono
   })
-  const [editEmail, setEditEmail] = useState(false)
-  const [editPhone, setEditPhone] = useState(false)
+  const [editInfo, setEditInfo] = useState({
+    email: false,
+    telefono: false
+  })
 
   const toggleModal = () => {
     setOpen(!open)
@@ -92,10 +94,28 @@ const ConfigScreen = () => {
         id: session._id,
         body: { [field]: userInfo[field] }
       })
+
+      toggleEdition(field)
     }
     catch (e) {
       console.error(e)
     }
+  }
+
+  const onCancelEdit = (field: keyof IUser) => {
+    setUserInfo({
+      ...userInfo,
+      [field]: session[field]
+    })
+
+    toggleEdition(field)
+  }
+
+  const toggleEdition = (field: keyof IUser) => {
+    setEditInfo({
+      ...editInfo,
+      [field]: !editInfo[field]
+    })
   }
 
   return (
@@ -166,10 +186,10 @@ const ConfigScreen = () => {
         <LayoutCustom ph={theme.paddings.large} style={themedStyles.buttonsContainer}>
           <LayoutCustom>
             <View style={themedStyles.inputIconWrapper}>
-              <TextInput editable={editEmail} onChangeText={handleUserInfoChange('email')} value={userInfo.email} placeholder="Email" placeholderTextColor={"gray"} style={themedStyles.input} />
+              <TextInput editable={editInfo.email} onChangeText={handleUserInfoChange('email')} value={userInfo.email} placeholder="Email" placeholderTextColor={"gray"} style={themedStyles.input} />
               {
-                !editEmail ?
-                  <TouchableOpacity onPress={() => setEditEmail(!editEmail)}>
+                !editInfo.email ?
+                  <TouchableOpacity onPress={() => toggleEdition('email')}>
                     <Icon
                       pack="eva"
                       name={'edit-2-outline'}
@@ -185,19 +205,21 @@ const ConfigScreen = () => {
                         style={{ ...themedStyles.inputIcon }}
                       />
                     </TouchableOpacity>
-                    <Icon
-                      pack="eva"
-                      name={'close-circle-outline'}
-                      style={{ ...themedStyles.inputIcon }}
-                    />
+                    <TouchableOpacity onPress={() => onCancelEdit('email')}>
+                      <Icon
+                        pack="eva"
+                        name={'close-circle-outline'}
+                        style={{ ...themedStyles.inputIcon }}
+                      />
+                    </TouchableOpacity>
                   </View>
               }
             </View>
             <View style={themedStyles.inputIconWrapper}>
-              <TextInput editable={editPhone} onChangeText={handleUserInfoChange('telefono')} value={userInfo.telefono} placeholder="Telefono" placeholderTextColor={"gray"} style={themedStyles.input} />
+              <TextInput editable={editInfo.telefono} onChangeText={handleUserInfoChange('telefono')} value={userInfo.telefono} placeholder="Telefono" placeholderTextColor={"gray"} style={themedStyles.input} />
               {
-                !editPhone ?
-                  <TouchableOpacity onPress={() => setEditPhone(!editPhone)}>
+                !editInfo.telefono ?
+                  <TouchableOpacity onPress={() => toggleEdition('telefono')}>
                     <Icon
                       pack="eva"
                       name={'edit-2-outline'}
@@ -213,11 +235,13 @@ const ConfigScreen = () => {
                         style={{ ...themedStyles.inputIcon }}
                       />
                     </TouchableOpacity>
-                    <Icon
-                      pack="eva"
-                      name={'close-circle-outline'}
-                      style={{ ...themedStyles.inputIcon }}
-                    />
+                    <TouchableOpacity onPress={() => onCancelEdit('telefono')}>
+                      <Icon
+                        pack="eva"
+                        name={'close-circle-outline'}
+                        style={{ ...themedStyles.inputIcon }}
+                      />
+                    </TouchableOpacity>
                   </View>
               }
             </View>
