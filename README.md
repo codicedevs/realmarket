@@ -56,7 +56,9 @@ En dicha base de datos remota hay creados usuarios de prueba que puedes usar par
 
 En el directorio `mobile/`, correr `yarn install` para instalar las dependencias.
 
-Luego, escanear el código QR con la aplicación Expo Go en tu celular.
+También es necesario contar con el archivo `.env` correctamente configurado dicho directorio. Pedirle el mismo a alguna otro colega que haya trabajado en el proyecto o generarlo a mano siguiendo los comentarios en el módulo `mobile/config.ts`.
+
+Luego, correr `yarn start` para arrancar Expo y poder escanear el código QR con la aplicación Expo Go en tu celular.
 
 Expo permite incluso depurar el código que corre en tu teléfono desde tu laptop (presionando la tecla `J`).
 
