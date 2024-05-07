@@ -1,41 +1,76 @@
 import { StyleService } from '@ui-kitten/components'
-import React from 'react'
-import { Dimensions } from 'react-native'
+import React, { useState } from 'react'
+import { Dimensions, Modal, TouchableOpacity } from 'react-native'
+import { WebView } from 'react-native-webview'
 import Container from '../../components/Container'
 import Header from '../../components/CustomHeader'
 import LayoutCustom from '../../components/LayoutCustom'
 import ActionCard from '../../components/cards/ActionsCards'
+import { orderOptions } from '../../types/order.types'
 import theme from '../../utils/theme'
+const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
+const iframeUrls = {
+  [orderOptions.EMIT]: "https://docs.google.com/forms/d/e/1FAIpQLSe6k-AKFxILjPhl7SQSnunBJvDsXOTw2OgMfEkTEb5jkBR7lw/viewform?embedded=true",
+  [orderOptions.REQUEST]: "https://docs.google.com/forms/d/e/1FAIpQLSdg8sWJJj9TJ8W_fO-l6bKrd1jighfdkG1uqd5tZFFfLIdcBQ/viewform?embedded=true"
+};
+
 const Positions = () => {
+  const [open, setOpen] = useState(false)
+  const [order, setOrder] = useState('')
+
+  const selectOrder = (data: string) => {
+    setOrder(data)
+    setOpen(true)
+  }
+
 
   return (
-    <Container style={themedStyles.container}>
-      {/* <TopNavigation
-        alignment="center"
-        title="Órdenes"
-        style={themedStyles.topNavigation}
-        accessoryLeft={() => (
-          <RoundedButton icon="arrow-back-outline" />
+    <>
+      <Modal
+        animationType="fade"
+        visible={open}
+        transparent={true}
+        onRequestClose={() => setOpen(false)}
+      >
+        {order in iframeUrls && (
+          <WebView
+            onShouldStartLoadWithRequest={() => true}
+            onError={(syntheticEvent) => {
+              const { nativeEvent } = syntheticEvent;
+              console.warn('WebView error: ', nativeEvent);
+            }}
+            style={{
+              height: 400,
+              width: '95%',
+              alignSelf: 'center'
+            }} source={{ uri: iframeUrls[order] }} />
         )}
-        accessoryRight={() => <RoundedButton icon="person-outline" />}
-      /> */}
-      <Header title={'Órdenes'} />
-      <LayoutCustom style={themedStyles.content}>
-        <LayoutCustom style={themedStyles.cardsContainer} justify="space-between">
-          <LayoutCustom style={themedStyles.cardSize}>
-            <ActionCard color="#009F9F" title="Emitir orden" />
-          </LayoutCustom>
-          <LayoutCustom style={themedStyles.cardSize}>
-            <ActionCard color="#D0682E" title='Solicitar transferencia' />
-          </LayoutCustom>
-          <LayoutCustom style={themedStyles.cardSize}>
-            <ActionCard color="#701BC4" title="Informar transferencia" />
+      </Modal>
+      <Container style={themedStyles.container}>
+        <Header title={'Órdenes'} />
+        <LayoutCustom style={themedStyles.content}>
+          <LayoutCustom style={themedStyles.cardsContainer} justify="space-between">
+            <LayoutCustom style={themedStyles.cardSize}>
+              <TouchableOpacity onPress={() => selectOrder(orderOptions.EMIT)}>
+                <ActionCard color="#009F9F" title="Emitir orden" />
+              </TouchableOpacity>
+            </LayoutCustom>
+            <LayoutCustom style={themedStyles.cardSize}>
+              <TouchableOpacity onPress={() => selectOrder(orderOptions.REQUEST)}>
+                <ActionCard color="#D0682E" title='Solicitar transferencia' />
+              </TouchableOpacity>
+            </LayoutCustom>
+            <LayoutCustom style={themedStyles.cardSize}>
+              <TouchableOpacity>
+                <ActionCard color="#701BC4" title="Informar transferencia" />
+              </TouchableOpacity>
+            </LayoutCustom>
           </LayoutCustom>
         </LayoutCustom>
-      </LayoutCustom>
-    </Container>
+      </Container>
+    </>
   )
 }
 
