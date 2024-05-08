@@ -80,7 +80,9 @@ const Home = () => {
       console.log(err)
     }
     finally {
-      setLoading(false)
+      setTimeout(() => {
+        setLoading(false)
+      }, 1000);
     }
   }
 

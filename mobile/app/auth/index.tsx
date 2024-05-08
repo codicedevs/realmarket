@@ -1,4 +1,4 @@
-import { StyleService } from "@ui-kitten/components";
+import { Icon, StyleService } from "@ui-kitten/components";
 import { Redirect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import * as yup from "yup";
 import Container from "../../components/Container";
 import LayoutCustom from "../../components/LayoutCustom";
 import { useSession } from "../../context/AuthProvider";
+import { useLoading } from "../../context/LoadingProvider";
 import theme from "../../utils/theme";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -52,10 +53,8 @@ const Auth = () => {
     const background = require("../../assets/Login/fondoLogin.png")
     const logo = require("../../assets/Login/rm-logo.png")
     const { signIn, session, checkSession } = useSession()
-    const [user, setUser] = useState({
-        username: "",
-        pass: ""
-    })
+    const [visibility, setVisibility] = useState(true)
+    const { setIsLoading } = useLoading()
 
     const {
         control,
@@ -63,16 +62,20 @@ const Auth = () => {
         formState: { errors },
     } = useForm({ resolver })
 
-    const logIn = () => {
-        signIn(user.username, user.pass)
-    }
-
     const onSubmit = (data) => {
         try {
-            signIn(data.username, data.pass)
-            // setSubmittedData(data);
-        } catch (err) { console.error(err) }
+            setIsLoading(true)
+            signIn(data.username.toLowerCase(), data.pass)
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setIsLoading(false)
+        }
     };
+
+    const toggleVisibility = () => {
+        setVisibility(!visibility)
+    }
 
     useEffect(() => {
         checkSession()
@@ -109,7 +112,23 @@ const Auth = () => {
                             control={control}
                             rules={{ required: true }}
                             render={({ field: { onChange, onBlur, value } }) => (
-                                <TextInput placeholder="Contraseña" placeholderTextColor={"#ffffff"} onChangeText={onChange} value={value} style={themedStyles.input} />
+                                <LayoutCustom horizontal style={{ position: 'relative' }}>
+                                    <TextInput secureTextEntry={visibility} placeholder="Contraseña" placeholderTextColor={"#ffffff"} onChangeText={onChange} value={value} style={themedStyles.input} />
+                                    <TouchableOpacity onPress={toggleVisibility}>
+                                        <Icon
+                                            pack="eva"
+                                            name={visibility ? 'eye-outline' : 'eye-off-outline'}
+                                            style={{
+                                                width: 20,
+                                                height: 20,
+                                                zIndex: 100,
+                                                position: 'absolute',
+                                                top: 10,
+                                                right: 10
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+                                </LayoutCustom>
                             )}
                             name="pass"
                         />
@@ -167,7 +186,8 @@ const themedStyles = StyleService.create({
         color: '#ffffff',
         fontSize: theme.fontSizes.medium,
         paddingBottom: theme.paddings.small,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        width: '100%'
     },
     buttonContainer: {
         backgroundColor: theme.colors.background,
