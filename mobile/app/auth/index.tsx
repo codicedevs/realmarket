@@ -69,7 +69,9 @@ const Auth = () => {
         } catch (err) {
             console.error(err)
         } finally {
-            setIsLoading(false)
+            setTimeout(() => {
+                setIsLoading(false)
+            }, 2000);
         }
     };
 
