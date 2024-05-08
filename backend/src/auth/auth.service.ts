@@ -1,4 +1,9 @@
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { jwtSettings } from 'src/settings';
@@ -12,16 +17,26 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
+  //Declaracion de la instancia del Logger dentro de cada servicio
+
+  private readonly logger = new Logger(AuthService.name);
 
   async signIn(username: string, password: string) {
     if (!username || !password)
       throw new BadRequestException('Faltan credenciales: usuario o password');
     let user: User | null = null;
     try {
+      //Implementacion del logger para ver cuanto tarda el servicio en contestar
+      const startTime = Date.now();
       user = await this.usersService.findByUsername(username);
+      this.logger.log(
+        'Duracion de la peticion',
+        (Date.now() - startTime) / 1000,
+      );
     } catch (error) {
       throw new HttpException('Credenciales inválidas', 401);
     }
+
     //Controla la contrasena
     //La contrasena guardada tiene que estar hasheada
     const checkpass = await bcrypt.compare(password, user.pass);

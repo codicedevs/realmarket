@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import * as dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
@@ -8,15 +8,21 @@ import { Posicion } from './entities/posicion.entity';
 
 @Injectable()
 export class PosicionesService extends RosvalHttpService {
+  private readonly logger = new Logger();
   async findByDate(
     accountId: string,
     from: string,
     especie?: string,
   ): Promise<Posicion[]> {
+    const timeLabel = Date.now().toString();
+    this.logger.log('arranco el logger');
+    console.time(timeLabel);
     const response = await this.get<Posicion[]>(
       `cuentas/${accountId}/posiciones`,
       { params: { from, especie } },
     );
+    console.log('Lo siguiente es lo que tardo Rosval');
+    console.timeEnd(timeLabel);
     return response.data;
   }
 
