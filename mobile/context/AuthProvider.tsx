@@ -7,13 +7,13 @@ const AuthContext = React.createContext<{
   signIn: (username: string, password: string) => void;
   signOut: () => void;
   session?: string | IUser | null;
-  isLoading: boolean;
+  loadingScreen: boolean;
   checkSession: () => void
 }>({
   signIn: () => null,
   signOut: () => null,
   session: null,
-  isLoading: false,
+  loadingScreen: false,
   checkSession: () => null
 });
 
@@ -32,7 +32,7 @@ export function useSession() {
 
 
 export function SessionProvider(props: React.PropsWithChildren) {
-  const [[isLoading, session], setSession] = useStorageState('session');
+  const [[loadingScreen, session], setSession] = useStorageState('session');
 
   const notification = (texto: string) => {
     Toast.show(texto, {
@@ -63,7 +63,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
           notification('Se cerro sesion')
         },
         session,
-        isLoading,
+        loadingScreen,
         checkSession: async () => {
           const res = await authService.whoami()
           setSession(res.data)

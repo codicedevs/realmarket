@@ -4,15 +4,15 @@ import { useLoading } from "../context/LoadingProvider";
 
 const useCurrency = ({ onChange }: { onChange?: () => void }): [string, (func?: () => void) => void] => {
   // const [currency, setCurrency] = useState('ARS');
-  const { setIsLoading } = useLoading();
+  const { setLoadingScreen } = useLoading();
   const { currency, setCurrency } = useContext(AppContext)
 
   const toggleCurrency = () => {
-    setIsLoading(true);
+    setLoadingScreen(true);
     const newCurrency = currency === 'ARS' ? 'USD' : 'ARS';
     setCurrency(newCurrency);
     setTimeout(() => {
-      setIsLoading(false);
+      setLoadingScreen(false);
     }, 1000);
   };
 

@@ -13,6 +13,7 @@ import LayoutCustom from '../../../components/LayoutCustom'
 import TimeCard from '../../../components/cards/TimeCard'
 import { AppContext } from '../../../context/AppContext'
 import { useSession } from '../../../context/AuthProvider'
+import { useLoading } from '../../../context/LoadingProvider'
 import disponibilidadService from '../../../service/disponibilidad.service'
 import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
@@ -42,7 +43,7 @@ const Home = () => {
   const { currency } = useContext(AppContext)
   const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
   const [positions, setPositions] = useState(1000)
-  const [loading, setLoading] = useState(false)
+  const { setIsLoading, isLoading } = useLoading()
 
   const checkData = () => {
     if (cifrasDisponibilidad) {
@@ -55,16 +56,9 @@ const Home = () => {
     router.replace('position')
   }
 
-  const promises = async () => {
-    const res = await disponibilidadService.getCashPositions()
-    const resPos = await disponibilidadService.totalPositions()
-    setCifrasDisponibilidad(res.data)
-    setPositions(resPos.data.totalPosiciones)
-  }
-
   const getCash = async () => {
     try {
-      setLoading(true)
+      setIsLoading(true)
       const [res, resPos] = await Promise.all([
         disponibilidadService.getCashPositions(),
         disponibilidadService.totalPositions()
@@ -81,7 +75,7 @@ const Home = () => {
     }
     finally {
       setTimeout(() => {
-        setLoading(false)
+        setIsLoading(false)
       }, 1000);
     }
   }
@@ -106,7 +100,7 @@ const Home = () => {
         </LayoutCustom>
         <LayoutCustom horizontal ph={theme.paddings.medium}>
           {
-            loading ?
+            isLoading ?
               <ActivityIndicator size={'small'} />
               :
               null
@@ -142,7 +136,7 @@ const Home = () => {
             <Image style={themedStyles.img} source={require("../../../assets/Icons/moneyStat.png")} />
             <LayoutCustom ml={theme.margins.small} style={{ alignItems: "flex-start" }}>
               <Text style={themedStyles.position}>Posiciones</Text>
-              <Text style={themedStyles.moneyText}>{currencyFormat(positions, currency)}</Text>
+              <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator size={'small'} /> : currencyFormat(positions, currency)}</Text>
             </LayoutCustom>
           </LayoutCustom>
         </TouchableOpacity>

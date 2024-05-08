@@ -54,7 +54,7 @@ const Auth = () => {
     const logo = require("../../assets/Login/rm-logo.png")
     const { signIn, session, checkSession } = useSession()
     const [visibility, setVisibility] = useState(true)
-    const { setIsLoading } = useLoading()
+    const { setLoadingScreen } = useLoading()
 
     const {
         control,
@@ -64,13 +64,13 @@ const Auth = () => {
 
     const onSubmit = (data) => {
         try {
-            setIsLoading(true)
+            setLoadingScreen(true)
             signIn(data.username.toLowerCase(), data.pass)
         } catch (err) {
             console.error(err)
         } finally {
             setTimeout(() => {
-                setIsLoading(false)
+                setLoadingScreen(false)
             }, 2000);
         }
     };
