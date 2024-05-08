@@ -63,10 +63,6 @@ const Auth = () => {
         formState: { errors },
     } = useForm({ resolver })
 
-    const logIn = () => {
-        signIn(user.username, user.pass)
-    }
-
     const onSubmit = (data) => {
         try {
             signIn(data.username, data.pass)
