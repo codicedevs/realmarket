@@ -8,7 +8,7 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const TabLayout = () => {
-  const { session, isLoading } = useSession()
+  const { session, loadingScreen } = useSession()
 
   if (!session) {
     return <Redirect href={"/auth"} />
@@ -26,7 +26,7 @@ const TabLayout = () => {
         tabBarStyle: themedStyles.tabBarStyle,
         tabBarLabelStyle: themedStyles.tabBarLabel,
         headerShown: false,
-        
+
       }}
     >
       <Tabs.Screen options={{
@@ -55,7 +55,7 @@ const TabLayout = () => {
           href: null
         }}
         name='config/index' />
-    <Tabs.Screen options={{href: null}} name='index' />
+      <Tabs.Screen options={{ href: null }} name='index' />
     </Tabs>
   )
 }
