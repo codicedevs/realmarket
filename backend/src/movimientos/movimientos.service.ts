@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import * as dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 import { formatRosvalDate } from 'src/utils/date';
 import { Movimiento } from './entities/movimiento.entity';
 
+const logger = new Logger(RosvalHttpService.name);
 @Injectable()
 export class MovimientosService extends RosvalHttpService {
   async findByDate(
@@ -13,10 +14,12 @@ export class MovimientosService extends RosvalHttpService {
     to: string,
     especie?: string,
   ): Promise<Movimiento[]> {
+    logger.log('Empezo el endpoint' + new Date());
     const response = await this.get<Movimiento[]>(
       `cuentas/${accountId}/movimientos`,
       { params: { fechaDesde: from, fechaHasta: to, especie } },
     );
+    logger.log('Termino el endpoint', new Date());
     return response.data;
   }
 
