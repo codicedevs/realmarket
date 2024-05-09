@@ -6,6 +6,8 @@ import { formatRosvalDate } from 'src/utils/date';
 import { getDolar, getDolarBcra } from 'src/utils/dolar';
 import { Posicion } from './entities/posicion.entity';
 
+const logger = new Logger(RosvalHttpService.name);
+
 @Injectable()
 export class PosicionesService extends RosvalHttpService {
   private readonly logger = new Logger();
@@ -15,14 +17,12 @@ export class PosicionesService extends RosvalHttpService {
     especie?: string,
   ): Promise<Posicion[]> {
     const timeLabel = Date.now().toString();
-    this.logger.log('arranco el logger');
-    console.time(timeLabel);
+    this.logger.log('arranco el logger a las ' + timeLabel);
     const response = await this.get<Posicion[]>(
       `cuentas/${accountId}/posiciones`,
       { params: { from, especie } },
     );
-    console.log('Lo siguiente es lo que tardo Rosval');
-    console.timeEnd(timeLabel);
+    this.logger.log('Aca termino de llamar posiciones ' + new Date());
     return response.data;
   }
 
