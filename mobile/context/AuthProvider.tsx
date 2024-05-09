@@ -1,5 +1,5 @@
 import React from 'react';
-import Toast from 'react-native-root-toast';
+import useNotification from '../hooks/useNotification';
 import { useStorageState } from '../hooks/useStorageState';
 import authService from '../service/auth.service';
 
@@ -33,17 +33,7 @@ export function useSession() {
 
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[loadingScreen, session], setSession] = useStorageState('session');
-
-  const notification = (texto: string) => {
-    Toast.show(texto, {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.TOP,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0,
-    });
-  }
+  const { notification } = useNotification()
 
   return (
     <AuthContext.Provider
