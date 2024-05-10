@@ -94,7 +94,7 @@ const Home = () => {
   return (
     <Container style={{ backgroundColor: theme.colors.background }}>
       <LayoutCustom>
-        <Header title={`Hola ${session.nombre}!`} />
+        <Header title={`Hola, ${session.nombre}`} />
         <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
           <CurrencyToggle />
         </LayoutCustom>
