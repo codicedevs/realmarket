@@ -15,4 +15,7 @@
     "source.fixAll": "explicit"
   },
   "editor.tabSize": 2,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
 }
