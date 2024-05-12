@@ -64,20 +64,21 @@ export default TabLayout
 
 const themedStyles = StyleService.create({
   tabBarStyle: {
-    height: windowHeight * 0.1,
+    height: 80,
+    paddingTop: 10,
     backgroundColor: theme.colors.background,
     borderTopWidth: 0
   },
   tabBarLabel: {
     fontSize: theme.fontSizes.label,
-    marginBottom: theme.margins.xSmall
+    marginBottom: -10
   },
   singleTabStyle: {
     padding: theme.paddings.xSmall,
     borderRadius: theme.borderRadius.small,
   },
   imageStyle: {
-    height: 33,
-    width: 33
+    height: 30,
+    width: 30
   }
 });
