@@ -1,57 +1,29 @@
 import { StyleService } from '@ui-kitten/components'
 import React, { useState } from 'react'
-import { Dimensions, Modal, TouchableOpacity } from 'react-native'
-import { WebView } from 'react-native-webview'
+import { Dimensions, TouchableOpacity } from 'react-native'
 import Container from '../../components/Container'
 import Header from '../../components/CustomHeader'
 import LayoutCustom from '../../components/LayoutCustom'
 import ActionCard from '../../components/cards/ActionsCards'
+import OrderModal from '../../components/orderModal'
 import { orderOptions } from '../../types/order.types'
 import theme from '../../utils/theme'
-const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const iframeUrls = {
-  [orderOptions.EMIT]: "https://docs.google.com/forms/d/e/1FAIpQLSe6k-AKFxILjPhl7SQSnunBJvDsXOTw2OgMfEkTEb5jkBR7lw/viewform?embedded=true",
-  [orderOptions.REQUEST]: "https://docs.google.com/forms/d/e/1FAIpQLSdg8sWJJj9TJ8W_fO-l6bKrd1jighfdkG1uqd5tZFFfLIdcBQ/viewform?embedded=true"
-};
-
 const Positions = () => {
-  const [open, setOpen] = useState(false)
-  const [order, setOrder] = useState('')
+  const [order, setOrder] = useState(null)
 
   const selectOrder = (data: string) => {
     setOrder(data)
-    setOpen(true)
   }
-
 
   return (
     <>
-      <Modal
-        animationType="fade"
-        visible={open}
-        transparent={true}
-        onRequestClose={() => setOpen(false)}
-      >
-        {order in iframeUrls && (
-          <WebView
-            onShouldStartLoadWithRequest={() => true}
-            onError={(syntheticEvent) => {
-              const { nativeEvent } = syntheticEvent;
-              console.warn('WebView error: ', nativeEvent);
-            }}
-            style={{
-              height: 400,
-              width: '95%',
-              alignSelf: 'center'
-            }} source={{ uri: iframeUrls[order] }} />
-        )}
-      </Modal>
+      {order && <OrderModal order={order} onClose={() => setOrder(null)} />}
       <Container style={themedStyles.container}>
         <Header title={'Órdenes'} />
         <LayoutCustom style={themedStyles.content}>
-          <LayoutCustom style={themedStyles.cardsContainer} justify="space-between">
+          <LayoutCustom style={themedStyles.cardsContainer} justify="space-evenly">
             <LayoutCustom style={themedStyles.cardSize}>
               <TouchableOpacity onPress={() => selectOrder(orderOptions.EMIT)}>
                 <ActionCard color="#009F9F" title="Emitir orden" />
@@ -60,11 +32,6 @@ const Positions = () => {
             <LayoutCustom style={themedStyles.cardSize}>
               <TouchableOpacity onPress={() => selectOrder(orderOptions.REQUEST)}>
                 <ActionCard color="#D0682E" title='Solicitar transferencia' />
-              </TouchableOpacity>
-            </LayoutCustom>
-            <LayoutCustom style={themedStyles.cardSize}>
-              <TouchableOpacity>
-                <ActionCard color="#701BC4" title="Informar transferencia" />
               </TouchableOpacity>
             </LayoutCustom>
           </LayoutCustom>
