@@ -7,7 +7,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>real-market-argentina-2024</string>
+    <string>Real Market Inversiones</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -28,18 +28,18 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>realmarket</string>
-          <string>com.codice.real-market-argentina-2024</string>
+          <string>com.codice.real-market-inversiones</string>
         </array>
       </dict>
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>exp+real-market-argentina-2024</string>
+          <string>exp+real-market-inversiones</string>
         </array>
       </dict>
     </array>
     <key>CFBundleVersion</key>
-    <string>1.5</string>
+    <string>1</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSAppTransportSecurity</key>
@@ -53,8 +53,8 @@
     <string>Allow $(PRODUCT_NAME) to save photos</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your photos</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Necesitamos acceder a tu libreria de archivos, para que puedas guardar tus comprobantes de operación.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>La app necesita accesso para que puedas descargar tus comprobantes de operación</string>
     <key>NSUserActivityTypes</key>
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>

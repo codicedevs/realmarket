@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "realmarketargentina2024.app"
-               BlueprintName = "realmarketargentina2024"
-               ReferencedContainer = "container:realmarketargentina2024.xcodeproj">
+               BuildableName = "RealMarketInversiones.app"
+               BlueprintName = "RealMarketInversiones"
+               ReferencedContainer = "container:RealMarketInversiones.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "realmarketargentina2024Tests.xctest"
-               BlueprintName = "realmarketargentina2024Tests"
-               ReferencedContainer = "container:realmarketargentina2024.xcodeproj">
+               BuildableName = "RealMarketInversionesTests.xctest"
+               BlueprintName = "RealMarketInversionesTests"
+               ReferencedContainer = "container:RealMarketInversiones.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "realmarketargentina2024.app"
-            BlueprintName = "realmarketargentina2024"
-            ReferencedContainer = "container:realmarketargentina2024.xcodeproj">
+            BuildableName = "RealMarketInversiones.app"
+            BlueprintName = "RealMarketInversiones"
+            ReferencedContainer = "container:RealMarketInversiones.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "realmarketargentina2024.app"
-            BlueprintName = "realmarketargentina2024"
-            ReferencedContainer = "container:realmarketargentina2024.xcodeproj">
+            BuildableName = "RealMarketInversiones.app"
+            BlueprintName = "RealMarketInversiones"
+            ReferencedContainer = "container:RealMarketInversiones.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
