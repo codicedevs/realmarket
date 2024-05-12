@@ -2,7 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StyleService } from '@ui-kitten/components'
 import { router } from 'expo-router'
 import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, Dimensions, Image, Pressable, Text, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, Text, TouchableOpacity } from 'react-native'
+import { TouchableOpacity as Touchable } from 'react-native-gesture-handler'
 import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
 import IButton from '../../../components/Buttons/IButton'
@@ -131,9 +132,9 @@ const Home = () => {
           }}
           renderItem={({ item, index }) => {
             return (
-              <Pressable key={index} style={{ height: '100%' }} onPress={() => router.navigate('/home/disponibilidad')}>
+              <Touchable activeOpacity={1} key={index} style={{ height: '100%' }} onPress={() => router.navigate('/home/disponibilidad')}>
                 <TimeCard item={item} currency={currency} />
-              </Pressable>
+              </Touchable>
             )
           }}
         />
