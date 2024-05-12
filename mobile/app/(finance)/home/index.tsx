@@ -131,9 +131,9 @@ const Home = () => {
           }}
           renderItem={({ item, index }) => {
             return (
-                <Pressable key={index} style={{height: '100%'}} onPress={() => router.navigate('/home/disponibilidad')}>
-                  <TimeCard item={item} currency={currency} />
-                </Pressable>
+              <Pressable key={index} style={{ height: '100%' }} onPress={() => router.navigate('/home/disponibilidad')}>
+                <TimeCard item={item} currency={currency} />
+              </Pressable>
             )
           }}
         />
