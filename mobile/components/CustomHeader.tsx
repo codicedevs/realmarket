@@ -6,17 +6,18 @@ import RoundedButton from './Buttons/RoundedButton';
 const windowHeight = Dimensions.get("window").height;
 export const headerHeight = windowHeight * 0.1
 const Header = ({ title }) => {
-  const isHome = title.includes('Hola') 
+  const isHome = title.includes('Hola')
   const configRoute = () => {
     router.replace('config')
   }
-  
+
   return (
-    <View style={{...styles.container, justifyContent: !isHome ? 'space-between' : 'flex-start'}}>
+    <View style={{ ...styles.container, justifyContent: 'space-between' }}>
       {!isHome && <RoundedButton icon="arrow-back-outline" onPress={() => router.back()} />}
       {!isHome && <Text style={styles.title}>{title}</Text>}
       <RoundedButton icon="person-outline" onPress={() => configRoute()} />
-      {isHome && <Text style={{...styles.title, paddingLeft: 20}}>{title}</Text>}
+      {isHome && <Text style={{ ...styles.title, paddingLeft: 20 }}>{title}</Text>}
+      {isHome && <RoundedButton />}
     </View>
   );
 };
