@@ -17,7 +17,7 @@ const Header = ({ title }) => {
       {!isHome && <Text style={styles.title}>{title}</Text>}
       <RoundedButton icon="person-outline" onPress={() => configRoute()} />
       {isHome && <Text style={{ ...styles.title, paddingLeft: 20 }}>{title}</Text>}
-      {isHome && <RoundedButton />}
+      {/* {isHome && <RoundedButton />} */}
     </View>
   );
 };
