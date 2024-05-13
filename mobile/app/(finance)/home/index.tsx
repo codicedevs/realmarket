@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StyleService } from '@ui-kitten/components'
-import { Link, router } from 'expo-router'
+import { router } from 'expo-router'
 import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, Dimensions, Image, Pressable, Text, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, Text, TouchableOpacity } from 'react-native'
+import { TouchableOpacity as Touchable } from 'react-native-gesture-handler'
 import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
 import IButton from '../../../components/Buttons/IButton'
@@ -11,10 +12,12 @@ import CurrencyToggle from '../../../components/CurrencyToggle'
 import Header from '../../../components/CustomHeader'
 import LayoutCustom from '../../../components/LayoutCustom'
 import TimeCard from '../../../components/cards/TimeCard'
+import OrderModal from '../../../components/orderModal'
 import { AppContext } from '../../../context/AppContext'
 import { useSession } from '../../../context/AuthProvider'
 import { useLoading } from '../../../context/LoadingProvider'
 import disponibilidadService from '../../../service/disponibilidad.service'
+import { orderOptions } from '../../../types/order.types'
 import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
@@ -44,6 +47,11 @@ const Home = () => {
   const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
   const [positions, setPositions] = useState(1000)
   const { setIsLoading, isLoading } = useLoading()
+  const [order, setOrder] = useState(null)
+
+  const selectOrder = (data: string) => {
+    setOrder(data)
+  }
 
   const checkData = () => {
     if (cifrasDisponibilidad) {
@@ -93,8 +101,9 @@ const Home = () => {
   const progressValue = useSharedValue<number>(0);
   return (
     <Container style={{ backgroundColor: theme.colors.background }}>
+      {order && <OrderModal order={order} onClose={() => setOrder(null)} />}
       <LayoutCustom>
-        <Header title={`Hola ${session.nombre}!`} />
+        <Header title={`Hola, ${typeof session === 'object' && session.nombre}`} />
         <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
           <CurrencyToggle />
         </LayoutCustom>
@@ -123,11 +132,9 @@ const Home = () => {
           }}
           renderItem={({ item, index }) => {
             return (
-              <Link href={'/home/disponibilidad'} asChild style={{ height: '100%' }}>
-                <Pressable>
-                  <TimeCard item={item} currency={currency} />
-                </Pressable>
-              </Link>
+              <Touchable activeOpacity={1} key={index} style={{ height: '100%' }} onPress={() => router.navigate('/home/disponibilidad')}>
+                <TimeCard item={item} currency={currency} />
+              </Touchable>
             )
           }}
         />
@@ -146,10 +153,10 @@ const Home = () => {
           justify="center"
         >
           <LayoutCustom alignSelfCenter style={themedStyles.buttonContainer}>
-            <IButton name={require(`../../../assets/Icons/ordenIcon.png`)} icon="wallet_send" title={`Informar\norden`} />
+            <IButton onPress={() => selectOrder(orderOptions.EMIT)} name={require(`../../../assets/Icons/ordenIcon.png`)} icon="wallet_send" title={`Informar\norden`} />
           </LayoutCustom>
           <LayoutCustom style={themedStyles.buttonContainer}>
-            <IButton name={require(`../../../assets/Icons/transferIcon.png`)} icon="document" title={`Solicitar\ntransferencia`} />
+            <IButton onPress={() => selectOrder(orderOptions.REQUEST)} name={require(`../../../assets/Icons/transferIcon.png`)} icon="document" title={`Solicitar\ntransferencia`} />
           </LayoutCustom>
         </LayoutCustom>
       </LayoutCustom>

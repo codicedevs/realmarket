@@ -22,30 +22,30 @@ const TabLayout = () => {
     <Tabs
       screenOptions={{
         tabBarInactiveTintColor: theme.colors.skyBlue,
-        tabBarActiveTintColor: theme.colors.skyBlue,
+        tabBarActiveTintColor: theme.colors.white,
         tabBarStyle: themedStyles.tabBarStyle,
         tabBarLabelStyle: themedStyles.tabBarLabel,
         headerShown: false,
-
       }}
     >
       <Tabs.Screen options={{
         title: "Inicio", tabBarIcon: ({ focused }) => (
-          <View style={{ ...themedStyles.singleTabStyle, backgroundColor: focused ? theme.colors.activeLabel : theme.colors.background }}>
+          <View style={{ ...themedStyles.singleTabStyle }}>
             <Image style={themedStyles.imageStyle} source={homeIcon} />
           </View>
         )
       }} name='home' />
       <Tabs.Screen options={{
         title: "Posiciones", tabBarIcon: ({ focused }) => (
-          <View style={{ ...themedStyles.singleTabStyle, backgroundColor: focused ? theme.colors.activeLabel : theme.colors.background }}>
+          <View style={{ ...themedStyles.singleTabStyle }}>
             <Image style={themedStyles.imageStyle} source={positionIcon} />
           </View>
         )
       }} name='position' />
       <Tabs.Screen options={{
-        title: "Órdenes", tabBarIcon: ({ focused }) => (
-          <View style={{ ...themedStyles.singleTabStyle, backgroundColor: focused ? theme.colors.activeLabel : theme.colors.background }}>
+        title: "Órdenes",
+        tabBarIcon: ({ focused }) => (
+          <View style={{ ...themedStyles.singleTabStyle }}>
             <Image style={themedStyles.imageStyle} source={actionsIcon} />
           </View>
         )
@@ -64,21 +64,21 @@ export default TabLayout
 
 const themedStyles = StyleService.create({
   tabBarStyle: {
-    height: windowHeight * 0.1,
+    height: 80,
+    paddingTop: 10,
     backgroundColor: theme.colors.background,
     borderTopWidth: 0
   },
   tabBarLabel: {
     fontSize: theme.fontSizes.label,
-    marginBottom: theme.margins.xSmall
+    marginBottom: -10
   },
   singleTabStyle: {
     padding: theme.paddings.xSmall,
     borderRadius: theme.borderRadius.small,
-    marginTop: theme.margins.xSmall
   },
   imageStyle: {
-    height: windowHeight * 0.05,
-    width: windowWidth * 0.1
+    height: 30,
+    width: 30
   }
 });

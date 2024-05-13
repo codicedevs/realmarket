@@ -54,7 +54,7 @@ const Auth = () => {
     const logo = require("../../assets/Login/rm-logo.png")
     const { signIn, session, checkSession } = useSession()
     const [visibility, setVisibility] = useState(true)
-    const { setLoadingScreen } = useLoading()
+    const { setLoadingScreen, loadingScreen } = useLoading()
 
     const {
         control,
@@ -63,11 +63,13 @@ const Auth = () => {
     } = useForm({ resolver })
 
     const onSubmit = (data) => {
+      console.log(data);
+      
         try {
             setLoadingScreen(true)
             signIn(data.username.toLowerCase(), data.pass)
         } catch (err) {
-            console.error(err)
+            console.error(err, 'here')
         } finally {
             setTimeout(() => {
                 setLoadingScreen(false)
@@ -126,7 +128,7 @@ const Auth = () => {
                                                 zIndex: 100,
                                                 position: 'absolute',
                                                 top: 10,
-                                                right: 10
+                                                right: 10,
                                             }}
                                         />
                                     </TouchableOpacity>
@@ -139,12 +141,11 @@ const Auth = () => {
                         </View>
                     </LayoutCustom>
                     <LayoutCustom mt={theme.margins.xSmall}>
-                        <TouchableOpacity style={themedStyles.buttonContainer} >
-                            <Text style={themedStyles.loginText} onPress={handleSubmit(onSubmit)}>LOGIN</Text>
+                        <TouchableOpacity onPress={handleSubmit(onSubmit)} style={themedStyles.buttonContainer} >
+                            <Text style={themedStyles.loginText}>LOGIN</Text>
                         </TouchableOpacity>
                         <LayoutCustom mt={theme.margins.small} style={themedStyles.forgotPasswordContainer}>
                             <Text style={themedStyles.forgottenPasswordText}>¿Olvidó su contraseña?</Text>
-                            <Text style={themedStyles.forgottenPasswordText}>¿O desea crear una nueva cuenta?</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                 </LayoutCustom>

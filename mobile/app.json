@@ -16,7 +16,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.codice.real-market-argentina-2024"
     },
     "android": {
       "adaptiveIcon": {
@@ -37,8 +38,8 @@
         "origin": false
       },
       "eas": {
+        "projectId": "2d407efe-7229-4073-8e53-66519c93e0f1"
       }
     }
   }
 }
-
