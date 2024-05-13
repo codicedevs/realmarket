@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as morgan from 'morgan';
@@ -9,11 +9,14 @@ import { serverSettings } from './settings';
 import { getProtocolConfig } from './utils/ssl';
 
 async function bootstrap() {
+  const logger = new Logger();
   const { key, cert, protocol } = getProtocolConfig();
 
   const app = await NestFactory.create(
     AppModule,
-    protocol == 'https' ? { httpsOptions: { key, cert } } : undefined,
+    protocol == 'https'
+      ? { httpsOptions: { key, cert }, logger: ['error', 'warn', 'log'] }
+      : undefined,
   );
 
   /** En las siguientes lineas cargo y seteo Swagger para mostrar la documentacion de los Endpoints */
@@ -36,6 +39,7 @@ async function bootstrap() {
     }),
   );
 
+  // logger.log(morgan);
   app.use(morgan('dev'));
 
   app.enableCors(CORS);
