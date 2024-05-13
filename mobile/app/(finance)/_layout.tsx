@@ -1,7 +1,7 @@
 import { StyleService } from '@ui-kitten/components'
 import { Redirect, Tabs } from 'expo-router'
 import React from 'react'
-import { Dimensions, Image, View } from 'react-native'
+import { Dimensions, Image, Platform, View } from 'react-native'
 import { useSession } from '../../context/AuthProvider'
 import theme from '../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
@@ -71,7 +71,7 @@ const themedStyles = StyleService.create({
   },
   tabBarLabel: {
     fontSize: theme.fontSizes.label,
-    marginBottom: -10
+    marginBottom: Platform.OS === 'android' ? 10 : -10,
   },
   singleTabStyle: {
     padding: theme.paddings.xSmall,
