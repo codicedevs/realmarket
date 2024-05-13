@@ -12,7 +12,7 @@ const Header = ({ title }) => {
   }
 
   return (
-    <View style={{ ...styles.container, justifyContent: 'space-between' }}>
+    <View style={{ ...styles.container, justifyContent: isHome ? 'flex-start' : 'space-between' }}>
       {!isHome && <RoundedButton icon="arrow-back-outline" onPress={() => router.back()} />}
       {!isHome && <Text style={styles.title}>{title}</Text>}
       <RoundedButton icon="person-outline" onPress={() => configRoute()} />
