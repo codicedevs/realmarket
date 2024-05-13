@@ -114,7 +114,7 @@ const Home = () => {
               :
               null
           }
-          <Text style={themedStyles.lastUpdateText}>Última actualización: 17/03</Text>
+          <Text style={themedStyles.lastUpdateText}>Última actualización: {!isLoading ? new Date().toLocaleDateString() : null}</Text>
         </LayoutCustom>
         <Carousel
           data={CARDS}
