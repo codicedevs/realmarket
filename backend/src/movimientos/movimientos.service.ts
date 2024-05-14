@@ -59,6 +59,7 @@ export class MovimientosService extends RosvalHttpService {
     const movimientosPesos = await this.findByDate(accountId, from, to, 'ARS');
 
     for (const mov of movimientosPesos) {
+      mov.cantidad *= -1;
       if (movimientosOrdenados[mov.informacion])
         movimientosOrdenados[mov.informacion].cantidad += mov.cantidad;
       else {
