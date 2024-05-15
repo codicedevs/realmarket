@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import * as dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 import { formatRosvalDate } from 'src/utils/date';
 import { Movimiento } from './entities/movimiento.entity';
+
+const logger = new Logger(RosvalHttpService.name);
 
 @Injectable()
 export class MovimientosService extends RosvalHttpService {
@@ -13,10 +15,12 @@ export class MovimientosService extends RosvalHttpService {
     to: string,
     especie?: string,
   ): Promise<Movimiento[]> {
+    logger.debug('Empezo a llamar a movimientos ' + new Date());
     const response = await this.get<Movimiento[]>(
       `cuentas/${accountId}/movimientos`,
       { params: { fechaDesde: from, fechaHasta: to, especie } },
     );
+    logger.debug('Termino ' + new Date());
     return response.data;
   }
 
@@ -55,6 +59,7 @@ export class MovimientosService extends RosvalHttpService {
     const movimientosPesos = await this.findByDate(accountId, from, to, 'ARS');
 
     for (const mov of movimientosPesos) {
+      mov.cantidad *= -1;
       if (movimientosOrdenados[mov.informacion])
         movimientosOrdenados[mov.informacion].cantidad += mov.cantidad;
       else {

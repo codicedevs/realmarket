@@ -25,7 +25,7 @@ const Disponibility = () => {
     const [movementsUsd, setMovementsUsd] = useState([])
     const handlePromise = usePromise()
     const { saveFile } = useSaveFile()
-    const { setIsLoading } = useLoading()
+    const { setLoadingScreen } = useLoading()
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
@@ -50,7 +50,7 @@ const Disponibility = () => {
     }
 
     const getReceipt = async (id: string) => {
-        setIsLoading(true)
+        setLoadingScreen(true)
         try {
             const url = `movimientos/comprobante/${id}`
             const base64Image = await movimientosService.getReceipt(id)
@@ -67,7 +67,7 @@ const Disponibility = () => {
         } catch (e) {
             console.error('error', e);
         } finally {
-            setIsLoading(false)
+            setLoadingScreen(false)
         }
     }
 

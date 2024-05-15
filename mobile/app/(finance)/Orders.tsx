@@ -1,41 +1,43 @@
 import { StyleService } from '@ui-kitten/components'
-import React from 'react'
-import { Dimensions } from 'react-native'
+import React, { useState } from 'react'
+import { Dimensions, TouchableOpacity } from 'react-native'
 import Container from '../../components/Container'
 import Header from '../../components/CustomHeader'
 import LayoutCustom from '../../components/LayoutCustom'
 import ActionCard from '../../components/cards/ActionsCards'
+import OrderModal from '../../components/orderModal'
+import { orderOptions } from '../../types/order.types'
 import theme from '../../utils/theme'
 const windowHeight = Dimensions.get("window").height;
 
 const Positions = () => {
+  const [order, setOrder] = useState(null)
+
+  const selectOrder = (data: string) => {
+    setOrder(data)
+  }
 
   return (
-    <Container style={themedStyles.container}>
-      {/* <TopNavigation
-        alignment="center"
-        title="Órdenes"
-        style={themedStyles.topNavigation}
-        accessoryLeft={() => (
-          <RoundedButton icon="arrow-back-outline" />
-        )}
-        accessoryRight={() => <RoundedButton icon="person-outline" />}
-      /> */}
-      <Header title={'Órdenes'} />
-      <LayoutCustom style={themedStyles.content}>
-        <LayoutCustom style={themedStyles.cardsContainer} justify="space-between">
-          <LayoutCustom style={themedStyles.cardSize}>
-            <ActionCard color="#009F9F" title="Emitir orden" />
-          </LayoutCustom>
-          <LayoutCustom style={themedStyles.cardSize}>
-            <ActionCard color="#D0682E" title='Solicitar transferencia' />
-          </LayoutCustom>
-          <LayoutCustom style={themedStyles.cardSize}>
-            <ActionCard color="#701BC4" title="Informar transferencia" />
+    <>
+      {order && <OrderModal order={order} onClose={() => setOrder(null)} />}
+      <Container style={themedStyles.container}>
+        <Header title={'Órdenes'} />
+        <LayoutCustom style={themedStyles.content}>
+          <LayoutCustom style={themedStyles.cardsContainer} justify="space-evenly">
+            <LayoutCustom style={themedStyles.cardSize}>
+              <TouchableOpacity onPress={() => selectOrder(orderOptions.EMIT)}>
+                <ActionCard color="#009F9F" title="Emitir orden" />
+              </TouchableOpacity>
+            </LayoutCustom>
+            <LayoutCustom style={themedStyles.cardSize}>
+              <TouchableOpacity onPress={() => selectOrder(orderOptions.REQUEST)}>
+                <ActionCard color="#D0682E" title='Solicitar transferencia' />
+              </TouchableOpacity>
+            </LayoutCustom>
           </LayoutCustom>
         </LayoutCustom>
-      </LayoutCustom>
-    </Container>
+      </Container>
+    </>
   )
 }
 

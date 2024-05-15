@@ -7,7 +7,7 @@ import { arrayBufferToBase64 } from '../utils/buffer';
 
 export function useSaveFile() {
 
-  const { setIsLoading } = useLoading()
+  const { setLoadingScreen } = useLoading()
   const saveFile = async (base: string, filename: string, url: string) => {
     const path = `${FileSystem.documentDirectory}${filename}`;
     try {
@@ -37,7 +37,7 @@ export function useSaveFile() {
     } catch (e) {
       console.error(e);
     } finally {
-      // setIsLoading(false)
+      // setLoadingScreen(false)
     }
   };
 
