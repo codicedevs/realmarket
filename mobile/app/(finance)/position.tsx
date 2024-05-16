@@ -20,30 +20,26 @@ const Finance = () => {
     const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
     const { currency } = useContext(AppContext)
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
-    const [positions, setPositions] = useState(0)
+    const [positions, setPositions] = useState({
+        arsPositions: 0,
+        usdPositions: 0
+    })
 
     useEffect(() => {
 
         async function storage() {
-            const storage = await AsyncStorage.getItem('totalPos')
-            setPositions(JSON.parse(storage))
+            const storage = await AsyncStorage.getItem('positions')
+            const value = JSON.parse(storage)
+            setPositions({
+                arsPositions: value.totalPosiciones,
+                usdPositions: value.usdPrice
+            })
         }
         storage()
-
-
     }
         , [])
 
     console.log('positions traidas', positions)
-
-    const formatPublicTitles = (data: IPosition[]) => {
-        const newData = data.map((d) => ({
-            ...d,
-            simboloLocal: d.simboloLocal.concat(d.lugar)
-        }))
-        //ACA FIJARTE SI SE VA A USAR O BORRARs
-        return newData
-    }
 
     const selectAsset = (data: IPosition) => {
         setSelectedAsset(data)
@@ -51,16 +47,15 @@ const Finance = () => {
     }
 
     const fetchAndOrganizePositions = async () => {
-        const value = await AsyncStorage.getItem('positions')
+        const value = JSON.parse(await AsyncStorage.getItem('positions'))
         if (value) {
-            const positions = JSON.parse(value);
-            const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ" && position.monedaCotizacion.includes(currency))
-            const acciones = positions.filter((position) => position.tipoTitulo === "Acciones" && position.monedaCotizacion.includes(currency))
-            const cedears = positions.filter((position) => position.tipoTitulo === "Cedears" && position.monedaCotizacion.includes(currency))
-            const obligaciones = positions.filter((position) => position.tipoTitulo === "Obligaciones Negociables" && position.monedaCotizacion.includes(currency))
-            const titulos = positions.filter((position) => position.tipoTitulo === "Títulos Públicos" && position.monedaCotizacion.includes(currency))
-            const pagare = positions.filter((position) => position.tipoTitulo === "Pagarés" && position.monedaCotizacion.includes(currency))
-            const monedas = positions.filter((position) => position.tipoTitulo === "Moneda" && position.monedaCotizacion.includes(currency))
+            const echeqs = value.posiciones.filter((position) => position.tipoTitulo === "ECHEQ" && position.monedaCotizacion.includes(currency))
+            const acciones = value.posiciones.filter((position) => position.tipoTitulo === "Acciones" && position.monedaCotizacion.includes(currency))
+            const cedears = value.posiciones.filter((position) => position.tipoTitulo === "Cedears" && position.monedaCotizacion.includes(currency))
+            const obligaciones = value.posiciones.filter((position) => position.tipoTitulo === "Obligaciones Negociables" && position.monedaCotizacion.includes(currency))
+            const titulos = value.posiciones.filter((position) => position.tipoTitulo === "Títulos Públicos" && position.monedaCotizacion.includes(currency))
+            const pagare = value.posiciones.filter((position) => position.tipoTitulo === "Pagarés" && position.monedaCotizacion.includes(currency))
+            const monedas = value.posiciones.filter((position) => position.tipoTitulo === "Moneda" && position.monedaCotizacion.includes(currency))
             setAssetsInfo({
                 ACC: acciones,
                 CED: cedears,
@@ -144,7 +139,7 @@ const Finance = () => {
                             justify="space-between"
                         >
                             <Text style={themedStyles.textColor}>Total general</Text>
-                            <Text style={themedStyles.textColor}>{currencyFormat(positions, 'ARS')}</Text>
+                            <Text style={themedStyles.textColor}>{currencyFormat(currency === 'ARS' ? positions.arsPositions : positions.usdPositions, currency)}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                     <LayoutCustom ph={theme.paddings.large}>
