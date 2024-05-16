@@ -7,6 +7,7 @@ const windowHeight = Dimensions.get("window").height;
 export const headerHeight = windowHeight * 0.1
 const Header = ({ title }) => {
   const isHome = title.includes('Hola')
+  const image = require('../assets/Icons/reloadIcon.png')
   const configRoute = () => {
     router.replace('config')
   }
@@ -17,7 +18,7 @@ const Header = ({ title }) => {
       {!isHome && <Text style={styles.title}>{title}</Text>}
       <RoundedButton icon="person-outline" onPress={() => configRoute()} />
       {isHome && <Text style={{ ...styles.title, paddingLeft: 20 }}>{title}</Text>}
-      {isHome && <RoundedButton />}
+      {isHome && <RoundedButton img={image} />}
     </View>
   );
 };

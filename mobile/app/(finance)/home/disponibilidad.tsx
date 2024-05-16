@@ -92,7 +92,7 @@ const Disponibility = () => {
             return movementsArs[0].balance
         }
         const initialValue = movementsUsd.find(transaction => transaction.description === "Saldo Inicial");
-        return movementsArs[0].balance
+        return movementsUsd[0].balance
     }
 
     useEffect(() => {

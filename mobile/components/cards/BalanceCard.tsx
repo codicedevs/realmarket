@@ -26,7 +26,7 @@ const BalanceCard = React.memo(({ balance, currency }: IBalanceCardProps) => {
                     </LayoutCustom>
                     <LayoutCustom mt={theme.margins.small} mb={theme.margins.medium} alignSelfCenter>
                         <Text style={styles.moneyText}>
-                            {currencyFormat(balance, currency)}
+                            {balance ? currencyFormat(balance, currency) : null}
                         </Text>
                     </LayoutCustom>
                 </LayoutCustom>
@@ -63,7 +63,7 @@ const themedStyles = StyleService.create({
     },
     moneyText: {
         color: '#009F9F',
-        fontSize: 22
+        fontSize: 20
     },
     title: {
         fontSize: 17,

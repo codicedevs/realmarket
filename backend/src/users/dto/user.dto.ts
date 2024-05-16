@@ -40,12 +40,14 @@ export class UpdateUserDto {
   nombre?: string;
   @IsOptional()
   @IsString()
-  accountId: string;
+  accountId?: string;
+  @IsOptional()
   @IsString()
   @IsEmail()
-  email: string;
+  email?: string;
   @IsString()
-  telefono: string;
+  @IsOptional()
+  telefono?: string;
 }
 
 export class ChangeUserPassDto {
