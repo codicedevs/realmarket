@@ -45,7 +45,10 @@ const Home = () => {
   const { session } = useSession()
   const { currency } = useContext(AppContext)
   const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
-  const [positions, setPositions] = useState(1000)
+  const [positions, setPositions] = useState({
+    arsPositions: 1000,
+    usdPositions: 1000
+  })
   const { setIsLoading, isLoading } = useLoading()
   const [order, setOrder] = useState(null)
 
@@ -72,9 +75,12 @@ const Home = () => {
         disponibilidadService.totalPositions()
       ]);
       setCifrasDisponibilidad(res.data)
-      setPositions(resPos.data.totalPosiciones)
+      setPositions({
+        arsPositions: resPos.data.totalPosiciones,
+        usdPositions: resPos.data.usdPrice
+      })
       if (Object.keys(resPos.data).length !== 0) {
-        const jsonValue = JSON.stringify(resPos.data.posiciones)
+        const jsonValue = JSON.stringify(resPos.data)
         await AsyncStorage.setItem('positions', jsonValue)
       }
       const jsonTotalPos = JSON.stringify(resPos.data.totalPosiciones)
@@ -146,7 +152,7 @@ const Home = () => {
             <Image style={themedStyles.img} source={require("../../../assets/Icons/moneyStat.png")} />
             <LayoutCustom ml={theme.margins.small} style={{ alignItems: "flex-start" }}>
               <Text style={themedStyles.position}>Posiciones</Text>
-              <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator size={'small'} /> : currencyFormat(positions, currency)}</Text>
+              <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator size={'small'} /> : currencyFormat(currency === "ARS" ? positions.arsPositions : positions.usdPositions, currency)}</Text>
             </LayoutCustom>
           </LayoutCustom>
         </TouchableOpacity>
