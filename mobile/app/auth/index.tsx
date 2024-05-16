@@ -63,8 +63,6 @@ const Auth = () => {
     } = useForm({ resolver })
 
     const onSubmit = (data) => {
-      console.log(data);
-      
         try {
             setLoadingScreen(true)
             signIn(data.username.toLowerCase(), data.pass)
@@ -105,7 +103,16 @@ const Auth = () => {
                             control={control}
                             rules={{ required: true }}
                             render={({ field: { onChange, onBlur, value } }) => (
-                                <TextInput placeholder="Nombre de usuario" placeholderTextColor={"#ffffff"} onChangeText={onChange} value={value} style={themedStyles.input} />
+                                <TextInput
+                                    placeholder="Nombre de usuario"
+                                    placeholderTextColor={"#ffffff"}
+                                    onChangeText={(text) => {
+                                        const cleanedValue = text.replace(/\s/g, '');
+                                        onChange(cleanedValue);
+                                    }}
+                                    value={value}
+                                    style={themedStyles.input}
+                                />
                             )}
                             name="username"
                         />
