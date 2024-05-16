@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService } from "@ui-kitten/components"
 import { useFocusEffect } from "expo-router"
-import React, { useCallback, useContext, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
@@ -20,6 +20,21 @@ const Finance = () => {
     const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
     const { currency } = useContext(AppContext)
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
+    const [positions, setPositions] = useState(0)
+
+    useEffect(() => {
+
+        async function storage() {
+            const storage = await AsyncStorage.getItem('totalPos')
+            setPositions(JSON.parse(storage))
+        }
+        storage()
+
+
+    }
+        , [])
+
+    console.log('positions traidas', positions)
 
     const formatPublicTitles = (data: IPosition[]) => {
         const newData = data.map((d) => ({
@@ -129,7 +144,7 @@ const Finance = () => {
                             justify="space-between"
                         >
                             <Text style={themedStyles.textColor}>Total general</Text>
-                            <Text style={themedStyles.textColor}>AR$1.456.789,000</Text>
+                            <Text style={themedStyles.textColor}>{currencyFormat(positions, 'ARS')}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                     <LayoutCustom ph={theme.paddings.large}>

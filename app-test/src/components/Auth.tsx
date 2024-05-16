@@ -27,7 +27,7 @@ export const Auth = () => {
       httpService.saveAccessToken(response.data.token)
       httpService.saveRefreshToken(response.data.refreshToken)
       alert(`Login Ok. ${response?.data?.user?.username}`)
-      console.log(response)
+      console.log('sign in ok', response)
     }
     catch (err) {
       alert(err)
