@@ -23,7 +23,7 @@ const ConfigScreen = () => {
   const whatsapp = require('../../../assets/Icons/whatsappIcon.png')
   const backgroundModal = require('../../../assets/background/backgroundIlustration.png')
   const [open, setOpen] = useState(false)
-  const { signOut, session } = useSession()
+  const { signOut, session, checkSession } = useSession()
   const name = session.nombre.split(' ')[0]
   const lastName = session.nombre.split(' ')[1]
   const [changePasswordInfo, setChangePasswordInfo] = useState({
@@ -84,7 +84,7 @@ const ConfigScreen = () => {
         id: session._id,
         body: { [field]: userInfo[field] }
       })
-
+      checkSession()
       toggleEdition(field)
     }
     catch (e) {
