@@ -63,7 +63,7 @@ const themedStyles = StyleService.create({
     },
     moneyText: {
         color: '#009F9F',
-        fontSize: 22
+        fontSize: 20
     },
     title: {
         fontSize: 17,
