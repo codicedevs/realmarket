@@ -77,6 +77,8 @@ const Home = () => {
         const jsonValue = JSON.stringify(resPos.data.posiciones)
         await AsyncStorage.setItem('positions', jsonValue)
       }
+      const jsonTotalPos = JSON.stringify(resPos.data.totalPosiciones)
+      await AsyncStorage.setItem('totalPos', jsonTotalPos)
     }
     catch (err) {
       console.log(err)
@@ -96,6 +98,7 @@ const Home = () => {
 
   useEffect(() => {
     getCash()
+
   }, [])
 
   const progressValue = useSharedValue<number>(0);
@@ -182,7 +185,7 @@ const themedStyles = StyleService.create({
   },
   moneyText: {
     color: theme.colors.skyBlue,
-    fontSize: theme.fontSizes.body,
+    fontSize: theme.fontSizes.small,
   },
   buttonContainer: {
     width: windowWidth * 0.5,

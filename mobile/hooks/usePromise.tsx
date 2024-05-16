@@ -9,7 +9,6 @@ const usePromise = () => {
         try {
             setLoadingScreen(true)
             res = await promise
-            console.log('try')
         }
         catch (err) {
             console.error('Error:', err)

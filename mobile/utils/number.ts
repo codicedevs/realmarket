@@ -6,6 +6,7 @@ export function currencyFormat(number: number, currency: string): string {
   const currencySymbol = '$'; // Uso directo del símbolo '$'
 
   // Determina el formato del número basado en su magnitud
+
   let displayNumber;
   if (absoluteNumber >= 1e12) { // 1 billón o más
     displayNumber = `${currencySymbol} ${(absoluteNumber / 1e12).toFixed(2)} B`;
