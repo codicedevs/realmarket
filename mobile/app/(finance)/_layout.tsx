@@ -26,6 +26,7 @@ const TabLayout = () => {
         tabBarStyle: themedStyles.tabBarStyle,
         tabBarLabelStyle: themedStyles.tabBarLabel,
         headerShown: false,
+        tabBarHideOnKeyboard: true
       }}
     >
       <Tabs.Screen options={{
