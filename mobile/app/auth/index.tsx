@@ -1,5 +1,5 @@
 import { Icon, StyleService } from "@ui-kitten/components";
-import { Redirect } from "expo-router";
+import { Redirect, router } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Dimensions, Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -152,7 +152,9 @@ const Auth = () => {
                             <Text style={themedStyles.loginText}>LOGIN</Text>
                         </TouchableOpacity>
                         <LayoutCustom mt={theme.margins.small} style={themedStyles.forgotPasswordContainer}>
-                            <Text style={themedStyles.forgottenPasswordText}>¿Olvidó su contraseña?</Text>
+                            <TouchableOpacity onPress={() => router.navigate('/auth/recoverPassword')}>
+                                <Text style={themedStyles.forgottenPasswordText}>¿Olvidó su contraseña?</Text>
+                            </TouchableOpacity>
                         </LayoutCustom>
                     </LayoutCustom>
                 </LayoutCustom>
