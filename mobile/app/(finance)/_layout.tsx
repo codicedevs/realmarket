@@ -14,9 +14,13 @@ const TabLayout = () => {
     return <Redirect href={"/auth"} />
   }
 
-  const positionIcon = require("../../assets/Tab/positionIcon.png")
   const homeIcon = require("../../assets/Tab/homeIcon.png")
+  const homeWhiteIcon = require("../../assets/Tab/homeBlanco.png")
+  const positionIcon = require("../../assets/Tab/positionIcon.png")
+  const positionWhiteIcon = require("../../assets/Tab/walletBlanco.png")
   const actionsIcon = require("../../assets/Tab/actionsIcon.png")
+  const actionsWhiteIcon = require("../../assets/Tab/actionsBlanco.png")
+
 
   return (
     <Tabs
@@ -32,14 +36,14 @@ const TabLayout = () => {
       <Tabs.Screen options={{
         title: "Inicio", tabBarIcon: ({ focused }) => (
           <View style={{ ...themedStyles.singleTabStyle }}>
-            <Image style={themedStyles.imageStyle} source={homeIcon} />
+            <Image style={themedStyles.imageStyle} source={focused ? homeWhiteIcon : homeIcon} />
           </View>
         )
       }} name='home' />
       <Tabs.Screen options={{
         title: "Posiciones", tabBarIcon: ({ focused }) => (
           <View style={{ ...themedStyles.singleTabStyle }}>
-            <Image style={themedStyles.imageStyle} source={positionIcon} />
+            <Image style={themedStyles.imageStyle} source={focused ? positionWhiteIcon : positionIcon} />
           </View>
         )
       }} name='position' />
@@ -47,7 +51,7 @@ const TabLayout = () => {
         title: "Órdenes",
         tabBarIcon: ({ focused }) => (
           <View style={{ ...themedStyles.singleTabStyle }}>
-            <Image style={themedStyles.imageStyle} source={actionsIcon} />
+            <Image style={themedStyles.imageStyle} source={focused ? actionsWhiteIcon : actionsIcon} />
           </View>
         )
       }} name='Orders' />
