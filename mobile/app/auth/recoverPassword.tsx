@@ -1,7 +1,9 @@
 import { StyleService } from "@ui-kitten/components";
 import { router } from "expo-router";
-import React, { useState } from "react";
-import { Dimensions, Image, ImageBackground, Text, TextInput, TouchableOpacity } from "react-native";
+import React, { useCallback } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Dimensions, Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from "react-native";
+import * as yup from "yup";
 import Container from "../../components/Container";
 import LayoutCustom from "../../components/LayoutCustom";
 import theme from "../../utils/theme";
@@ -9,13 +11,55 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 
+const useYupValidationResolver = (validationSchema) =>
+  useCallback(
+    async (data) => {
+      try {
+        const values = await validationSchema.validate(data, {
+          abortEarly: false,
+        });
+
+        return {
+          values,
+          errors: {},
+        };
+      } catch (errors) {
+        return {
+          values: {},
+          errors: errors.inner.reduce(
+            (allErrors, currentError) => ({
+              ...allErrors,
+              [currentError.path]: {
+                type: currentError.type ?? "validation",
+                message: currentError?.message,
+              },
+            }),
+            {}
+          ),
+        };
+      }
+    },
+    [validationSchema]
+  );
+
+// Ejemplo de uso del validador con Yup
+const validationSchema = yup.object({
+  email: yup.string().email("Debe ser un correo electrónico válido").required("Requerido")
+});
+
 const Auth = () => {
+  const resolver = useYupValidationResolver(validationSchema)
   const background = require("../../assets/Login/fondoLogin.png")
   const logo = require("../../assets/Login/rm-logo.png")
-  const [email, setEmail] = useState('')
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver })
 
-  const handleEmail = (text: string) => {
-    setEmail(text)
+  const onSubmit = (data) => {
+    console.log(data.email)
+    router.push({ pathname: '/auth/confirmPassword', params: { value: data.email } })
   }
 
   return (
@@ -29,11 +73,31 @@ const Auth = () => {
               <Text style={themedStyles.subTitle} numberOfLines={2}>Ingrese su email y le enviaremos un codigo de 4 digitos</Text>
             </LayoutCustom>
             <LayoutCustom pv={theme.paddings.large} justify="space-around" style={themedStyles.inputContainer}>
-              <TextInput placeholder="Email" value={email} onChangeText={handleEmail} placeholderTextColor={"#ffffff"} style={themedStyles.input} />
+              <Controller
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    placeholder="Email"
+                    placeholderTextColor={"#ffffff"}
+                    onChangeText={(text) => {
+                      const cleanedValue = text.replace(/\s/g, '');
+                      onChange(cleanedValue);
+                    }}
+                    value={value}
+                    style={themedStyles.input}
+                  />
+                )}
+                name="email"
+              />
+              {/* <TextInput placeholder="Email" value={email} onChangeText={handleEmail} placeholderTextColor={"#ffffff"} style={themedStyles.input} /> */}
+              <View style={{ minHeight: 10, alignSelf: 'center' }}>
+                {errors.email && <Text style={themedStyles.errorText}>{errors.email.message as string} </Text>}
+              </View>
             </LayoutCustom>
           </LayoutCustom>
           <LayoutCustom mt={theme.margins.xSmall}>
-            <TouchableOpacity style={themedStyles.buttonContainer} onPress={() => router.push({ pathname: '/auth/confirmPassword', params: { value: email } })}>
+            <TouchableOpacity style={themedStyles.buttonContainer} onPress={handleSubmit(onSubmit)}>
               <Text style={themedStyles.loginText}>Enviar</Text>
             </TouchableOpacity>
           </LayoutCustom>

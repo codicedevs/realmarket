@@ -13,7 +13,7 @@ const Auth = () => {
   const background = require("../../assets/Login/fondoLogin.png")
   const logo = require("../../assets/Login/rm-logo.png")
   const value = useLocalSearchParams();
-
+  //cambiar que no sea con value.value
   return (
     <Container style={themedStyles.container}>
       <ImageBackground style={themedStyles.background} source={background}>
@@ -21,7 +21,7 @@ const Auth = () => {
           <LayoutCustom itemsCenter>
             <Image style={themedStyles.img} source={logo} />
             <LayoutCustom itemsCenter mt={theme.margins.large}>
-              <Text style={themedStyles.title} >Recupero de contraseña de {value.email}</Text>
+              <Text style={themedStyles.title} >Recupero de contraseña de {value.value}</Text>
             </LayoutCustom>
             <LayoutCustom pv={theme.paddings.large} justify="space-around" style={themedStyles.inputContainer}>
               <TextInput placeholder="Email" placeholderTextColor={"#ffffff"} style={themedStyles.input} />
