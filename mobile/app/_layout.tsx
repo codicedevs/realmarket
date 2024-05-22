@@ -20,7 +20,7 @@ const RootLayout = () => {
               <LoadingProvider>
                 <Stack>
                   <Stack.Screen name='(finance)' options={{ headerShown: false }} />
-                  <Stack.Screen name="auth/index" options={{ headerShown: false }} />
+                  <Stack.Screen name="auth" options={{ headerShown: false }} />
                 </Stack>
               </LoadingProvider>
             </SessionProvider>
