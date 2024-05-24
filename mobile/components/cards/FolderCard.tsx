@@ -19,18 +19,16 @@ const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPositi
         <LayoutCustom horizontal justify='space-between' style={themedStyles.container} onPress={toggle}>
           <Text style={themedStyles.text}>{financial[title]}</Text>
           <Icon
-            name='chevron-down-outline'
+            name={open ? 'chevron-up-outline' : 'chevron-down-outline'}
             style={{ width: 20, height: 20 }}
           />
         </LayoutCustom>
       }
       {
-        open ?
-          data.map((d, index) => {
-            return <TransactionCards data={d} index={index} selectAsset={selectAsset} key={index} />
-          })
-          :
-          null
+        open &&
+        data.map((d, index) => {
+          return <TransactionCards data={d} index={index} selectAsset={selectAsset} key={index} />
+        })
       }
     </>
   )
