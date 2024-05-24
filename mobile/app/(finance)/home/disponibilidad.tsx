@@ -2,7 +2,7 @@ import { StyleService } from "@ui-kitten/components"
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Modal, Pressable, ScrollView, Text } from "react-native"
+import { ActivityIndicator, Modal, ScrollView, Text, TouchableOpacity } from "react-native"
 import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
 import Header from "../../../components/CustomHeader"
@@ -111,7 +111,7 @@ const Disponibility = () => {
                                 <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
                             </LayoutCustom>
                             <LayoutCustom>
-                                <Pressable
+                                <TouchableOpacity
                                     style={[themedStyles.button, themedStyles.buttonConfirm]}
                                     onPress={() => getReceipt(selectedTransaction?.comprobante)}
                                     disabled={isLoading}
@@ -122,14 +122,14 @@ const Disponibility = () => {
                                             :
                                             <Text style={themedStyles.textStyle}>Ver</Text>
                                     }
-                                </Pressable>
-                                <Pressable
+                                </TouchableOpacity>
+                                <TouchableOpacity
                                     style={[themedStyles.button, themedStyles.buttonClose]}
                                     onPress={() => setOpen(false)}
                                     disabled={isLoading}
                                 >
                                     <Text style={themedStyles.textStyle}>Volver</Text>
-                                </Pressable>
+                                </TouchableOpacity>
                             </LayoutCustom>
                         </LayoutCustom>
                     </LayoutCustom>
