@@ -37,22 +37,14 @@ const TransactionItem: React.FC<{ data: ITransactionItemProps, selectTransaction
         <LayoutCustom gap={1}>
           <LayoutCustom horizontal>
             <Text style={themedStyles.darkerText}>{data.description.slice(0, 20)}</Text>
-            {/* {
-            data.receivedBy ?
-            <Text style={themedStyles.darkerText}>
-                {data.receivedBy}
-              </Text>
-              :
-              null
-            } */}
           </LayoutCustom>
-          <Text style={{ fontSize: 10, color: 'white' }}>
+          <Text style={{ fontSize: 10, color: 'white', fontFamily: 'Lato-Regular' }}>
             {data.date.toString()}
           </Text>
-          <Text style={{ color: 'white' }}>{currencyFormat(data.balance, currency)}</Text>
+          <Text style={{ color: 'white', fontFamily: 'Lato-Regular' }}>{currencyFormat(data.balance, currency)}</Text>
         </LayoutCustom>
       </LayoutCustom>
-      <Text style={{ color: String(data.amount)[0] !== "-" ? "green" : "red" }}>
+      <Text style={{ color: String(data.amount)[0] !== "-" ? "green" : "red", fontFamily: 'Lato-Regular' }}>
         {currencyFormat(data.amount, currency)}
       </Text>
     </LayoutCustom>
@@ -79,6 +71,7 @@ const themedStyles = StyleService.create({
     borderRadius: theme.borderRadius.medium,
   },
   darkerText: {
-    color: "gray"
+    color: "gray",
+    fontFamily: 'Lato-Regular'
   }
 });

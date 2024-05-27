@@ -77,6 +77,7 @@ const themedStyles = StyleService.create({
   tabBarLabel: {
     fontSize: theme.fontSizes.label,
     marginBottom: Platform.OS === 'android' ? 10 : -10,
+    fontFamily: 'Lato-Regular'
   },
   singleTabStyle: {
     padding: theme.paddings.xSmall,

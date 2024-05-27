@@ -193,11 +193,12 @@ const themedStyles = StyleService.create({
         alignItems: "flex-end"
     },
     textColor: {
-        color: "white"
+        color: "white",
+        fontFamily: 'Lato-Regular'
     },
     titleTable: {
         color: 'white',
-        fontWeight: 'bold'
+        fontFamily: 'Lato-Bold'
     },
     scrollContainer: {
         flex: 1,
@@ -241,23 +242,24 @@ const themedStyles = StyleService.create({
     modalTextTitle: {
         fontSize: 22,
         marginBottom: theme.margins.medium,
-        fontWeight: 'bold'
+        fontFamily: 'Lato-Bold'
     },
     modalTextSubTitle: {
         fontSize: 16,
         marginBottom: theme.margins.xSmall,
-        fontWeight: '500'
+        fontFamily: 'Lato-Bold'
     },
     modalTextInfo: {
-        fontSize: 16,
-        marginBottom: theme.margins.xSmall
+        fontSize: 14,
+        marginBottom: theme.margins.xSmall,
+        fontFamily: 'Lato-Regular'
     },
     withMargin: {
         marginLeft: theme.margins.xSmall
     },
     textStyle: {
         color: 'white',
-        fontWeight: 'bold',
         textAlign: 'center',
+        fontFamily: 'Lato-Bold'
     }
 });

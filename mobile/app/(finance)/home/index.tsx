@@ -191,6 +191,7 @@ const themedStyles = StyleService.create({
   moneyText: {
     color: theme.colors.skyBlue,
     fontSize: theme.fontSizes.small,
+    fontFamily: 'Lato-Regular'
   },
   buttonContainer: {
     width: windowWidth * 0.5,
@@ -203,10 +204,12 @@ const themedStyles = StyleService.create({
   position: {
     fontSize: theme.fontSizes.body,
     marginBottom: theme.margins.xSmall,
-    color: 'white'
+    color: 'white',
+    fontFamily: 'Lato-Regular'
   },
   lastUpdateText: {
     color: 'white',
     fontSize: 15,
+    fontFamily: 'Lato-Regular'
   }
 });

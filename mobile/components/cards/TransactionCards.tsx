@@ -103,10 +103,12 @@ const themedStyles = StyleService.create({
     },
     currencyText: {
         fontSize: 12,
-        color: 'white'
+        color: 'white',
+        fontFamily: 'Lato-Regular'
     },
     normalTextSize: {
         fontSize: 10,
-        color: 'white'
+        color: 'white',
+        fontFamily: 'Lato-Regular'
     }
 });

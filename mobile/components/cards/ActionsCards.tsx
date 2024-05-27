@@ -59,6 +59,7 @@ const themedStyles = StyleService.create({
   },
   text: {
     fontSize: 17,
-    color: 'white'
+    color: 'white',
+    fontFamily: 'Lato-Regular'
   }
 });

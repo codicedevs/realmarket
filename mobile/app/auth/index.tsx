@@ -149,7 +149,7 @@ const Auth = () => {
                     </LayoutCustom>
                     <LayoutCustom mt={theme.margins.xSmall}>
                         <TouchableOpacity onPress={handleSubmit(onSubmit)} style={themedStyles.buttonContainer} >
-                            <Text style={themedStyles.loginText}>LOGIN</Text>
+                            <Text style={themedStyles.loginText}>Login</Text>
                         </TouchableOpacity>
                         <LayoutCustom mt={theme.margins.small} style={themedStyles.forgotPasswordContainer}>
                             <TouchableOpacity onPress={() => router.navigate('/auth/recoverPassword')}>
@@ -180,13 +180,14 @@ const themedStyles = StyleService.create({
     title: {
         color: 'white',
         fontSize: theme.fontSizes.subtitle,
-        fontWeight: 'bold'
+        fontFamily: 'Lato-Bold'
     },
     subTitle: {
         textAlign: 'center',
         lineHeight: 25,
         color: 'white',
-        fontSize: theme.fontSizes.medium
+        fontSize: theme.fontSizes.medium,
+        fontFamily: 'Lato-Regular'
     },
     inputContainer: {
         height: windowHeight * 0.37
@@ -198,8 +199,8 @@ const themedStyles = StyleService.create({
         color: '#ffffff',
         fontSize: theme.fontSizes.medium,
         paddingBottom: theme.paddings.small,
-        fontWeight: "bold",
-        width: '100%'
+        width: '100%',
+        fontFamily: 'Lato-Bold'
     },
     buttonContainer: {
         backgroundColor: theme.colors.background,
@@ -210,7 +211,8 @@ const themedStyles = StyleService.create({
         alignSelf: "center"
     },
     forgottenPasswordText: {
-        color: theme.colors.forgoten_password_Text
+        color: theme.colors.forgoten_password_Text,
+        fontFamily: 'Lato-Regular'
     },
     forgotPasswordContainer: {
         alignItems: 'center'
@@ -218,9 +220,10 @@ const themedStyles = StyleService.create({
     loginText: {
         color: 'white',
         fontSize: theme.fontSizes.large,
-        fontWeight: 'bold'
+        fontFamily: 'Lato-Bold'
     },
     errorText: {
-        color: 'red'
+        color: 'red',
+        fontFamily: 'Lato-Regular'
     }
 });

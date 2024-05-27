@@ -221,14 +221,16 @@ const themedStyles = StyleService.create({
     },
     textStyle: {
         color: 'white',
-        fontWeight: 'bold',
+        fontFamily: 'Lato-Bold',
         textAlign: 'center',
     },
     modalText: {
         textAlign: 'center',
-        color: 'black'
+        color: 'black',
+        fontFamily: 'Lato-Regular'
     },
     amountText: {
-        textAlign: "center"
+        textAlign: "center",
+        fontFamily: 'Lato-Regular'
     }
 });

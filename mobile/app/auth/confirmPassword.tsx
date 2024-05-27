@@ -59,7 +59,8 @@ const themedStyles = StyleService.create({
     fontSize: theme.fontSizes.body,
     fontWeight: 'bold',
     marginBottom: 10,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Lato-Regular'
   },
   subTitle: {
     textAlign: 'center',
@@ -79,7 +80,9 @@ const themedStyles = StyleService.create({
     fontSize: theme.fontSizes.medium,
     paddingBottom: theme.paddings.small,
     fontWeight: "bold",
-    width: '100%'
+    width: '100%',
+    fontFamily: 'Lato-Regular'
+
   },
   buttonContainer: {
     backgroundColor: theme.colors.background,
@@ -98,7 +101,8 @@ const themedStyles = StyleService.create({
   loginText: {
     color: 'white',
     fontSize: theme.fontSizes.large,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontFamily: 'Lato-Regular'
   },
   errorText: {
     color: 'red'

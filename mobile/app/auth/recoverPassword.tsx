@@ -124,14 +124,15 @@ const themedStyles = StyleService.create({
   title: {
     color: 'white',
     fontSize: theme.fontSizes.body,
-    fontWeight: 'bold',
-    marginBottom: 10
+    marginBottom: 10,
+    fontFamily: 'Lato-Bold'
   },
   subTitle: {
     textAlign: 'center',
     lineHeight: 25,
     color: 'white',
-    fontSize: theme.fontSizes.medium
+    fontSize: theme.fontSizes.medium,
+    fontFamily: 'Lato-Regular'
   },
   inputContainer: {
     height: windowHeight * 0.37,
@@ -145,7 +146,8 @@ const themedStyles = StyleService.create({
     fontSize: theme.fontSizes.medium,
     paddingBottom: theme.paddings.small,
     fontWeight: "bold",
-    width: '100%'
+    width: '100%',
+    fontFamily: 'Lato-Regular'
   },
   buttonContainer: {
     backgroundColor: theme.colors.background,
@@ -164,9 +166,11 @@ const themedStyles = StyleService.create({
   loginText: {
     color: 'white',
     fontSize: theme.fontSizes.large,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontFamily: 'Lato-Regular'
   },
   errorText: {
-    color: 'red'
+    color: 'red',
+    fontFamily: 'Lato-Regular'
   }
 });

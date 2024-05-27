@@ -39,6 +39,7 @@ export default FolderCard
 const themedStyles = StyleService.create({
   text: {
     color: 'white',
+    fontFamily: 'Lato-Regular'
   },
   container: {
     marginVertical: theme.margins.xSmall,

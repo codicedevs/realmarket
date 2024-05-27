@@ -259,13 +259,12 @@ const themedStyles = StyleService.create({
     backgroundColor: theme.colors.background
   },
   input: {
-    // borderBottomWidth: 1,
     height: windowHeight * 0.06,
     borderColor: 'gray',
     color: '#5A5959',
     fontSize: theme.fontSizes.small,
     paddingBottom: theme.paddings.xSmall,
-    fontWeight: "bold"
+    fontFamily: 'Lato-Bold'
   },
   centeredView: {
     flex: 1,
@@ -276,7 +275,8 @@ const themedStyles = StyleService.create({
   modalInput: {
     fontSize: theme.fontSizes.small,
     paddingBottom: theme.paddings.xSmall,
-    flex: 1
+    flex: 1,
+    fontFamily: 'Lato-Regular'
   },
   modalView: {
     height: windowHeight * 0.4,
@@ -313,7 +313,8 @@ const themedStyles = StyleService.create({
     textAlign: 'center',
     color: 'black',
     margin: theme.margins.small,
-    fontSize: theme.fontSizes.caption
+    fontSize: theme.fontSizes.caption,
+    fontFamily: 'Lato-Regular'
   },
   modalSubtitle: {
     textAlign: 'center',
@@ -329,8 +330,8 @@ const themedStyles = StyleService.create({
   },
   textStyle: {
     color: 'white',
-    fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Lato-Bold'
   },
   inputIconWrapper: {
     flexDirection: 'row',
@@ -356,7 +357,8 @@ const themedStyles = StyleService.create({
   },
   initials: {
     fontSize: 50,
-    color: 'white'
+    color: 'white',
+    fontFamily: 'Lato-Regular'
   },
   infoContainer: {
     height: windowHeight * 0.12,
@@ -365,15 +367,18 @@ const themedStyles = StyleService.create({
   },
   nameText: {
     fontSize: 21,
-    color: '#D0682E'
+    color: '#D0682E',
+    fontFamily: 'Lato-Regular'
   },
   userName: {
     fontSize: 18,
-    color: 'white'
+    color: 'white',
+    fontFamily: 'Lato-Regular'
   },
   account: {
     fontSize: 15,
-    color: 'white'
+    color: 'white',
+    fontFamily: 'Lato-Regular'
   },
   imageResize: {
     width: '100%',

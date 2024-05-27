@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSizes.caption,
     // fontWeight: 'bold',
     color: '#ffff',
+    fontFamily: 'Lato-Regular'
   },
 });
 export default Header;
