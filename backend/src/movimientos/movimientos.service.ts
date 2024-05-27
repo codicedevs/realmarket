@@ -91,7 +91,7 @@ export class MovimientosService extends RosvalHttpService {
     idComprobante: string,
   ): Promise<AxiosResponse<any, any>> {
     const resp = await this.get(`/comprobantes/${idComprobante}`, {
-      params: { formato: 'JPG' },
+      params: { formato: 'PDF' },
       responseType: 'stream',
     });
     return resp;
