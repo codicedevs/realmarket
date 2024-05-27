@@ -2,7 +2,7 @@ import { StyleService } from "@ui-kitten/components"
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import React, { useContext, useEffect, useState } from "react"
-import { Modal, Pressable, ScrollView, Text } from "react-native"
+import { ActivityIndicator, Modal, ScrollView, Text, TouchableOpacity } from "react-native"
 import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
 import Header from "../../../components/CustomHeader"
@@ -12,9 +12,9 @@ import BalanceCard from "../../../components/cards/BalanceCard"
 import { AppContext } from "../../../context/AppContext"
 import { useLoading } from "../../../context/LoadingProvider"
 import usePromise from "../../../hooks/usePromise"
-import { useSaveFile } from "../../../hooks/useSaveFile"
 import movimientosService from "../../../service/movimientos.service"
 import { currencyFormat } from "../../../utils/number"
+import { saveFilePdf } from "../../../utils/saveFile"
 import theme from "../../../utils/theme"
 
 const Disponibility = () => {
@@ -24,8 +24,8 @@ const Disponibility = () => {
     const [movementsArs, setMovementsArs] = useState([])
     const [movementsUsd, setMovementsUsd] = useState([])
     const handlePromise = usePromise()
-    const { saveFile } = useSaveFile()
     const { setLoadingScreen } = useLoading()
+    const [isLoading, setIsLoading] = useState(false)
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
@@ -50,24 +50,16 @@ const Disponibility = () => {
     }
 
     const getReceipt = async (id: string) => {
-        setLoadingScreen(true)
+        setIsLoading(true)
         try {
             const url = `movimientos/comprobante/${id}`
             const base64Image = await movimientosService.getReceipt(id)
-            const filename = `comprobante_${id}.jpg`;
-            saveFile(base64Image, filename, url)
-            //  saveFile(base64Image, filename)
-            // Notifications.scheduleNotificationAsync({
-            //     content: {
-            //         title: "Descarga Completa 📥",
-            //         body: `${filename} ha sido guardado exitosamente.`,
-            //     },
-            //     trigger: null,
-            // });
+            const filename = `comprobante_${id}.pdf`;
+            await saveFilePdf(base64Image, filename, url)
         } catch (e) {
             console.error('error', e);
         } finally {
-            setLoadingScreen(false)
+            setIsLoading(false)
         }
     }
 
@@ -119,33 +111,31 @@ const Disponibility = () => {
                                 <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
                             </LayoutCustom>
                             <LayoutCustom>
-                                <Pressable
+                                <TouchableOpacity
                                     style={[themedStyles.button, themedStyles.buttonConfirm]}
                                     onPress={() => getReceipt(selectedTransaction?.comprobante)}
+                                    disabled={isLoading}
                                 >
-                                    <Text style={themedStyles.textStyle}>Ver</Text>
-                                </Pressable>
-                                <Pressable
+                                    {
+                                        isLoading ?
+                                            <ActivityIndicator size={"small"} color={"white"} />
+                                            :
+                                            <Text style={themedStyles.textStyle}>Ver</Text>
+                                    }
+                                </TouchableOpacity>
+                                <TouchableOpacity
                                     style={[themedStyles.button, themedStyles.buttonClose]}
                                     onPress={() => setOpen(false)}
+                                    disabled={isLoading}
                                 >
                                     <Text style={themedStyles.textStyle}>Volver</Text>
-                                </Pressable>
+                                </TouchableOpacity>
                             </LayoutCustom>
                         </LayoutCustom>
                     </LayoutCustom>
                 }
             </Modal>
             <Container style={themedStyles.container}>
-                {/* <TopNavigation
-                    alignment="center"
-                    title="Movimientos"
-                    style={themedStyles.topNavigation}
-                    accessoryLeft={() => (
-                        <RoundedButton icon="arrow-back-outline" />
-                    )}
-                    accessoryRight={() => <RoundedButton icon="person-outline" />}
-                /> */}
                 <Header title={'Movimientos'} />
                 <LayoutCustom style={themedStyles.content}>
                     <LayoutCustom mv={theme.margins.large}>

@@ -10,6 +10,7 @@ import LayoutCustom from "../../components/LayoutCustom"
 import FolderCard from "../../components/cards/FolderCard"
 import { IPosition } from "../../components/cards/TransactionCards"
 import { AppContext } from "../../context/AppContext"
+import { financial } from "../../types/financial.types"
 import { currencyFormat } from "../../utils/number"
 import theme from "../../utils/theme"
 const windowWidth = Dimensions.get("window").width;
@@ -39,8 +40,6 @@ const Finance = () => {
     }
         , [])
 
-    console.log('positions traidas', positions)
-
     const selectAsset = (data: IPosition) => {
         setSelectedAsset(data)
         setOpen(true)
@@ -48,23 +47,16 @@ const Finance = () => {
 
     const fetchAndOrganizePositions = async () => {
         const value = JSON.parse(await AsyncStorage.getItem('positions'))
-        if (value) {
-            const echeqs = value.posiciones.filter((position) => position.tipoTitulo === "ECHEQ" && position.monedaCotizacion.includes(currency))
-            const acciones = value.posiciones.filter((position) => position.tipoTitulo === "Acciones" && position.monedaCotizacion.includes(currency))
-            const cedears = value.posiciones.filter((position) => position.tipoTitulo === "Cedears" && position.monedaCotizacion.includes(currency))
-            const obligaciones = value.posiciones.filter((position) => position.tipoTitulo === "Obligaciones Negociables" && position.monedaCotizacion.includes(currency))
-            const titulos = value.posiciones.filter((position) => position.tipoTitulo === "Títulos Públicos" && position.monedaCotizacion.includes(currency))
-            const pagare = value.posiciones.filter((position) => position.tipoTitulo === "Pagarés" && position.monedaCotizacion.includes(currency))
-            const monedas = value.posiciones.filter((position) => position.tipoTitulo === "Moneda" && position.monedaCotizacion.includes(currency))
-            setAssetsInfo({
-                ACC: acciones,
-                CED: cedears,
-                OBG: obligaciones,
-                TIT: titulos,
-                PAG: pagare,
-                MON: monedas,
-                ECH: echeqs
-            })
+        if (value && value.posiciones) {
+            const assetsInfo = Object.keys(financial).reduce((acc, key) => {
+                const tipoTitulo = financial[key as keyof typeof financial];
+                acc[key] = value.posiciones.filter(position =>
+                    position.tipoTitulo === tipoTitulo && position.monedaCotizacion.includes(currency)
+                );
+                return acc;
+            }, {} as Record<keyof typeof financial, any[]>);
+
+            setAssetsInfo(assetsInfo);
         }
     }
 
