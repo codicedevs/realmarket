@@ -6,7 +6,7 @@ import {
     useLocation,
     useNavigate,
 } from 'react-router-dom';
-import { CustomLayout } from '../components/Layout';
+import { CustomLayout } from '../components/layout/Layout';
 import { useAuth } from '../Context/auth';
 import Login from '../Views/Login/Login';
 import { AuthenticationGuard } from './AuthenticationGuard';

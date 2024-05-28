@@ -1,14 +1,15 @@
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
 import Sider from 'antd/es/layout/Sider';
-import { Content, Header } from 'antd/es/layout/layout';
+import { Content } from 'antd/es/layout/layout';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { useAuth } from '../Context/auth';
+import { useAuth } from '../../Context/auth';
+import MyHeader from '../header/MyHeader';
 import './layout.css';
 
-const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
+const items2: MenuProps['items'] = [UserOutlined].map(
     (icon, index) => {
         const key = String(index + 1);
 
@@ -17,13 +18,13 @@ const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOu
             icon: React.createElement(icon),
             label: `subnav ${key}`,
 
-            children: new Array(4).fill(null).map((_, j) => {
-                const subKey = index * 4 + j + 1;
-                return {
-                    key: subKey,
-                    label: `option${subKey}`,
-                };
-            }),
+            // children: new Array(4).fill(null).map((_, j) => {
+            //     const subKey = index * 4 + j + 1;
+            //     return {
+            //         key: subKey,
+            //         label: `option${subKey}`,
+            //     };
+            // }), if children se ve con dropdown
         };
     },
 );
@@ -39,14 +40,7 @@ export const CustomLayout = () => {
         <Layout style={{ height: '100vh' }}>
             {
                 user &&
-                <Header style={{ height: '10vh', display: 'flex' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', padding: '0 10px' }}>
-                        <div className='logo' />
-                        <div>
-                            Logout
-                        </div>
-                    </div>
-                </Header>
+                <MyHeader />
             }
             <Layout>
                 {
@@ -57,6 +51,7 @@ export const CustomLayout = () => {
                             style={{ height: '100%', borderRight: 0 }}
                             items={items2}
                             defaultSelectedKeys={['1']}
+                            theme='dark'
                         />
                     </Sider>
                 }
