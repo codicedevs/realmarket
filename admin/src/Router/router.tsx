@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { useAuth } from '../Context/auth';
+import Login from '../Views/Login/Login';
 import { AuthenticationGuard } from './AuthenticationGuard';
 
 const HomePage = () => <div>Home</div>;
@@ -49,17 +50,15 @@ const LogoutPage = () => {
 
 const routes = createRoutesFromElements(
     <Route element={<Layout />}>
-        <Route index element={<HomePage />} />
-
         {/* Protect route based on authentication */}
         <Route element={<AuthenticationGuard />}>
+            <Route index element={<HomePage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="logout" element={<LogoutPage />} />
         </Route>
-
         {/* Login page in case unauthenticated */}
         <Route element={<AuthenticationGuard guardType="unauthenticated" />}>
-            <Route path="login" element={<LoginPage />} />
+            <Route path="/login" element={<Login />} />
         </Route>
     </Route>
 );

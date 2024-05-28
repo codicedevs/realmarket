@@ -1,4 +1,6 @@
+import { RouterProvider } from 'react-router-dom';
 import { AuthProvider, useAuth } from './Context/auth';
+import { router } from './Router/router';
 7
 
 const LoginButton = () => {
@@ -32,11 +34,7 @@ const UserProfile = () => {
 const App = () => {
   return (
     <AuthProvider>
-      <div>
-        <h1>My App</h1>
-        <LoginButton />
-        <UserProfile />
-      </div>
+      <RouterProvider router={router} />
     </AuthProvider>
   );
 };

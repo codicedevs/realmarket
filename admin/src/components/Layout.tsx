@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useAuth } from '../Context/auth';
 
 export const Layout = () => {
@@ -6,7 +6,7 @@ export const Layout = () => {
 
     return (
         <div>
-            <h1>Dashboard</h1>
+            {/* <h1>Dashboard</h1>
             <nav>
                 <ul>
                     <li>
@@ -23,7 +23,7 @@ export const Layout = () => {
                         )}
                     </li>
                 </ul>
-            </nav>
+            </nav> */}
             <Outlet />
         </div>
     );
