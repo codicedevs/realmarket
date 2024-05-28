@@ -1,0 +1,27 @@
+.header-wrapper {
+  height: 10vh;
+  display: flex;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.logo {
+  background-image: url('../../assets/Logo/rm-negro.png');
+  background-size: contain;
+  background-position: left;
+  height: 80px;
+  width: 100%;
+  background-repeat: no-repeat;
+}
+
+.configuration {
+  color: white;
+  display: flex;
+  align-items: center;
+}

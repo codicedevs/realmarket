@@ -1,0 +1,89 @@
+.wrapper {
+  height: 100vh - 20vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.rm-logo {
+  background-image: url('../../assets/Logo/rm-negro.png');
+  background-size: contain;
+  background-position: center;
+  height: 200px;
+  width: 100%;
+}
+
+.login-container {
+  width: 400px;
+  height: 500px;
+  background-color: #252362;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  justify-content: space-around;
+  height: 20%;
+  padding: 10px;
+}
+
+.button-container {
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-top: 10px;
+}
+
+.input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid #cccccc;
+  padding: 8px 10px;
+  font-size: 16px;
+  color: white;
+  outline: none;
+  transition: border-bottom-color 0.3s;
+  /* Hace menos tosco el cambio de color */
+}
+
+.input:hover,
+.input:focus {
+  border-bottom-color: #007bff;
+}
+
+.button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.button:focus {
+  outline: none;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input:focus::placeholder {
+  color: transparent;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+}

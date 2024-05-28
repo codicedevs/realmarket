@@ -6,7 +6,7 @@ import {
     useLocation,
     useNavigate,
 } from 'react-router-dom';
-import { Layout } from '../components/Layout';
+import { CustomLayout } from '../components/layout/Layout';
 import { useAuth } from '../Context/auth';
 import Login from '../Views/Login/Login';
 import { AuthenticationGuard } from './AuthenticationGuard';
@@ -49,7 +49,7 @@ const LogoutPage = () => {
 };
 
 const routes = createRoutesFromElements(
-    <Route element={<Layout />}>
+    <Route element={<CustomLayout />}>
         {/* Protect route based on authentication */}
         <Route element={<AuthenticationGuard />}>
             <Route index element={<HomePage />} />

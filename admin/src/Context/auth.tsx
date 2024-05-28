@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { User, mockAuthService } from '../components/mockAuthService';
+import { mockAuthService } from '../components/mockAuthService';
+import { UserInfo } from '../types/user.type';
 
 type AuthContextType = {
-    user: User | null;
-    login: () => Promise<void>;
+    user: string | null;
+    login: (data: UserInfo) => Promise<void>;
     logout: () => Promise<void>;
 };
 
@@ -14,11 +15,11 @@ type AuthProviderProps = {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-    const [user, setUser] = React.useState<User | null>(null);
+    const [user, setUser] = React.useState<string | null>(null);
 
-    const login = async () => {
+    const login = async (data: UserInfo) => {
         const user = await mockAuthService.login();
-        setUser(user);
+        setUser(data.email);
     };
 
     const logout = async () => {
