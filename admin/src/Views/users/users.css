@@ -1,0 +1,23 @@
+/* Ocultar los spinners en navegadores WebKit como Chrome y Safari */
+.ant-input-number-handler-wrap {
+  display: none !important;
+}
+
+/* Opcional: eliminar las flechas en Firefox */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  /* Firefox */
+}
+
+.addButtonContainer {
+  padding: 5px 10px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}

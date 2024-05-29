@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { useAuth } from "../../Context/auth";
@@ -8,7 +9,7 @@ import './Login.css';
 const schema = yup.object({
   email: yup
     .string()
-    .email('Ingrese un correo electrónico válido.')
+    // .email('Ingrese un correo electrónico válido.')
     .required('El campo de correo electrónico es obligatorio.'),
   password: yup
     .string()
@@ -18,7 +19,7 @@ const schema = yup.object({
 
 const Login = () => {
 
-  const { login } = useAuth()
+  const { login, checkSession } = useAuth()
 
   const {
     register,
@@ -28,6 +29,10 @@ const Login = () => {
     resolver: yupResolver(schema),
   })
   const onSubmit = (data: UserInfo) => login(data)
+
+  useEffect(() => {
+    checkSession()
+  }, [])
 
   return (
     <div className='wrapper'>

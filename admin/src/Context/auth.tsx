@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { mockAuthService } from '../components/mockAuthService';
-import { UserInfo } from '../types/user.type';
+import authService from '../service/auth.service';
+import { IUser, UserInfo } from '../types/user.type';
 
 type AuthContextType = {
-    user: string | null;
+    user: IUser | null;
     login: (data: UserInfo) => Promise<void>;
     logout: () => Promise<void>;
+    checkSession: () => Promise<void>;
 };
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -15,20 +16,24 @@ type AuthProviderProps = {
 };
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-    const [user, setUser] = React.useState<string | null>(null);
+    const [user, setUser] = React.useState<IUser | null>(null);
 
     const login = async (data: UserInfo) => {
-        const user = await mockAuthService.login();
-        setUser(data.email);
+        const userInfo = await authService.login(data.email, data.password)
+        if (userInfo) setUser(userInfo.user);
     };
 
     const logout = async () => {
-        await mockAuthService.logout();
         setUser(null);
     };
 
+    const checkSession = async () => {
+        const res = await authService.whoami()
+        setUser(res.data)
+    }
+
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, checkSession }}>
             {children}
         </AuthContext.Provider>
     );
