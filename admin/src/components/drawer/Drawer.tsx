@@ -47,7 +47,7 @@ const Drawer = () => {
     <Sider >
       <Menu
         mode='inline'
-        style={{ height: '100%', borderRight: 0 }}
+        style={{ borderRight: 0 }}
         items={items2}
         // defaultSelectedKeys={['1']}
         theme='dark'
