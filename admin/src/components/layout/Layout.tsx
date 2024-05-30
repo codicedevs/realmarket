@@ -10,7 +10,7 @@ export const CustomLayout = () => {
     const { user } = useAuth();
 
     const {
-        token: { colorBgContainer, borderRadiusLG },
+        token: { colorBgContainer },
     } = theme.useToken();
 
     return (
@@ -27,8 +27,7 @@ export const CustomLayout = () => {
                 <Layout>
                     <Content style={{
                         background: colorBgContainer,
-                        borderRadius: borderRadiusLG,
-                        justifyContent: "center"
+                        justifyContent: "center",
                     }}>
                         <Outlet />
                     </Content>

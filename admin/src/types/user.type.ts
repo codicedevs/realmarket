@@ -4,7 +4,7 @@ export interface UserInfo {
 }
 
 export interface IUser {
-  id: number,
+  _id: number,
   documento: string,
   nombre: string,
   username: string,
