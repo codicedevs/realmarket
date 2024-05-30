@@ -28,6 +28,7 @@ export const CustomLayout = () => {
                     <Content style={{
                         background: colorBgContainer,
                         justifyContent: "center",
+                        overflowY: 'auto'
                     }}>
                         <Outlet />
                     </Content>

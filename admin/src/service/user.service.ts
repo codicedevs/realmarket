@@ -10,6 +10,10 @@ export class UserService extends HttpService {
     return this.get(`/all`)
   }
 
+  async getUserById(id: string) {
+    return this.get(`/${id}`)
+  }
+
   // async ChangePassword({ currentPass, newPass }: { currentPass: string, newPass: string }) {
   //   return this.post(`/changePass`, {
   //     currentPass: currentPass,
