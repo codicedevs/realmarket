@@ -15,3 +15,13 @@ export interface IUser {
   resetKey: string,
   resetKeyTimeStamp: string
 }
+
+export interface user {
+  documento: string,
+  nombre: string,
+  username: string,
+  pass: string,
+  accountId: string,
+  email: string,
+  telefono: string,
+}

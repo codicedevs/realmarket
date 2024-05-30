@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import * as yup from 'yup';
 import userService from "../../service/user.service";
-import { IUser } from "../../types/user.type";
+import { IUser, user } from "../../types/user.type";
 import './users.css';
 
 const schema = yup.object({
@@ -16,7 +16,7 @@ const schema = yup.object({
   username: yup
     .string()
     .required('El campo de nombre de usuario es obligatorio.'),
-  password: yup
+  pass: yup
     .string()
     .required('El campo de contraseña es obligatorio.')
     .min(8, 'La contraseña debe tener al menos 8 caracteres.'),
@@ -32,6 +32,12 @@ const schema = yup.object({
     .required('El campo de teléfono es obligatorio.')
     .positive('El número de teléfono debe ser positivo.')
     .integer('El número de teléfono debe ser un número entero.'),
+  documento: yup
+    .number()
+    .typeError('El documento debe ser un numero.')
+    .required('El campo de documento es obligatorio.')
+    .positive('El número de documento debe ser positivo.')
+    .integer('El número de documento debe ser un número entero.'),
   email: yup
     .string()
     .email('Ingrese un correo electrónico válido.')
@@ -48,21 +54,13 @@ const UserManager = () => {
     defaultValues: {
       nombre: user?.username || '',
       username: '',
-      password: '',
+      pass: '',
       accountId: undefined,
       telefono: undefined,
-      email: ''
+      email: '',
+      documento: undefined
     }
   });
-
-  const onSubmit = (data: IUser) => {
-    if (id) {
-      console.log('editando')
-    } else {
-      console.log("creando")
-    }
-    console.log(data);
-  };
 
   const goBack = () => {
     navigate("/user")
@@ -75,20 +73,45 @@ const UserManager = () => {
     }
   }
 
+  const createUser = async (data: user) => {
+    return userService.createUser(data)
+  }
+
+  const editUser = async (data: user) => {
+    if (id) return userService.editUser(id, data)
+  }
+
+  const onSubmit = (data: user) => {
+    const formData = {
+      ...data,
+      telefono: data.telefono.toString(),
+      documento: data.documento.toString(),
+      accountId: data.accountId.toString()
+    };
+    if (id) {
+      editUser(formData)
+      console.log('editando')
+    } else {
+      createUser(formData)
+      console.log("creando")
+    }
+  };
+
+
   useEffect(() => {
     bringUser()
   }, [id])
 
   useEffect(() => {
-    // Asegúrate de que user no es nulo y contiene los datos necesarios antes de llamar a reset
     if (user) {
       reset({
         nombre: user.nombre,
-        username: user.username || '',  // Asumiendo que estos campos pueden no estar presentes
-        password: user.pass,
+        username: user.username,
+        pass: user.pass,
         accountId: Number(user.accountId),
         telefono: Number(user.telefono),
-        email: user.email || ''
+        email: user.email,
+        documento: Number(user.documento)
       });
     }
   }, [user, reset]);
@@ -134,11 +157,11 @@ const UserManager = () => {
 
         <Form.Item
           label="Contraseña"
-          name="password"
-          help={errors.password?.message}
-          validateStatus={errors.password ? "error" : ""}>
+          name="pass"
+          help={errors.pass?.message}
+          validateStatus={errors.pass ? "error" : ""}>
           <Controller
-            name="password"
+            name="pass"
             control={control}
             render={({ field }) => <Input.Password {...field} className="creation-input" placeholder="Ingresa una contraseña" />}
           />
@@ -178,6 +201,19 @@ const UserManager = () => {
             name="email"
             control={control}
             render={({ field }) => <Input {...field} className="creation-input" placeholder="Ingresa el email" />}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Documento"
+          name="documento"
+          help={errors.documento?.message}
+          validateStatus={errors.documento ? "error" : ""}
+        >
+          <Controller
+            name="documento"
+            control={control}
+            render={({ field }) => <InputNumber {...field} className="creation-input" placeholder="Ingresa el documento" />}
           />
         </Form.Item>
 
