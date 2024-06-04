@@ -20,6 +20,7 @@ type AuthProviderProps = {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = React.useState<IUser | null>(null);
     const [loading, setLoading] = React.useState(false)
+    const [hasCheckedSession, setHasCheckedSession] = React.useState(false);
 
     //funcion del login
     const login = async (data: UserInfo) => {
@@ -29,17 +30,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     //funcion del logout, falta cambiar su logica
     const logout = async () => {
-        setUser(null);
+        await authService.signOut()
+        setUser(null)
     };
 
     //chequea si ya hay una sesion iniciada
     const checkSession = async () => {
-        setLoading(true)
-        const res = await authService.whoami()
-        setUser(res.data)
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000);
+        if (hasCheckedSession) return;
+        setHasCheckedSession(true);
+        try {
+            setLoading(true)
+            const res = await authService.whoami()
+            setUser(res.data)
+        } catch (e) {
+            console.log(e)
+        } finally {
+            setTimeout(() => {
+                setLoading(false)
+            }, 1000);
+        }
     }
 
     return (
