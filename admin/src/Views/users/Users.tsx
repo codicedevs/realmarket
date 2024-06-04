@@ -1,14 +1,49 @@
-import { Button, Space, Table } from "antd"
+import { ExclamationCircleFilled } from '@ant-design/icons'
+import { Button, Modal, Space, Table } from "antd"
 import Column from "antd/es/table/Column"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
+import { Bounce, toast } from 'react-toastify'
 import userService from "../../service/user.service"
 import { IUser } from "../../types/user.type"
 import './users.css'
 
+const { confirm } = Modal;
+
+
 const Users = () => {
   const [users, setUsers] = useState([])
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const errorNotification = () => {
+    toast.error('Ocurrio un problema', {
+      position: "bottom-center",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce
+    })
+  }
+
+  const successNotification = () => {
+    toast.success('El usuario fue borrado con exito', {
+      position: "bottom-center",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce
+    });
+
+  }
 
   const sendToCreation = () => {
     navigate("/user/creation")
@@ -24,9 +59,35 @@ const Users = () => {
     setUsers(res.data)
   }
 
+  const deleteUser = async (id: number) => {
+    try {
+      await userService.delete((id).toString())
+      await bringUsers()
+    } catch (e) {
+      console.error(e)
+      errorNotification()
+    } finally {
+      successNotification()
+    }
+  }
+
+  const deleteModal = (id: number) => {
+    confirm({
+      title: 'Esta seguro que desea borrar este usuario?',
+      icon: <ExclamationCircleFilled />,
+      content: '',
+      onOk() { deleteUser(id) },
+      onCancel() { },
+      centered: true,
+      cancelText: 'Cancelar',
+      okText: 'Eliminar',
+      okType: 'danger'
+    });
+  };
+
   useEffect(() => {
     bringUsers()
-  }, [])
+  }, [location])
 
   return (
     <div style={{ width: '100%', height: '100%', padding: 10 }}>
@@ -46,7 +107,7 @@ const Users = () => {
           render={(_: any, record: IUser) => (
             <Space size="small" style={{ display: 'flex', flexDirection: 'column' }}>
               <a onClick={() => sendToEdition(record._id)}>Update</a>
-              <a onClick={() => console.log(record._id)}>Delete</a>
+              <a onClick={() => deleteModal(record._id)}>Delete</a>
             </Space>
           )}
         />
