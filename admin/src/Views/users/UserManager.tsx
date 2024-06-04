@@ -4,6 +4,8 @@ import { Button, Form, Input, InputNumber } from "antd";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
+import { Bounce, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import * as yup from 'yup';
 import userService from "../../service/user.service";
 import { IUser, user } from "../../types/user.type";
@@ -49,6 +51,48 @@ const UserManager = () => {
   const { id } = useParams();
   const [user, setUser] = useState<IUser | null>()
 
+  const successNotification = () => {
+    if (id) {
+      toast.success('El usuario fue editado con exito', {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce
+      });
+    } else {
+      toast.success('El usuario fue creado con exito', {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce
+      });
+    }
+  }
+
+  const errorNotification = () => {
+    toast.error('Ocurrio un problema', {
+      position: "bottom-center",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce
+    })
+  }
+
   const { control, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -81,19 +125,30 @@ const UserManager = () => {
     if (id) return userService.editUser(id, data)
   }
 
-  const onSubmit = (data: user) => {
+  const onSubmit = async (data: user) => {
     const formData = {
       ...data,
       telefono: data.telefono.toString(),
       documento: data.documento.toString(),
       accountId: data.accountId.toString()
     };
-    if (id) {
-      editUser(formData)
-      console.log('editando')
-    } else {
-      createUser(formData)
-      console.log("creando")
+    try {
+
+      if (id) {
+        await editUser(formData)
+        successNotification()
+      } else {
+        await createUser(formData)
+        successNotification()
+      }
+      setTimeout(() => {
+        goBack()
+      }, 500);
+    }
+    catch (e) {
+      errorNotification()
+    }
+    finally {
     }
   };
 
@@ -230,4 +285,4 @@ const UserManager = () => {
   )
 }
 
-export default UserManager
+export default UserManager 
