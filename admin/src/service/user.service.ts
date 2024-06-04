@@ -23,16 +23,12 @@ export class UserService extends HttpService {
     return this.put(`/edit/${id}`, body)
   }
 
-  // async deleteUser(id: string) {
-  //   return this.delete(``)
-  // }
-
-  // async ChangePassword({ currentPass, newPass }: { currentPass: string, newPass: string }) {
-  //   return this.post(`/changePass`, {
-  //     currentPass: currentPass,
-  //     newPass: newPass
-  //   })
-  // }
+  async ChangePassword({ currentPass, newPass }: { currentPass: string, newPass: string }) {
+    return this.post(`/changePass`, {
+      currentPass: currentPass,
+      newPass: newPass
+    })
+  }
 }
 
 export default new UserService()
