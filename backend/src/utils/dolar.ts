@@ -1,20 +1,33 @@
 import axios from 'axios';
+import * as dayjs from 'dayjs';
 
-const bearerBcra =
-  'BEARER ' +
-  'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDE3OTkzMjMsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJtdHJvdmFudEBnbWFpbC5jb20ifQ.LAJPY8vNUSNPJ0SfzC4TrSfg5oIjZO1E8KQ0kfq8wPkcFng-PqqFOMoGaXN1SkPt4K64nELxp1-NcfBHstmXdg';
+export const getDolar = async (fechaDolar: string) => {
+  try {
+    const date = dayjs(fechaDolar).format('YYYY/MM/DD');
+    console.log('fechas', fechaDolar, date);
+    const response = await axios.get(
+      `https://api.argentinadatos.com/v1/cotizaciones/dolares/oficial/${date}`,
+      {
+        httpsAgent: new (require('https').Agent)({ rejectUnauthorized: false }),
+      },
+    );
 
-// Consultado a https://dolarapi.com/docs/operations/get-dolar-oficial.html  -- API GRATUITA y DIARIA
-export const getDolar = async () => {
-  const response = await axios.get('https://dolarapi.com/v1/dolares/oficial');
-  return response.data;
+    return response.data;
+  } catch (err) {
+    console.log('erro de la nueva api', err);
+  }
 };
 
-// Consultado a https://estadisticasbcra.com/api/documentacion -- TIENE 100 CONSULTAS DIARIAS LIBRES y el BEARER TOKEN VENCE AL AÑO
-
-export const getDolarBcra = async () => {
-  const response = await axios.get('https://api.estadisticasbcra.com/usd_of', {
-    headers: { Authorization: bearerBcra },
-  });
-  return response.data[response.data.length - 1];
+export const getDolarBcraNew = async (fechaDolar: string) => {
+  try {
+    const response = await axios.get(
+      `https://api.bcra.gob.ar/estadisticas/v2.0/DatosVariable/5/${fechaDolar}/${fechaDolar}`,
+      {
+        httpsAgent: new (require('https').Agent)({ rejectUnauthorized: false }),
+      },
+    );
+    return response.data.results[0].valor;
+  } catch (err) {
+    console.log(err);
+  }
 };

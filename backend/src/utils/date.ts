@@ -6,5 +6,5 @@ export function formatRosvalDate(date: AnyDate): string {
 }
 
 export function formatBcraDate(date: AnyDate): string {
-  return dayjs(date).format('YYYY/MM/DD');
+  return dayjs(date).subtract(1, 'day').format('YYYY-MM-DD');
 }
