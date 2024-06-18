@@ -1,39 +1,24 @@
 import { RouterProvider } from 'react-router-dom';
-import { AuthProvider, useAuth } from './Context/auth';
+import { Bounce, ToastContainer } from 'react-toastify';
+import { AuthProvider } from './Context/auth';
 import { router } from './Router/router';
-7
-
-const LoginButton = () => {
-  const { login } = useAuth();
-
-  return <button onClick={login}>Login</button>;
-};
-
-const LogoutButton = () => {
-  const { logout } = useAuth();
-
-  return <button onClick={logout}>Logout</button>;
-};
-
-const UserProfile = () => {
-  const { user } = useAuth();
-
-  if (!user) {
-    return <div>Please login.</div>;
-  }
-
-  return (
-    <div>
-      <p>Welcome, {user.name}!</p>
-      <p>Email: {user.email}</p>
-      <LogoutButton />
-    </div>
-  );
-};
 
 const App = () => {
   return (
     <AuthProvider>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <RouterProvider router={router} />
     </AuthProvider>
   );
