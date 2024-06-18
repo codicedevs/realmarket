@@ -51,6 +51,12 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   telefono?: string;
+  @IsString()
+  @IsOptional()
+  username?: string;
+  @IsString()
+  @IsOptional()
+  pass?: string
 }
 
 export class ChangeUserPassDto {

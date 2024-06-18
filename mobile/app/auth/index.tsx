@@ -44,8 +44,8 @@ const useYupValidationResolver = (validationSchema) =>
     )
 
 const validationSchema = yup.object({
-    username: yup.string().required("Requerido"),
-    pass: yup.string().required("Requerido"),
+    username: yup.string().required("Requerido").min(6, 'El usuario debe tener al menos 6 caracteres'),
+    pass: yup.string().required("Requerido").min(8, 'La contraseña debe tener al menos 8 caracteres'),
 })
 
 const Auth = () => {
@@ -67,7 +67,7 @@ const Auth = () => {
             setLoadingScreen(true)
             signIn(data.username.toLowerCase(), data.pass)
         } catch (err) {
-            console.error(err, 'here')
+            console.log(err, 'here')
         } finally {
             setTimeout(() => {
                 setLoadingScreen(false)

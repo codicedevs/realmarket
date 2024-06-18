@@ -10,9 +10,9 @@ export const CustomLayout = () => {
     const { user } = useAuth();
 
     const {
-        token: { colorBgContainer, borderRadiusLG },
+        token: { colorBgContainer },
     } = theme.useToken();
-    console.log(user)
+
     return (
         <Layout style={{ height: '100vh' }}>
             {
@@ -24,16 +24,11 @@ export const CustomLayout = () => {
                     user &&
                     <Drawer />
                 }
-                <Layout style={{ padding: '0 24px 24px' }}>
+                <Layout>
                     <Content style={{
-                        padding: 24,
-                        margin: 0,
-                        minHeight: 280,
                         background: colorBgContainer,
-                        borderRadius: borderRadiusLG,
-                        // height: '100%'
                         justifyContent: "center",
-                        display: 'flex'
+                        overflowY: 'auto'
                     }}>
                         <Outlet />
                     </Content>
