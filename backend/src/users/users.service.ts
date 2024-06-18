@@ -11,7 +11,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<User[]> {
     const users: User[] = await this.userRepository.find();
@@ -64,6 +64,64 @@ export class UsersService {
       pass: hashedPass,
     });
   }
+
+  /// NUEVOS SERVICIOS DE PASSWORDS RECOVERY ///
+
+  //   async passwordRecovery(email: string) {
+  //     const user = await this.userRepository.findOneBy({ email });
+  //     if (!user) throw new NotFoundException('Revise si su correo es el correcto');
+  //     const resetKey = Math.floor(Math.random() * (99999 - 10000) + 10000);
+  //     const resetKeyTimeStamp = new Date().toISOString();
+  //     await this.userRepository.update(new ObjectId(user._id), {
+  //       resetKey: resetKey,
+  //       resetKeyTimeStamp: resetKeyTimeStamp,
+  //     });
+  //     await this.userRepository.sendPasswordRecovery(user, resetKey);
+  //     const userUpdated = await this.userRepository.findOne(email);
+  //     return { userUpdated, resetKey };
+  //   }
+
+  //   /**
+  // * Esta funcion recibe lo referente en resetPassBody para actualizar la contraseña de un usuario que envia el resetKey que recibio
+  // * Compara que el resetKey sea igual al generado en su modelo (cuando solicito el cambio de contraseña), y tambien determina que no este expirado (12hs)
+  // * Si el proceso es correcto se actualiza la password del usuario y se establece resetKey en undefined, por haber sido utilizado
+  // * @param resetPassBody
+  // * @returns
+  // */
+
+  //   async resetPassword(resetPassBody: {
+  //     resetKey: number;
+  //     email: string;
+  //     password: string;
+  //   }) {
+  //     const user = await this.userRepository.findOne(
+  //       resetPassBody.email
+  //     );
+  //     if (user.resetKey != resetPassBody.resetKey) {
+  //       throw new UnauthorizedException({ message: "El reset key es invalido" });
+  //     }
+  //     // Reset password key, tiene 12 hs de validez
+  //     const keyFromUser = new Date(user.resetKeyTimeStamp);
+  //     const actualDate = new Date();
+  //     const differenceInHours = Math.abs(actualDate.getTime() - keyFromUser.getTime()) / (1000 * 60 * 60);
+  //     if (differenceInHours > 12) {
+  //       throw new UnauthorizedException(
+  //         { message: "El reset key ha expirado, tiene una validez de 12 horas." }
+  //       );
+  //     }
+  //     // Actualiza la contraseña del usuario cuando el proceso de resetKey es exitoso
+  //     await this.userRepository.update(user.id, {
+  //       password: resetPassBody.password,
+  //     });
+  //     // Resetea el resetKey en el modelo de usuario cuando es usado exitosamente
+  //     await this.userRepository.update(user.id, {
+  //       resetKey: null,
+  //     });
+  //     return;
+  //   }
+
+
+  ////////////////////////////////////////////////////////////////
 
   async deleteById(id: string): Promise<DeleteResult | undefined> {
     const result = await this.userRepository.delete(id);

@@ -19,9 +19,11 @@ export class User {
   @Column()
   telefono: string;
   @Column()
-  resetKey: string;
+  resetKey: number;
   @Column()
-  restKeyTimeStamp: string;
+  resetKeyTimeStamp: string;
+  @Column()
+  isActive: boolean;
 
   //   tipoDocumento: string;
   // cuit?: string;

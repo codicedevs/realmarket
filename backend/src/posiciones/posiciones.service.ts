@@ -46,7 +46,7 @@ export class PosicionesService extends RosvalHttpService {
         acum += pos.cantidadLiquidada * pos.precioUnitario * usdPrice;
       } else if (pos.monedaCotizacion === 'USDB') {
         acum += pos.cantidadLiquidada * pos.precioUnitario * usdPriceBcra;
-      } else acum += pos.cantidadLiquidada * pos.precioUnitario;
+      } else acum += (pos.cantidadLiquidada * pos.precioUnitario) + (pos.cantidadPendienteLiquidar * pos.precioUnitario);
       return acum;
     }, 0);
 
