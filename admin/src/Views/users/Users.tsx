@@ -42,6 +42,7 @@ const Users = () => {
       theme: "light",
       transition: Bounce
     });
+
   }
 
   const sendToCreation = () => {
