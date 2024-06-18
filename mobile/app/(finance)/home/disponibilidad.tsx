@@ -124,7 +124,7 @@ const Disponibility = () => {
                                     }
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    style={[themedStyles.button, themedStyles.buttonClose]}
+                                    style={{ ...themedStyles.button, backgroundColor: isLoading ? "gray" : "#009F9F" }}
                                     onPress={() => setOpen(false)}
                                     disabled={isLoading}
                                 >

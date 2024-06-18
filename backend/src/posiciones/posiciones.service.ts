@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 import { formatBcraDate, formatRosvalDate } from 'src/utils/date';
-import { getDolar, getDolarBcraNew } from 'src/utils/dolar';
+import { getDolar } from 'src/utils/dolar';
 import { Posicion } from './entities/posicion.entity';
 
 const logger = new Logger(RosvalHttpService.name);
@@ -35,10 +35,11 @@ export class PosicionesService extends RosvalHttpService {
     const fechaDolar = formatBcraDate(new Date());
 
     const pruebaDolar = await getDolar(fechaDolar);
-    const pruebaBcraNew = await getDolarBcraNew(fechaDolar);
+    // const pruebaBcraNew = await getDolarBcraNew(fechaDolar);
 
     const usdPrice = pruebaDolar.venta;
-    const usdPriceBcra = pruebaBcraNew;
+    const usdPriceBcra = 901.17;
+    console.log(usdPriceBcra, usdPriceBcra, fechaDolar);
 
     const totalPosiciones = posiciones.reduce((acum, pos) => {
       if (pos.monedaCotizacion === 'USD') {
@@ -95,23 +96,23 @@ export class PosicionesService extends RosvalHttpService {
       dispoHoy: posicionesHoy[0].cantidadLiquidada * -1,
       dispoHoy2: posicionesHoy[0].cantidadPendienteLiquidar * -1,
       dispo24:
-        (posiciones24[0].cantidadLiquidada -
+        (posiciones24[0].cantidadLiquidada +
           posiciones24[0].cantidadPendienteLiquidar) *
         -1,
       dispo48:
-        (posiciones48[0].cantidadLiquidada -
+        (posiciones48[0].cantidadLiquidada +
           posiciones48[0].cantidadPendienteLiquidar) *
         -1,
       dispoHoyUsd:
-        (posicionesHoyUsd[0].cantidadLiquidada -
+        (posicionesHoyUsd[0].cantidadLiquidada +
           posicionesHoyUsd[0].cantidadPendienteLiquidar) *
         -1,
       dispo24Usd:
-        (posiciones24Usd[0].cantidadLiquidada -
+        (posiciones24Usd[0].cantidadLiquidada +
           posiciones24Usd[0].cantidadPendienteLiquidar) *
         -1,
       dispo48Usd:
-        (posiciones48Usd[0].cantidadLiquidada -
+        (posiciones48Usd[0].cantidadLiquidada +
           posiciones48Usd[0].cantidadPendienteLiquidar) *
         -1,
     };

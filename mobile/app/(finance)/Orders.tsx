@@ -22,6 +22,9 @@ const Positions = () => {
       {order && <OrderModal order={order} onClose={() => setOrder(null)} />}
       <Container style={themedStyles.container}>
         <Header title={'Órdenes'} />
+        {/* <View style={{ alignItems: 'center' }}>
+          <Image style={{ width: 100, height: 100 }} source={require("../../assets/Icons/trimin.jpg")} />
+        </View> */}
         <LayoutCustom style={themedStyles.content}>
           <LayoutCustom style={themedStyles.cardsContainer} justify="space-evenly">
             <LayoutCustom style={themedStyles.cardSize}>
