@@ -163,7 +163,6 @@ const ConfigScreen = () => {
   }
 
   const onSubmit = async (data) => {
-    console.log(1)
     try {
       await userService.ChangePassword(data)
       notification('Contraseña cambiada con exito')
@@ -245,7 +244,6 @@ const ConfigScreen = () => {
             <LayoutCustom>
               <Pressable
                 style={[themedStyles.button, themedStyles.buttonConfirm]}
-                // onPress={changePassword}
                 onPress={handleSubmit(onSubmit)}
               >
                 <Text style={themedStyles.textStyle}>Confirmar</Text>
