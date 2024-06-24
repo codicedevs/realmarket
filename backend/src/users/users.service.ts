@@ -1,9 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, hash } from 'bcrypt';
 import { ObjectId } from 'mongodb';
 import { EmailService } from 'src/email/email.service';
-import { smtpSettings } from 'src/settings';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { User } from './user.entity';
@@ -39,9 +38,15 @@ export class UsersService {
   async create(body: CreateUserDto): Promise<User> {
     const hashedPass = await hash(body?.pass, 10);
     body.pass = hashedPass;
-    const user = await this.userRepository.save(body)
-    this.emailService.sendUserRegistration(user)
-    return user
+    try {
+
+      const user = await this.userRepository.save(body)
+      this.emailService.sendUserRegistration(user)
+      return user
+    } catch (err) {
+      console.log(err.message)
+      throw new HttpException("El mail ya existe", 401)
+    }
 
   }
 
@@ -75,8 +80,8 @@ export class UsersService {
 
   /// NUEVOS SERVICIOS DE PASSWORDS RECOVERY ///
 
-  async passwordRecovery(username: string) {
-    const user = await this.userRepository.findOneBy({ username });
+  async passwordRecovery(email: string) {
+    const user = await this.userRepository.findOneBy({ email });
     if (!user) throw new NotFoundException('Revise su usuario');
     const resetKey = Math.floor(Math.random() * (99999 - 10000) + 10000);
     const resetKeyTimeStamp = new Date().toISOString();
@@ -84,10 +89,9 @@ export class UsersService {
       resetKey: resetKey,
       resetKeyTimeStamp: resetKeyTimeStamp,
     });
-    console.log(smtpSettings.HOST, smtpSettings.AUTH_USER)
     await this.emailService.sendPasswordRecovery(user, resetKey);
-    const userUpdated = await this.userRepository.findOneBy({ username });
-    return { userUpdated, resetKey };
+    const userUpdated = await this.userRepository.findOneBy({ email });
+    return { userUpdated };
   }
 
   //   /**
@@ -100,11 +104,11 @@ export class UsersService {
 
   async resetPassword(resetPassBody: {
     resetKey: number;
-    username: string;
+    email: string;
     password: string;
   }) {
 
-    const user = await this.userRepository.findOneBy({ username: resetPassBody.username });
+    const user = await this.userRepository.findOneBy({ email: resetPassBody.email });
     if (user.resetKey != resetPassBody.resetKey) {
       throw new UnauthorizedException({ message: "El reset key es invalido" });
     }

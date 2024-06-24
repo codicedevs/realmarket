@@ -5,7 +5,7 @@ export class ResetPassDto {
   @MaxLength(6)
   resetKey: number;
   @IsString()
-  username: string;
+  email: string;
   @MinLength(8)
   password: string;
 }

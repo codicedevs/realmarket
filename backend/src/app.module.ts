@@ -20,6 +20,7 @@ import { UsersController } from './users/users.controller';
       type: 'mongodb',
       url: dbSettings.DB_URL,
       database: dbSettings.DB_NAME,
+      synchronize: true,
       useNewUrlParser: true,
       autoLoadEntities: true,
       useUnifiedTopology: true,
