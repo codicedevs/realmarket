@@ -1,20 +1,60 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 // import Text from '../../../components/Text'
 import { Icon, StyleService } from '@ui-kitten/components';
 import * as Linking from 'expo-linking';
+import { Controller, useForm } from 'react-hook-form';
 import { Dimensions, Image, ImageBackground, Modal, Pressable, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import * as yup from "yup";
 import ConfigButton from '../../../components/Buttons/ConfigButton';
 import Container from '../../../components/Container';
 import Header from '../../../components/CustomHeader';
 import LayoutCustom from '../../../components/LayoutCustom';
 import { useSession } from '../../../context/AuthProvider';
+import { useLoading } from '../../../context/LoadingProvider';
 import useNotification from '../../../hooks/useNotification';
 import userService from '../../../service/user.service';
 import theme from '../../../utils/theme';
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
+const useYupValidationResolver = (validationSchema) =>
+  useCallback(
+    async (data) => {
+      try {
+        const values = await validationSchema.validate(data, {
+          abortEarly: false,
+        })
+
+        return {
+          values,
+          errors: {},
+        }
+      } catch (errors) {
+        return {
+          values: {},
+          errors: errors.inner.reduce(
+            (allErrors, currentError) => ({
+              ...allErrors,
+              [currentError.path]: {
+                type: currentError.type ?? "validation",
+                message: currentError?.message,
+              },
+            }),
+            {}
+          ),
+        }
+      }
+    },
+    [validationSchema]
+  )
+
+const validationSchema = yup.object({
+  oldPass: yup.string().required("Requerido").min(8, 'El usuario debe tener al menos 8 caracteres'),
+  pass: yup.string().required("Requerido").min(8, 'La contraseña debe tener al menos 8 caracteres'),
+})
+
 const ConfigScreen = () => {
+  const resolver = useYupValidationResolver(validationSchema)
   const iniciales = require('../../../assets/background/portaIniciales.png')
   const background = require('../../../assets/background/separador.png')
   const password = require('../../../assets/Icons/changePassword.png')
@@ -26,6 +66,13 @@ const ConfigScreen = () => {
   const { signOut, session, checkSession } = useSession()
   const name = session.nombre.split(' ')[0]
   const lastName = session.nombre.split(' ')[1]
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver })
+
   const [changePasswordInfo, setChangePasswordInfo] = useState({
     newPass: '',
     currentPass: ''
@@ -39,6 +86,7 @@ const ConfigScreen = () => {
     telefono: false
   })
   const { notification } = useNotification()
+  const { setLoadingScreen } = useLoading()
 
   const toggleModal = () => {
     setOpen(!open)
@@ -79,6 +127,26 @@ const ConfigScreen = () => {
   }
 
   const editUserInfo = async (field: keyof IUser) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const soloNumerosRegex = /^\d*$/;
+    if (field === "telefono") {
+      const isOnlyNumbers = soloNumerosRegex.test(userInfo[field])
+      if (!isOnlyNumbers) {
+        notification("Solo puede contener numeros")
+        return
+      }
+      if (userInfo[field].length !== 10) {
+        notification("El telefono debe tener 10 caracteres")
+        return
+      }
+    } else {
+      const isValid = emailRegex.test(userInfo[field])
+      if (!isValid) {
+        notification("Debe ser un email valido")
+        return
+      }
+    }
+    setLoadingScreen(true)
     try {
       await userService.editUser({
         id: session._id,
@@ -89,8 +157,22 @@ const ConfigScreen = () => {
     }
     catch (e) {
       console.error(e)
+    } finally {
+      setLoadingScreen(false)
     }
   }
+
+  const onSubmit = async (data) => {
+    try {
+      await userService.ChangePassword(data)
+      notification('Contraseña cambiada con exito')
+    } catch (e) {
+      console.error(e)
+      notification('Hubo un problema')
+    } finally {
+      toggleModal()
+    }
+  };
 
   const onCancelEdit = (field: keyof IUser) => {
     setUserInfo({
@@ -122,27 +204,47 @@ const ConfigScreen = () => {
               <Text style={themedStyles.modalTitle}>Cambiar contraseña</Text>
               <View style={{ justifyContent: 'space-between', height: windowHeight * 0.13 }}>
                 <View style={themedStyles.inputIconWrapper}>
-                  <TextInput value={changePasswordInfo.currentPass} onChangeText={handleChange('currentPass')} placeholder='Contraseña actual' style={themedStyles.modalInput} />
+                  <Controller
+                    control={control}
+                    rules={{ required: true }}
+                    name='currentPass'
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <TextInput value={value} onChangeText={onChange} placeholder='Contraseña actual' style={themedStyles.modalInput} />
+                    )}
+                  />
                   <Icon
                     pack="eva"
                     name={'eye'}
                     style={themedStyles.inputIcon}
                   />
                 </View>
+                <View style={{ minHeight: 30, justifyContent: "center" }}>
+                  {errors.oldPass && <Text style={themedStyles.errorText}>{errors.pass?.message as string} </Text>}
+                </View>
                 <View style={themedStyles.inputIconWrapper}>
-                  <TextInput value={changePasswordInfo.newPass} onChangeText={handleChange('newPass')} placeholder='Nueva contraseña' style={themedStyles.modalInput} />
+                  <Controller
+                    control={control}
+                    rules={{ required: true }}
+                    name='newPass'
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <TextInput value={value} onChangeText={onChange} placeholder='Nueva contraseña' style={themedStyles.modalInput} />
+                    )}
+                  />
                   <Icon
                     pack="eva"
                     name={'eye'}
                     style={themedStyles.inputIcon}
                   />
+                </View>
+                <View style={{ minHeight: 30, justifyContent: "center" }}>
+                  {errors.pass && <Text style={themedStyles.errorText}>{errors.pass?.message as string} </Text>}
                 </View>
               </View>
             </LayoutCustom>
             <LayoutCustom>
               <Pressable
                 style={[themedStyles.button, themedStyles.buttonConfirm]}
-                onPress={changePassword}
+                onPress={handleSubmit(onSubmit)}
               >
                 <Text style={themedStyles.textStyle}>Confirmar</Text>
               </Pressable>
@@ -279,7 +381,7 @@ const themedStyles = StyleService.create({
     fontFamily: 'Lato-Regular'
   },
   modalView: {
-    height: windowHeight * 0.4,
+    height: windowHeight * 0.45,
     width: windowWidth * 0.85,
     backgroundColor: 'white',
     borderRadius: theme.borderRadius.medium,
@@ -388,5 +490,9 @@ const themedStyles = StyleService.create({
   buttonsContainer: {
     backgroundColor: "#FAFCFC",
     height: '100%'
+  },
+  errorText: {
+    color: 'red',
+    fontFamily: 'Lato-Regular'
   }
 });
