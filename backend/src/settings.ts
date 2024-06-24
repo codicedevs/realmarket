@@ -1,13 +1,13 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-export const smtpSettings = {
-  SMTP_SERVER: process.env.SMTP_SERVER,
-  SMTP_PORT: +process.env.SMPT_PORT,
-  SMTP_SECURE: process.env.SMPT_SECURE,
-  SMTP_USERNAME: process.env.SMPT_USERNAME,
-  SMTP_PASSWORD: process.env.SMPT_PASSWORD,
-};
+export const smtpSettings = Object.freeze({
+  HOST: process.env.SMTP_SERVER!,
+  PORT: +process.env.SMTP_PORT,
+  SECURE: false,
+  AUTH_USER: process.env.SMTP_USERNAME,
+  AUTH_PASS: process.env.SMTP_PASSWORD,
+});
 
 export const serverSettings = {
   SERVER_PORT: +(process.env.SERVER_PORT ?? 8002),

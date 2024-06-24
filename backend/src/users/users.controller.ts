@@ -12,6 +12,7 @@ import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { getJwtPayload } from 'src/auth/utils/jwt.utils';
 import { ObjectId } from 'typeorm';
+import { ResetPassDto } from './dto/reset.pass.dto';
 import {
   ChangeUserPassDto,
   CreateUserDto,
@@ -24,8 +25,8 @@ import { UsersService } from './users.service';
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
-  @Get('all')
+  constructor(private readonly usersService: UsersService) { }
+  @Get('')
   public async findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
@@ -59,5 +60,28 @@ export class UsersController {
   @Delete(':id')
   async deleteById(@Param('id') id: string) {
     return await this.usersService.deleteById(id);
+  }
+
+  @Post("recover-password")
+  async recoverPassword(@Body() recoverPassword: any) {
+    const result = await this.usersService.passwordRecovery(recoverPassword.username);
+    return {
+      message: "Proceso de recupero de contraseña iniciado exitosamente",
+      data: result,
+    };
+
+  }
+  /**
+* @param resetPass
+* @returns
+*/
+
+  @Post("reset-password")
+  async resetPassword(@Body() resetPass: ResetPassDto) {
+    const result = await this.usersService.resetPassword(resetPass);
+    return {
+      message: "Usted ha recuperado su contraseña exitosamente",
+      data: result
+    };
   }
 }
