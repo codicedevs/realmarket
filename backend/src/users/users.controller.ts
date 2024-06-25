@@ -66,6 +66,7 @@ export class UsersController {
   }
 
   @Post("recover-password")
+  @Public()
   async recoverPassword(@Body() recoverPassword: RecoverPasswordDto) {
     const result = await this.usersService.passwordRecovery(recoverPassword.email);
     return {
