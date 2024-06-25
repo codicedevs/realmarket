@@ -73,7 +73,6 @@ export class UsersController {
       message: "Proceso de recupero de contraseña iniciado exitosamente",
       data: result,
     };
-
   }
   /**
 * @param resetPass
