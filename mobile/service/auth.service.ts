@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { Alert } from "react-native";
 import { BASE_URL } from "../config";
 import { HttpService } from "./http.service";
 
@@ -24,8 +23,8 @@ export class AuthService extends HttpService {
             loginProps = res.data
         }
         catch (err) {
-            if (err.response.status === 401) Alert.alert("CREDENCIALES INVALIDAS")
-            else Alert.alert("HA OCURRIDO UN ERROR", err.message + " - " + err.config.url)
+            // if (err.response.status === 401) Alert.alert("CREDENCIALES INVALIDAS")
+            // else Alert.alert("HA OCURRIDO UN ERROR", err.message + " - " + err.config.url)
             console.error(err)
         } finally {
             return loginProps
