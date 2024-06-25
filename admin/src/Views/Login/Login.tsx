@@ -7,10 +7,9 @@ import { UserInfo } from "../../types/user.type";
 import './Login.css';
 
 const schema = yup.object({
-  email: yup
+  user: yup
     .string()
-    // .email('Ingrese un correo electrónico válido.')
-    .required('El campo de correo electrónico es obligatorio.'),
+    .required('El campo de usuario es obligatorio.'),
   password: yup
     .string()
     .required('El campo de contraseña es obligatorio.')
@@ -39,9 +38,9 @@ const Login = () => {
       <div className='login-container'>
         <div className='rm-logo' />
         <div className='input-container'>
-          <input placeholder='Email' className='input' {...register("email")} />
-          <p className="error-message">{errors.email?.message}</p>
-          <input placeholder='Contrasenia' className='input' {...register("password")} />
+          <input placeholder='Usuario' className='input' {...register("user")} />
+          <p className="error-message">{errors.user?.message}</p>
+          <input placeholder='Contraseña' className='input' {...register("password")} />
           <p className="error-message">{errors.password?.message}</p>
         </div>
         <div className='button-container'>
