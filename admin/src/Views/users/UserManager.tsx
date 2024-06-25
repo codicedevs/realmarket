@@ -17,7 +17,8 @@ const schema = yup.object({
     .required('El campo de nombre es obligatorio.'),
   username: yup
     .string()
-    .required('El campo de nombre de usuario es obligatorio.'),
+    .required('El campo de nombre de usuario es obligatorio.')
+    .min(6, 'El nombre de usuario debe tener al menos 6 caracteres'),
   pass: yup
     .string()
     .required('El campo de contraseña es obligatorio.')
@@ -118,11 +119,18 @@ const UserManager = () => {
   }
 
   const createUser = async (data: user) => {
-    return userService.createUser(data)
+    try {
+      return await userService.createUser(data)
+    } catch (e) {
+      throw new Error
+    }
   }
 
   const editUser = async (data: user) => {
-    if (id) return userService.editUser(id, data)
+    if (!id) {
+      throw new Error('No user ID provided for editUser');
+    }
+    return await userService.editUser(id, data);
   }
 
   const onSubmit = async (data: user) => {
@@ -130,17 +138,17 @@ const UserManager = () => {
       ...data,
       telefono: data.telefono.toString(),
       documento: data.documento.toString(),
-      accountId: data.accountId.toString()
+      accountId: data.accountId.toString(),
+      username: data.username.toLowerCase()
     };
     try {
 
       if (id) {
         await editUser(formData)
-        successNotification()
       } else {
-        await createUser(formData)
-        successNotification()
+        await createUser({ ...formData, isActive: true })
       }
+      successNotification()
       setTimeout(() => {
         goBack()
       }, 500);
