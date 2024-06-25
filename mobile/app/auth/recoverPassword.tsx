@@ -1,8 +1,9 @@
-import { StyleService } from "@ui-kitten/components";
+import { Icon, StyleService } from "@ui-kitten/components";
 import { router } from "expo-router";
 import React, { useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Dimensions, Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import * as yup from "yup";
 import Container from "../../components/Container";
 import LayoutCustom from "../../components/LayoutCustom";
@@ -75,9 +76,27 @@ const Auth = () => {
     }
   }
 
+  const toBeggining = () => {
+    router.push({ pathname: '/auth' })
+  }
+
   return (
     <Container style={themedStyles.container}>
       <ImageBackground style={themedStyles.background} source={background}>
+        <View style={{ paddingLeft: 10, paddingTop: 5 }}>
+          <TouchableWithoutFeedback onPress={toBeggining}>
+            <Icon
+              pack="eva"
+              name={"arrow-back-outline"}
+              style={{
+                width: 30,
+                height: 30,
+                zIndex: 100,
+                padding: 10
+              }}
+            />
+          </TouchableWithoutFeedback>
+        </View>
         <LayoutCustom ph={theme.paddings.large} pv={theme.paddings.xlarge}>
           <LayoutCustom itemsCenter>
             <Image style={themedStyles.img} source={logo} />
@@ -137,7 +156,7 @@ const themedStyles = StyleService.create({
   },
   title: {
     color: 'white',
-    fontSize: theme.fontSizes.body,
+    fontSize: theme.fontSizes.medium,
     marginBottom: 10,
     fontFamily: 'Lato-Bold'
   },
@@ -145,7 +164,7 @@ const themedStyles = StyleService.create({
     textAlign: 'center',
     lineHeight: 25,
     color: 'white',
-    fontSize: theme.fontSizes.medium,
+    fontSize: theme.fontSizes.small,
     fontFamily: 'Lato-Regular'
   },
   inputContainer: {
@@ -168,7 +187,7 @@ const themedStyles = StyleService.create({
     alignItems: "center",
     padding: theme.paddings.xMedium,
     borderRadius: theme.borderRadius.medium,
-    width: windowWidth * 0.6,
+    width: windowWidth * 0.5,
     alignSelf: "center"
   },
   forgottenPasswordText: {
@@ -179,7 +198,7 @@ const themedStyles = StyleService.create({
   },
   loginText: {
     color: 'white',
-    fontSize: theme.fontSizes.large,
+    fontSize: theme.fontSizes.medium,
     fontWeight: 'bold',
     fontFamily: 'Lato-Regular'
   },
