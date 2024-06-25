@@ -6,6 +6,9 @@ import { Dimensions, Image, ImageBackground, Text, TextInput, TouchableOpacity, 
 import * as yup from "yup";
 import Container from "../../components/Container";
 import LayoutCustom from "../../components/LayoutCustom";
+import { useLoading } from "../../context/LoadingProvider";
+import userService from "../../service/user.service";
+import { notification } from "../../utils/notification";
 import theme from "../../utils/theme";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -44,10 +47,11 @@ const useYupValidationResolver = (validationSchema) =>
 
 // Ejemplo de uso del validador con Yup
 const validationSchema = yup.object({
-  email: yup.string().email("Debe ser un correo electrónico válido").required("Requerido")
+  email: yup.string().required("Requerido")
 });
 
 const Auth = () => {
+  const { setLoadingScreen } = useLoading()
   const resolver = useYupValidationResolver(validationSchema)
   const background = require("../../assets/Login/fondoLogin.png")
   const logo = require("../../assets/Login/rm-logo.png")
@@ -57,9 +61,18 @@ const Auth = () => {
     formState: { errors },
   } = useForm({ resolver })
 
-  const onSubmit = (data) => {
-    console.log(data.email)
-    router.push({ pathname: '/auth/confirmPassword', params: { value: data.email } })
+  const onSubmit = async (data) => {
+    setLoadingScreen(true)
+    try {
+      await userService.recoverPassword(data)
+      router.push({ pathname: '/auth/confirmPassword', params: { value: data.email } })
+    }
+    catch (e) {
+      notification("Ocurrio un problema")
+    }
+    finally {
+      setLoadingScreen(false)
+    }
   }
 
   return (
@@ -77,6 +90,7 @@ const Auth = () => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { onChange, onBlur, value } }) => (
+                  //entre y seguia estando el email q escribi antes
                   <TextInput
                     placeholder="Email"
                     placeholderTextColor={"#ffffff"}
@@ -90,7 +104,7 @@ const Auth = () => {
                 )}
                 name="email"
               />
-              {/* <TextInput placeholder="Email" value={email} onChangeText={handleEmail} placeholderTextColor={"#ffffff"} style={themedStyles.input} /> */}
+              {/* <TextInput placeholder="email" value={email} onChangeText={handleEmail} placeholderTextColor={"#ffffff"} style={themedStyles.input} /> */}
               <View style={{ minHeight: 10, alignSelf: 'center' }}>
                 {errors.email && <Text style={themedStyles.errorText}>{errors.email.message as string} </Text>}
               </View>

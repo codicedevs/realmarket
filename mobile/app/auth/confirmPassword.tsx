@@ -1,18 +1,85 @@
 import { StyleService } from "@ui-kitten/components";
-import { useLocalSearchParams } from "expo-router";
-import React from "react";
-import { Dimensions, Image, ImageBackground, Text, TextInput, TouchableOpacity } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { useCallback } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Dimensions, Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from "react-native";
+import * as yup from "yup";
 import Container from "../../components/Container";
 import LayoutCustom from "../../components/LayoutCustom";
+import { useLoading } from "../../context/LoadingProvider";
+import userService from "../../service/user.service";
+import { notification } from "../../utils/notification";
 import theme from "../../utils/theme";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
+const useYupValidationResolver = (validationSchema) =>
+  useCallback(
+    async (data) => {
+      try {
+        const values = await validationSchema.validate(data, {
+          abortEarly: false,
+        })
+
+        return {
+          values,
+          errors: {},
+        }
+      } catch (errors) {
+        return {
+          values: {},
+          errors: errors.inner.reduce(
+            (allErrors, currentError) => ({
+              ...allErrors,
+              [currentError.path]: {
+                type: currentError.type ?? "validation",
+                message: currentError?.message,
+              },
+            }),
+            {}
+          ),
+        }
+      }
+    },
+    [validationSchema]
+  )
+
+const validationSchema = yup.object({
+  code: yup.string().required("Requerido").min(5, 'El codigo debe contiene 5 caracteres').matches(/^[0-9]{5}$/, "El código debe contener 5 números"),
+  pass: yup.string().required("Requerido").min(8, 'La contraseña debe tener al menos 8 caracteres'),
+})
 
 const Auth = () => {
+  const resolver = useYupValidationResolver(validationSchema)
   const background = require("../../assets/Login/fondoLogin.png")
   const logo = require("../../assets/Login/rm-logo.png")
-  const value = useLocalSearchParams();
+  const value = useLocalSearchParams()
+  const { setLoadingScreen } = useLoading()
+
+  const onSubmit = async (data) => {
+    setLoadingScreen(true)
+    try {
+      await userService.resetPassword({
+        resetKey: data.code,
+        email: value.value,
+        password: data.pass
+      })
+      notification('Contraseña cambiada con exito')
+      router.push({ pathname: '/auth' })
+    } catch (e) {
+      console.error(e)
+      notification('Hubo un problema')
+    } finally {
+      setLoadingScreen(false)
+    }
+  };
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver })
+  console.log(errors.code)
+
   //cambiar que no sea con value.value
   return (
     <Container style={themedStyles.container}>
@@ -20,17 +87,38 @@ const Auth = () => {
         <LayoutCustom ph={theme.paddings.large} pv={theme.paddings.xlarge}>
           <LayoutCustom itemsCenter>
             <Image style={themedStyles.img} source={logo} />
-            <LayoutCustom itemsCenter mt={theme.margins.large}>
-              <Text style={themedStyles.title} >Recupero de contraseña de {value.value}</Text>
+            <LayoutCustom alignSelfCenter mt={theme.margins.large}>
+              <Text style={themedStyles.title} >Recupero de contraseña de</Text>
+              <Text style={themedStyles.titleEmail}>{value.value}</Text>
             </LayoutCustom>
             <LayoutCustom pv={theme.paddings.large} justify="space-around" style={themedStyles.inputContainer}>
-              <TextInput placeholder="Email" placeholderTextColor={"#ffffff"} style={themedStyles.input} />
-              <TextInput placeholder="Nueva contraseña" placeholderTextColor={"#ffffff"} style={themedStyles.input} />
-              <TextInput placeholder="Confirmar contraseña" placeholderTextColor={"#ffffff"} style={themedStyles.input} />
+              {/* <TextInput placeholder="Email" placeholderTextColor={"#ffffff"} style={themedStyles.input} /> */}
+              <Controller
+                control={control}
+                rules={{ required: true }}
+                name='code'
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput placeholder="Codigo" onChangeText={onChange} value={value} placeholderTextColor={"#ffffff"} style={themedStyles.input} />
+                )}
+              />
+              <View style={{ minHeight: 30, justifyContent: "center" }}>
+                {errors.code && <Text style={themedStyles.errorText}>{errors.code?.message as string} </Text>}
+              </View>
+              <Controller
+                control={control}
+                rules={{ required: true }}
+                name='pass'
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput placeholder="Nueva contraseña" onChangeText={onChange} value={value} placeholderTextColor={"#ffffff"} style={themedStyles.input} />
+                )}
+              />
+              <View style={{ minHeight: 30, justifyContent: "center" }}>
+                {errors.pass && <Text style={themedStyles.errorText}>{errors.pass?.message as string} </Text>}
+              </View>
             </LayoutCustom>
           </LayoutCustom>
           <LayoutCustom mt={theme.margins.xSmall}>
-            <TouchableOpacity style={themedStyles.buttonContainer} >
+            <TouchableOpacity style={themedStyles.buttonContainer} onPress={handleSubmit(onSubmit)}  >
               <Text style={themedStyles.loginText}>Enviar</Text>
             </TouchableOpacity>
           </LayoutCustom>
@@ -56,6 +144,14 @@ const themedStyles = StyleService.create({
   },
   title: {
     color: 'white',
+    fontSize: theme.fontSizes.body,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+    fontFamily: 'Lato-Regular'
+  },
+  titleEmail: {
+    color: 'lightgrey',
     fontSize: theme.fontSizes.body,
     fontWeight: 'bold',
     marginBottom: 10,
@@ -105,6 +201,7 @@ const themedStyles = StyleService.create({
     fontFamily: 'Lato-Regular'
   },
   errorText: {
-    color: 'red'
+    color: 'red',
+    fontFamily: 'Lato-Regular'
   }
 });
