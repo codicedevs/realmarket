@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -28,7 +29,8 @@ export class CreateUserDto {
   email: string;
   @IsString()
   telefono: string;
-
+  @IsBoolean()
+  isActive: boolean;
 }
 
 export class UpdateUserDto {
