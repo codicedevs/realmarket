@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     //funcion del login
     const login = async (data: UserInfo) => {
-        const userInfo = await authService.login(data.email, data.password)
+        const userInfo = await authService.login(data.user, data.password)
         if (userInfo) setUser(userInfo.user);
     };
 
