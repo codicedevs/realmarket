@@ -23,13 +23,13 @@ const Header = ({ title }) => {
     //   {isHome && <RoundedButton img={image} />}
     // </View>
     <View style={styles.container}>
-      <View style={{ minWidth: windowWidth * 0.3, alignItems: 'center' }}>
+      <View style={{ width: windowWidth * 0.3, alignItems: 'center' }}>
         {!isHome ? <RoundedButton icon="arrow-back-outline" onPress={() => router.back()} /> : <RoundedButton icon="person-outline" onPress={() => configRoute()} />}
       </View>
-      <View style={{ minWidth: windowWidth * 0.4, alignItems: 'center' }}>
+      <View style={{ width: windowWidth * 0.4, alignItems: 'center' }}>
         <Text style={styles.title}>{title}</Text>
       </View>
-      <View style={{ minWidth: windowWidth * 0.3, alignItems: 'center' }}>
+      <View style={{ width: windowWidth * 0.3, alignItems: 'center' }}>
         {isHome ? <RoundedButton img={image} />
           :
           !isConfig && <RoundedButton icon="person-outline" onPress={() => configRoute()} />
