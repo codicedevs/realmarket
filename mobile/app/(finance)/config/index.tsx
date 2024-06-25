@@ -109,11 +109,11 @@ const ConfigScreen = () => {
   }
 
   const sendWhatsapp = () => {
-    Linking.openURL('https://wa.me/3413110700')
+    Linking.openURL('https://wa.me/3416594796')
   }
 
   const sendEmail = () => {
-    Linking.openURL('mailto:mtrovant@gmail.com')
+    Linking.openURL('mailto:info@realmarket.com.ar')
   }
 
   const changePassword = async () => {
