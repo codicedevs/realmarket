@@ -54,7 +54,7 @@ const Auth = () => {
     const logo = require("../../assets/Login/rm-logo.png")
     const { signIn, session, checkSession } = useSession()
     const [visibility, setVisibility] = useState(true)
-    const { setLoadingScreen, loadingScreen } = useLoading()
+    const { setLoadingScreen } = useLoading()
 
     const {
         control,

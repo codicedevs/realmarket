@@ -13,8 +13,16 @@ export class UserService extends HttpService {
     })
   }
 
-  async editUser({id, body}: EditUserParams){
+  async editUser({ id, body }: EditUserParams) {
     return this.put(`/edit/${id}`, body)
+  }
+
+  async recoverPassword(userInfo) {
+    return this.post(`/recover-password`, userInfo)
+  }
+
+  async resetPassword(userInfo) {
+    return this.post(`reset-password`, userInfo)
   }
 }
 

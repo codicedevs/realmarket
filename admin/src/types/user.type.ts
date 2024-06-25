@@ -1,5 +1,5 @@
 export interface UserInfo {
-  email: string;
+  user: string;
   password: string;
 }
 
@@ -24,4 +24,5 @@ export interface user {
   accountId: string,
   email: string,
   telefono: string,
+  isActive: boolean
 }

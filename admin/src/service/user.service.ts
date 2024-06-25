@@ -8,7 +8,7 @@ export class UserService extends HttpService {
   }
 
   async getAll() {
-    return this.get(`/all`)
+    return this.get(`/`)
   }
 
   async getUserById(id: string) {
@@ -16,7 +16,7 @@ export class UserService extends HttpService {
   }
 
   async createUser(body: user) {
-    this.post(`/register`, body)
+    return this.post(`/register`, body)
   }
 
   async editUser(id: string, body: user) {

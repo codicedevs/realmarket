@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StyleService } from '@ui-kitten/components'
 import { router } from 'expo-router'
 import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, Dimensions, Image, Text, TouchableOpacity } from 'react-native'
-import { TouchableOpacity as Touchable } from 'react-native-gesture-handler'
+import { ActivityIndicator, Dimensions, Image, Text } from 'react-native'
+import { TouchableOpacity as Touchable, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
 import IButton from '../../../components/Buttons/IButton'
@@ -111,7 +111,7 @@ const Home = () => {
     <Container style={{ backgroundColor: theme.colors.background }}>
       {order && <OrderModal order={order} onClose={() => setOrder(null)} />}
       <LayoutCustom>
-        <Header title={`Hola, ${typeof session === 'object' && session.nombre}`} />
+        <Header title={`Hola ${typeof session === 'object' && session.nombre.split(" ")[0]}`} />
         <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
           <CurrencyToggle />
         </LayoutCustom>
@@ -146,15 +146,15 @@ const Home = () => {
             )
           }}
         />
-        <TouchableOpacity activeOpacity={1} onPress={positionRoute}>
+        <TouchableWithoutFeedback onLongPress={() => { }} onPress={positionRoute}>
           <LayoutCustom horizontal itemsCenter justify='flex-start' mv={theme.margins.medium} pl={theme.paddings.large}>
-            <Image style={themedStyles.img} source={require("../../../assets/Icons/moneyStat.png")} />
+            <Image style={themedStyles.img} source={require("../../../assets/Icons/money.png")} />
             <LayoutCustom ml={theme.margins.small} style={{ alignItems: "flex-start" }}>
               <Text style={themedStyles.position}>Posiciones</Text>
               <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator size={'small'} /> : currencyFormat(currency === "ARS" ? positions.arsPositions : positions.usdPositions, currency)}</Text>
             </LayoutCustom>
           </LayoutCustom>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
         <LayoutCustom
           horizontal
           itemsCenter

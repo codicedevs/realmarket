@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 // import Text from '../../../components/Text'
 import { Icon, StyleService } from '@ui-kitten/components';
 import * as Linking from 'expo-linking';
@@ -66,6 +66,8 @@ const ConfigScreen = () => {
   const { signOut, session, checkSession } = useSession()
   const name = session.nombre.split(' ')[0]
   const lastName = session.nombre.split(' ')[1]
+  const emailInputRef = useRef(null);
+  const phoneInputRef = useRef(null);
 
   const {
     control,
@@ -107,11 +109,11 @@ const ConfigScreen = () => {
   }
 
   const sendWhatsapp = () => {
-    Linking.openURL('https://wa.me/3413110700')
+    Linking.openURL('https://wa.me/3416594796')
   }
 
   const sendEmail = () => {
-    Linking.openURL('mailto:mtrovant@gmail.com')
+    Linking.openURL('mailto:info@realmarket.com.ar')
   }
 
   const changePassword = async () => {
@@ -184,11 +186,23 @@ const ConfigScreen = () => {
   }
 
   const toggleEdition = (field: keyof IUser) => {
-    setEditInfo({
-      ...editInfo,
-      [field]: !editInfo[field]
-    })
-  }
+    setEditInfo(prevEditInfo => {
+      const newEditInfo = {
+        ...prevEditInfo,
+        [field]: !prevEditInfo[field]
+      };
+
+      return newEditInfo;
+    });
+  };
+
+  useEffect(() => {
+    if (editInfo.email && emailInputRef.current) {
+      emailInputRef.current.focus();
+    } else if (editInfo.telefono && phoneInputRef.current) {
+      phoneInputRef.current.focus();
+    }
+  }, [editInfo.email, editInfo.telefono]);
 
   return (
     <>
@@ -278,7 +292,15 @@ const ConfigScreen = () => {
         <LayoutCustom ph={theme.paddings.large} style={themedStyles.buttonsContainer}>
           <LayoutCustom>
             <View style={themedStyles.inputIconWrapper}>
-              <TextInput editable={editInfo.email} onChangeText={handleUserInfoChange('email')} value={userInfo.email} placeholder="Email" placeholderTextColor={"gray"} style={themedStyles.input} />
+              <TextInput
+                ref={emailInputRef}
+                editable={editInfo.email}
+                onChangeText={handleUserInfoChange('email')}
+                value={userInfo.email}
+                placeholder="Email"
+                placeholderTextColor={"gray"}
+                style={themedStyles.input}
+              />
               {
                 !editInfo.email ?
                   <TouchableOpacity onPress={() => toggleEdition('email')}>
@@ -308,7 +330,15 @@ const ConfigScreen = () => {
               }
             </View>
             <View style={themedStyles.inputIconWrapper}>
-              <TextInput editable={editInfo.telefono} onChangeText={handleUserInfoChange('telefono')} value={userInfo.telefono} placeholder="Telefono" placeholderTextColor={"gray"} style={themedStyles.input} />
+              <TextInput
+                ref={phoneInputRef}
+                editable={editInfo.telefono}
+                onChangeText={handleUserInfoChange('telefono')}
+                value={userInfo.telefono}
+                placeholder="Telefono"
+                placeholderTextColor={"gray"}
+                style={themedStyles.input}
+              />
               {
                 !editInfo.telefono ?
                   <TouchableOpacity onPress={() => toggleEdition('telefono')}>
@@ -366,7 +396,8 @@ const themedStyles = StyleService.create({
     color: '#5A5959',
     fontSize: theme.fontSizes.small,
     paddingBottom: theme.paddings.xSmall,
-    fontFamily: 'Lato-Bold'
+    fontFamily: 'Lato-Bold',
+    width: windowWidth * 0.7
   },
   centeredView: {
     flex: 1,

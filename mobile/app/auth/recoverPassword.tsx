@@ -1,11 +1,15 @@
-import { StyleService } from "@ui-kitten/components";
+import { Icon, StyleService } from "@ui-kitten/components";
 import { router } from "expo-router";
 import React, { useCallback } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Dimensions, Image, ImageBackground, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import * as yup from "yup";
 import Container from "../../components/Container";
 import LayoutCustom from "../../components/LayoutCustom";
+import { useLoading } from "../../context/LoadingProvider";
+import userService from "../../service/user.service";
+import { notification } from "../../utils/notification";
 import theme from "../../utils/theme";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -44,10 +48,11 @@ const useYupValidationResolver = (validationSchema) =>
 
 // Ejemplo de uso del validador con Yup
 const validationSchema = yup.object({
-  email: yup.string().email("Debe ser un correo electrónico válido").required("Requerido")
+  email: yup.string().required("Requerido")
 });
 
 const Auth = () => {
+  const { setLoadingScreen } = useLoading()
   const resolver = useYupValidationResolver(validationSchema)
   const background = require("../../assets/Login/fondoLogin.png")
   const logo = require("../../assets/Login/rm-logo.png")
@@ -57,14 +62,41 @@ const Auth = () => {
     formState: { errors },
   } = useForm({ resolver })
 
-  const onSubmit = (data) => {
-    console.log(data.email)
-    router.push({ pathname: '/auth/confirmPassword', params: { value: data.email } })
+  const onSubmit = async (data) => {
+    setLoadingScreen(true)
+    try {
+      await userService.recoverPassword(data)
+      router.push({ pathname: '/auth/confirmPassword', params: { value: data.email } })
+    }
+    catch (e) {
+      notification("Ocurrio un problema")
+    }
+    finally {
+      setLoadingScreen(false)
+    }
+  }
+
+  const toBeggining = () => {
+    router.push({ pathname: '/auth' })
   }
 
   return (
     <Container style={themedStyles.container}>
       <ImageBackground style={themedStyles.background} source={background}>
+        <View style={{ paddingLeft: 10, paddingTop: 5 }}>
+          <TouchableWithoutFeedback onPress={toBeggining}>
+            <Icon
+              pack="eva"
+              name={"arrow-back-outline"}
+              style={{
+                width: 30,
+                height: 30,
+                zIndex: 100,
+                padding: 10
+              }}
+            />
+          </TouchableWithoutFeedback>
+        </View>
         <LayoutCustom ph={theme.paddings.large} pv={theme.paddings.xlarge}>
           <LayoutCustom itemsCenter>
             <Image style={themedStyles.img} source={logo} />
@@ -77,6 +109,7 @@ const Auth = () => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { onChange, onBlur, value } }) => (
+                  //entre y seguia estando el email q escribi antes
                   <TextInput
                     placeholder="Email"
                     placeholderTextColor={"#ffffff"}
@@ -90,7 +123,7 @@ const Auth = () => {
                 )}
                 name="email"
               />
-              {/* <TextInput placeholder="Email" value={email} onChangeText={handleEmail} placeholderTextColor={"#ffffff"} style={themedStyles.input} /> */}
+              {/* <TextInput placeholder="email" value={email} onChangeText={handleEmail} placeholderTextColor={"#ffffff"} style={themedStyles.input} /> */}
               <View style={{ minHeight: 10, alignSelf: 'center' }}>
                 {errors.email && <Text style={themedStyles.errorText}>{errors.email.message as string} </Text>}
               </View>
@@ -123,7 +156,7 @@ const themedStyles = StyleService.create({
   },
   title: {
     color: 'white',
-    fontSize: theme.fontSizes.body,
+    fontSize: theme.fontSizes.medium,
     marginBottom: 10,
     fontFamily: 'Lato-Bold'
   },
@@ -131,7 +164,7 @@ const themedStyles = StyleService.create({
     textAlign: 'center',
     lineHeight: 25,
     color: 'white',
-    fontSize: theme.fontSizes.medium,
+    fontSize: theme.fontSizes.small,
     fontFamily: 'Lato-Regular'
   },
   inputContainer: {
@@ -154,7 +187,7 @@ const themedStyles = StyleService.create({
     alignItems: "center",
     padding: theme.paddings.xMedium,
     borderRadius: theme.borderRadius.medium,
-    width: windowWidth * 0.6,
+    width: windowWidth * 0.5,
     alignSelf: "center"
   },
   forgottenPasswordText: {
@@ -165,7 +198,7 @@ const themedStyles = StyleService.create({
   },
   loginText: {
     color: 'white',
-    fontSize: theme.fontSizes.large,
+    fontSize: theme.fontSizes.medium,
     fontWeight: 'bold',
     fontFamily: 'Lato-Regular'
   },

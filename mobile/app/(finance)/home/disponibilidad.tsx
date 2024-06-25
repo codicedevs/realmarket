@@ -105,9 +105,9 @@ const Disponibility = () => {
                         <LayoutCustom style={themedStyles.modalView}>
                             <LayoutCustom mb={theme.margins.large}>
                                 <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalle del movimiento</Text>
-                                <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 23, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
                                 <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date.toString()}</Text>
-                                <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.small }}>Importe:</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 23, marginBottom: theme.margins.small }}>Importe:</Text>
                                 <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
                             </LayoutCustom>
                             <LayoutCustom>
