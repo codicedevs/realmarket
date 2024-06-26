@@ -54,7 +54,7 @@ const MyHeader = () => {
     });
   }
 
-  const { control, handleSubmit, formState: { errors }, reset } = useForm({
+  const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       pass: '',
@@ -67,11 +67,11 @@ const MyHeader = () => {
     setOpen(false)
   }
 
-  const changePassword = async (data) => {
+  const changePassword = async (data: any) => {
     await userService.ChangePassword({ currentPass: data.pass, newPass: data.confirmPass })
   }
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     try {
       await changePassword(data)
       successNotification()

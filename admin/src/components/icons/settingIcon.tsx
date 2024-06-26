@@ -7,6 +7,7 @@ const SettingsIcon = () => (
     version="1.1"
     id="Layer_1"
     xmlns="http://www.w3.org/2000/svg"
+    // @ts-ignore
     xmlns:xlink="http://www.w3.org/1999/xlink"
     viewBox="0 0 455 455" xml:space="preserve" stroke="#ffffff">
     <g id="SVGRepo_bgCarrier" stroke-width="0">

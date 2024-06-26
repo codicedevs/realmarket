@@ -193,6 +193,7 @@ const UserManager = () => {
         layout="vertical"
         autoComplete="off"
         className="form"
+        // @ts-ignore
         onFinish={handleSubmit(onSubmit)}>
         <Form.Item
           label="Nombre"
