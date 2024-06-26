@@ -15,8 +15,8 @@ const routes = createRoutesFromElements(
     <Route element={<CustomLayout />}>
         {/* Protect route based on authentication */}
         <Route element={<AuthenticationGuard guardType="authenticated" />}>
-            <Route index path='/' element={<HomePage />} />
-            <Route path="/user" element={<Users />} />
+            {/* <Route index path='/' element={<HomePage />} /> */}
+            <Route index path="/" element={<Users />} />
             <Route path='/user/creation' element={<UserManager />} />
             <Route path='/user/edition/:id' element={<UserManager />} />
         </Route>
