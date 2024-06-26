@@ -4,7 +4,7 @@ import {
     Route
 } from 'react-router-dom';
 import { CustomLayout } from '../components/layout/Layout';
-import Login from '../Views/login/Login';
+import Login from '../Views/Login/Login';
 import UserManager from '../Views/users/UserManager';
 import Users from '../Views/users/Users';
 import { AuthenticationGuard } from './AuthenticationGuard';
