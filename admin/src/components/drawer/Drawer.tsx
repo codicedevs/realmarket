@@ -11,7 +11,7 @@ const drawerRoutes = [
     icon: UserOutlined,
     label: "Usuarios",
     id: 1,
-    path: '/user'
+    path: '/'
   }
 ]
 
