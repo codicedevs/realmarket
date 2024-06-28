@@ -1,7 +1,7 @@
 
 const SettingsIcon = () => (
   <svg
-    fill="#ffffff"
+    fill="#001529"
     height="30px"
     width="30px"
     version="1.1"

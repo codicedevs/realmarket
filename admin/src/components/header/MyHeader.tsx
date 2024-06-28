@@ -67,11 +67,11 @@ const MyHeader = () => {
     setOpen(false)
   }
 
-  const changePassword = async (data) => {
+  const changePassword = async (data: { pass: string, confirmPass: string }): Promise<void> => {
     await userService.ChangePassword({ currentPass: data.pass, newPass: data.confirmPass })
   }
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     try {
       await changePassword(data)
       successNotification()
@@ -143,7 +143,7 @@ const MyHeader = () => {
       >
         <div className='modalContentWrapper'>
 
-          <p onClick={() => initateChangePassword()}>Cambiar contra</p>
+          <p onClick={() => initateChangePassword()}>Cambiar contraseña</p>
           <p onClick={logout}>Cerrar sesion</p>
         </div>
       </Modal>

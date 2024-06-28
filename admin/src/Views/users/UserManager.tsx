@@ -108,7 +108,7 @@ const UserManager = () => {
   });
 
   const goBack = () => {
-    navigate("/user")
+    navigate("/")
   }
 
   const bringUser = async () => {
