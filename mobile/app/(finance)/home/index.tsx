@@ -111,7 +111,7 @@ const Home = () => {
     <Container style={{ backgroundColor: theme.colors.background }}>
       {order && <OrderModal order={order} onClose={() => setOrder(null)} />}
       <LayoutCustom>
-        <Header title={`Hola ${typeof session === 'object' && session.nombre.split(" ")[0]}`} />
+        <Header title={`Hola ${typeof session === 'object' && session.nombre.split(" ")[0]}`} refresh={getCash} />
         <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
           <CurrencyToggle />
         </LayoutCustom>

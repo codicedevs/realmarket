@@ -54,7 +54,7 @@ const MyHeader = () => {
     });
   }
 
-  const { control, handleSubmit, formState: { errors }, reset } = useForm({
+  const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       pass: '',

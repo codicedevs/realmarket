@@ -9,7 +9,7 @@ import UserManager from '../Views/users/UserManager';
 import Users from '../Views/users/Users';
 import { AuthenticationGuard } from './AuthenticationGuard';
 
-const HomePage = () => <div>Home</div>;
+// const HomePage = () => <div>Home</div>;
 
 const routes = createRoutesFromElements(
     <Route element={<CustomLayout />}>

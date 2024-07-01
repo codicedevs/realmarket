@@ -6,7 +6,7 @@ import RoundedButton from './Buttons/RoundedButton';
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 export const headerHeight = windowHeight * 0.1
-const Header = ({ title }) => {
+const Header = ({ title, refresh }) => {
   const isHome = title.includes('Hola')
   const isConfig = title.includes('Configuración')
   const image = require('../assets/Icons/reloadIcon.png')
@@ -30,7 +30,7 @@ const Header = ({ title }) => {
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={{ width: windowWidth * 0.3, alignItems: 'center' }}>
-        {isHome ? <RoundedButton img={image} />
+        {isHome ? <RoundedButton onPress={refresh} img={image} />
           :
           !isConfig && <RoundedButton icon="person-outline" onPress={() => configRoute()} />
         }
