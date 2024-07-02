@@ -3,13 +3,13 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { getJwtPayload } from 'src/auth/utils/jwt.utils';
 import { Posicion } from './entities/posicion.entity';
-import { PosicionesService } from './posiciones.service';
+import { Dolar, PosicionesService } from './posiciones.service';
 
 @ApiTags('posiciones')
 @ApiBearerAuth()
 @Controller('posiciones')
 export class PosicionesController {
-  constructor(private readonly posicionesService: PosicionesService) {}
+  constructor(private readonly posicionesService: PosicionesService) { }
 
   @Get('')
   public async getPosiciones(
@@ -31,5 +31,11 @@ export class PosicionesController {
   public async totalPosition(@Req() request: Request) {
     const { accountId } = getJwtPayload(request);
     return this.posicionesService.getTotalPosition(accountId);
+  }
+
+  @Get('dolar')
+  public async getDolar(@Req() request: Request, @Query('date') date: string): Promise<Dolar> {
+    const res = this.posicionesService.getDolar(date)
+    return res
   }
 }
