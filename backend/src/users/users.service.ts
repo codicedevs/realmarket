@@ -54,6 +54,8 @@ export class UsersService {
     id: ObjectId,
     body: UpdateUserDto,
   ): Promise<User | undefined> {
+    const hashedPass = await hash(body?.pass, 10);
+    body.pass = hashedPass;
     const result: UpdateResult = await this.userRepository.update(
       new ObjectId(id),
       body,
