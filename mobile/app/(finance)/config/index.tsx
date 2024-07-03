@@ -49,8 +49,8 @@ const useYupValidationResolver = (validationSchema) =>
   )
 
 const validationSchema = yup.object({
-  oldPass: yup.string().required("Requerido").min(8, 'El usuario debe tener al menos 8 caracteres'),
-  pass: yup.string().required("Requerido").min(8, 'La contraseña debe tener al menos 8 caracteres'),
+  currentPass: yup.string().required("Requerido").min(8, 'El usuario debe tener al menos 8 caracteres'),
+  newPass: yup.string().required("Requerido").min(8, 'La contraseña debe tener al menos 8 caracteres'),
 })
 
 const ConfigScreen = () => {
@@ -93,13 +93,6 @@ const ConfigScreen = () => {
   const toggleModal = () => {
     setOpen(!open)
   }
-
-  const handleChange = name => text => {
-    setChangePasswordInfo(prevState => ({
-      ...prevState,
-      [name]: text
-    }));
-  };
 
   const handleUserInfoChange = name => text => {
     setUserInfo(prevState => ({
@@ -149,6 +142,11 @@ const ConfigScreen = () => {
       }
     }
     setLoadingScreen(true)
+    if (userInfo[field] === session[field]) {
+      toggleEdition(field)
+      setLoadingScreen(false)
+      return
+    }
     try {
       await userService.editUser({
         id: session._id,
@@ -222,7 +220,7 @@ const ConfigScreen = () => {
                     control={control}
                     rules={{ required: true }}
                     name='currentPass'
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({ field: { onChange, value } }) => (
                       <TextInput value={value} onChangeText={onChange} placeholder='Contraseña actual' style={themedStyles.modalInput} />
                     )}
                   />
@@ -240,7 +238,7 @@ const ConfigScreen = () => {
                     control={control}
                     rules={{ required: true }}
                     name='newPass'
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({ field: { onChange, value } }) => (
                       <TextInput value={value} onChangeText={onChange} placeholder='Nueva contraseña' style={themedStyles.modalInput} />
                     )}
                   />
