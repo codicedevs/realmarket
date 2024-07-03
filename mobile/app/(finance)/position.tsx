@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService } from "@ui-kitten/components"
 import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native"
+import { Dimensions, FlatList, Modal, Pressable, Text, View } from "react-native"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
 import Header from "../../components/CustomHeader"
@@ -59,6 +59,15 @@ const Finance = () => {
             setAssetsInfo(assetsInfo);
         }
     }
+
+    const renderFolderCard = ({ item, index }) => (
+        <FolderCard title={item.title} data={item.data} selectAsset={selectAsset} key={index} />
+    );
+
+    const folderData = Object.keys(assetsInfo).map((key) => ({
+        title: key,
+        data: assetsInfo[key]
+    }));
 
     useFocusEffect(
         useCallback(() => {
@@ -152,7 +161,12 @@ const Finance = () => {
                     </LayoutCustom>
                 </LayoutCustom>
                 <View style={themedStyles.scrollContainer}>
-                    <ScrollView>
+                    <FlatList
+                        data={folderData}
+                        renderItem={renderFolderCard}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                    {/* <ScrollView>
                         {
                             Object.keys(assetsInfo).length !== 0 ?
                                 Object.keys(assetsInfo).map((i, index) => {
@@ -161,7 +175,7 @@ const Finance = () => {
                                 :
                                 null
                         }
-                    </ScrollView>
+                    </ScrollView> */}
                 </View>
             </Container>
         </>
