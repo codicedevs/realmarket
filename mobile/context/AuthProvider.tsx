@@ -8,7 +8,7 @@ const AuthContext = React.createContext<{
   signOut: () => void;
   session?: string | IUser | null;
   loadingScreen: boolean;
-  checkSession: () => void
+  checkSession: () => Promise<boolean>
 }>({
   signIn: () => null,
   signOut: () => null,
@@ -54,8 +54,13 @@ export function SessionProvider(props: React.PropsWithChildren) {
         session,
         loadingScreen,
         checkSession: async () => {
-          const res = await authService.whoami()
-          setSession(res.data)
+          try {
+            const res = await authService.whoami()
+            setSession(res.data)
+            return !!res
+          } catch (e) {
+            return false
+          }
         }
       }}>
       {props.children}
