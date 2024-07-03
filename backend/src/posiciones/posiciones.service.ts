@@ -1,16 +1,37 @@
 import { Injectable, Logger } from '@nestjs/common';
-
 import * as dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
-import { formatBcraDate, formatRosvalDate } from 'src/utils/date';
-import { getDolar } from 'src/utils/dolar';
+import { formatRosvalDate } from 'src/utils/date';
 import { Posicion } from './entities/posicion.entity';
 
+export interface Dolar {
+
+  usd: number,
+  usdb: number,
+
+}
+
 const logger = new Logger(RosvalHttpService.name);
+
 
 @Injectable()
 export class PosicionesService extends RosvalHttpService {
   private readonly logger = new Logger();
+
+  async getDolar(date: string): Promise<Dolar> {
+
+    try {
+
+      const responseUSD = await this.get('unidades/cotizaciones', { params: { fecha: date, unidad: 'USD' } })
+      const responseUSDB = await this.get('unidades/cotizaciones', { params: { fecha: date, unidad: 'USDB' } })
+
+      return { usd: responseUSD.data[0].cierre, usdb: responseUSDB.data[0].cierre }
+
+    } catch (err) {
+      console.log('Error', err.message)
+    }
+  }
+
   async findByDate(
     accountId: string,
     from: string,
@@ -31,15 +52,18 @@ export class PosicionesService extends RosvalHttpService {
       accountId,
       formatRosvalDate(dayjs()),
     );
+    const fechaDolar = formatRosvalDate(dayjs().subtract(1, 'day'));
+    const pruebaDolar = await this.getDolar(fechaDolar)
+    const usdPrice = pruebaDolar?.usd;
+    const usdPriceBcra = pruebaDolar?.usdb;
 
-    const fechaDolar = formatBcraDate(new Date());
+    posiciones.forEach(p => {
+      if (p.tipoTitulo === 'Moneda' && p.monedaCotizacion === 'USD') {
+        console.log(p.tipoTitulo, p.monedaCotizacion, p.precio, usdPrice)
+        p.precioUnitario = usdPrice
+      }
+    })
 
-    const pruebaDolar = await getDolar(fechaDolar);
-    // const pruebaBcraNew = await getDolarBcraNew(fechaDolar);
-
-    const usdPrice = pruebaDolar.venta;
-    const usdPriceBcra = 901.17;
-    console.log(usdPriceBcra, usdPriceBcra, fechaDolar);
 
     const totalPosiciones = posiciones.reduce((acum, pos) => {
       if (pos.monedaCotizacion === 'USD') {
