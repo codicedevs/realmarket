@@ -57,6 +57,19 @@ export class PosicionesService extends RosvalHttpService {
     const pruebaDolar = await this.getDolar(fechaDolar)
     const usdPrice = pruebaDolar?.usd;
     const usdPriceBcra = pruebaDolar?.usdb;
+    posiciones.forEach(p => {
+      if (p.tipoTitulo === 'Moneda') {
+        if (p.monedaCotizacion === 'USD') {
+          p.precioUnitario = usdPrice;
+          p.simboloLocal = p.nombreEspecie
+        } else if (!p.cantidadLiquidada) {
+          p.simboloLocal = '$ por liquidar';
+        } else {
+          p.simboloLocal = '$ liquidados'
+        }
+      }
+    })
+
     const totalPosiciones = posiciones.reduce((acum, pos) => {
       if (pos.monedaCotizacion === 'USD') {
         acum += pos.cantidadLiquidada * pos.precioUnitario * usdPrice;
