@@ -49,6 +49,7 @@
 }
 
 .modalContentWrapper p {
+
   margin: 10px 0;
   padding: 12px 24px;
   background-color: #0069d9;
@@ -61,7 +62,7 @@
   /* Texto en negrita */
   text-align: center;
   /* Centrar el texto */
-  width: 30%;
+  width: 35%;
   /* Ancho del botón */
   max-width: 300px;
   /* Ancho máximo del botón */
@@ -75,12 +76,12 @@
   /* Escalar el botón al pasar el cursor */
 }
 
-:where(.css-dev-only-do-not-override-j9bb5n).ant-layout-header {
+:where(.css-dev-only-do-not-override-m4timi).ant-layout-header {
   /* height: 64px; */
   padding: 0 0;
   color: rgba(0, 0, 0, 0.88);
   line-height: 64px;
-  background: #001529
+  background: #ebecee
 }
 
 /* todo esto para sacar el padding extra del header */
