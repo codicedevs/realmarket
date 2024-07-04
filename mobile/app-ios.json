@@ -2,7 +2,7 @@
   "expo": {
     "name": "Real Market Inversiones",
     "slug": "real-market-inversiones",
-    "version": "2.0.0",
+    "version": "2.1",
     "orientation": "portrait",
     "icon": "./assets/rm-negro.png",
     "scheme": "realmarket",
@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.codice.real-market-inversiones",
-      "buildNumber": "2"
+      "buildNumber": "2.1"
     },
     "web": {
       "favicon": "./assets/favicon.png"
