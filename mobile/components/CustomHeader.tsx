@@ -24,14 +24,13 @@ const Header = ({ title, refresh }) => {
     // </View>
     <View style={styles.container}>
       <View style={{ width: windowWidth * 0.3, alignItems: 'center' }}>
-        {!isHome ? <RoundedButton icon="arrow-back-outline" onPress={() => router.back()} /> : <RoundedButton icon="person-outline" onPress={() => configRoute()} />}
+        {!isHome && <RoundedButton icon="arrow-back-outline" onPress={() => router.back()} />}
       </View>
       <View style={{ width: windowWidth * 0.4, alignItems: 'center' }}>
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={{ width: windowWidth * 0.3, alignItems: 'center' }}>
-        {isHome ? <RoundedButton onPress={refresh} img={image} />
-          :
+        {
           !isConfig && <RoundedButton icon="person-outline" onPress={() => configRoute()} />
         }
       </View>
