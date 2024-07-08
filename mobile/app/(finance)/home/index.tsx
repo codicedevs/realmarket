@@ -17,35 +17,27 @@ import { AppContext } from '../../../context/AppContext'
 import { useSession } from '../../../context/AuthProvider'
 import { useLoading } from '../../../context/LoadingProvider'
 import disponibilidadService from '../../../service/disponibilidad.service'
+import { CifrasDisponibilidad, currencyPositions } from '../../../types/financial.types'
 import { orderOptions } from '../../../types/order.types'
 import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-interface CifrasDisponibilidad {
-  dispoHoy: number;
-  dispo24: number;
-  dispo48: number;
-  dispoHoyUsd: number;
-  dispo24Usd: number;
-  dispo48Usd: number
-}
-
 const mockData = {
-  "dispoHoy": 10000.1,
-  "dispo24": 10000.1,
-  "dispo48": 10000.1,
-  "dispoHoyUsd": 500.83,
-  "dispo24Usd": 500.83,
-  "dispo48Usd": 500.83
+  "dispoHoy": 0,
+  "dispo24": 0,
+  "dispo48": 0,
+  "dispoHoyUsd": 0,
+  "dispo24Usd": 0,
+  "dispo48Usd": 0
 }
 
 const Home = () => {
   const { session } = useSession()
   const { currency } = useContext(AppContext)
   const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
-  const [positions, setPositions] = useState({
+  const [positions, setPositions] = useState<currencyPositions>({
     arsPositions: 1000,
     usdPositions: 1000
   })
@@ -123,7 +115,7 @@ const Home = () => {
     <Container style={{ backgroundColor: theme.colors.background }}>
       {order && <OrderModal order={order} onClose={() => setOrder(null)} />}
       <LayoutCustom>
-        <Header title={`Hola ${typeof session === 'object' && session.nombre.split(" ")[0]}`} refresh={getCash} />
+        <Header title={`Hola ${typeof session === 'object' && session.nombre.split(" ")[0]}`} />
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -132,7 +124,7 @@ const Home = () => {
           <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
             <CurrencyToggle />
           </LayoutCustom>
-          <LayoutCustom horizontal ph={theme.paddings.medium}>
+          <LayoutCustom itemsCenter mb={10} horizontal ph={theme.paddings.medium}>
             {
               isLoading ?
                 <ActivityIndicator size={'small'} />
