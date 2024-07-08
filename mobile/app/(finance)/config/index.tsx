@@ -102,7 +102,7 @@ const ConfigScreen = () => {
   }
 
   const sendWhatsapp = () => {
-    Linking.openURL('https://wa.me/3416594796')
+    Linking.openURL('https://wa.me/3412831834')
   }
 
   const sendEmail = () => {
