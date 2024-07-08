@@ -19,5 +19,40 @@ export interface CifrasDisponibilidad {
 
 export interface currencyPositions {
   arsPositions: number;
-  usdPositions: number
+  usdPositions: number;
+  posiciones: CurrencyPosition[]
+}
+
+interface movements {
+  description: string;
+  comprobante: string;
+  date: Date;
+  amount: number;
+  balance: number;
+}
+
+export interface currencyMovements {
+  movementsArs: movements[],
+  movementsUsd: movements[]
+}
+
+export interface CurrencyPosition {
+  cuenta: string;
+  fecha: Date | null;
+  tipoTitulo: string;
+  tipoTituloAgente: string;
+  codigoISIN: string;
+  especie: string;
+  nombreEspecie: string;
+  simboloLocal: string;
+  lugar: string;
+  subCuenta: string;
+  estado: string;
+  cantidadLiquidada: number;
+  cantidadPendienteLiquidar: number;
+  precio: number;
+  precioUnitario: number;
+  monedaCotizacion: string;
+  fechaPrecio: string;
+  parking: string | null;
 }
