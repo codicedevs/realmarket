@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService } from "@ui-kitten/components"
 import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import { Dimensions, FlatList, Modal, Pressable, Text, View } from "react-native"
+import { Dimensions, FlatList, Image, Modal, Pressable, Text, View } from "react-native"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
 import Header from "../../components/CustomHeader"
@@ -10,6 +9,7 @@ import LayoutCustom from "../../components/LayoutCustom"
 import FolderCard from "../../components/cards/FolderCard"
 import { IPosition } from "../../components/cards/TransactionCards"
 import { AppContext } from "../../context/AppContext"
+import disponibilidadService from "../../service/disponibilidad.service"
 import { financial } from "../../types/financial.types"
 import { currencyFormat } from "../../utils/number"
 import theme from "../../utils/theme"
@@ -25,32 +25,50 @@ const Finance = () => {
         arsPositions: 0,
         usdPositions: 0
     })
+    const [info, setInfo] = useState({})
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-
-        async function storage() {
-            const storage = await AsyncStorage.getItem('positions')
-            const value = JSON.parse(storage)
-            setPositions({
-                arsPositions: value.totalPosiciones,
-                usdPositions: value.usdPrice
-            })
-        }
-        storage()
-    }
-        , [])
+        fetchPositionsinfo()
+        // async function storage() {
+        //     const storage = await AsyncStorage.getItem('positions')
+        //     const value = JSON.parse(storage)
+        //     setPositions({
+        //         arsPositions: value.totalPosiciones,
+        //         usdPositions: value.usdPrice
+        //     })
+        // }
+        // storage()
+    }, [])
 
     const selectAsset = (data: IPosition) => {
         setSelectedAsset(data)
         setOpen(true)
     }
 
+    const fetchPositionsinfo = async () => {
+        try {
+            setLoading(true)
+            const res = await disponibilidadService.totalPositions();
+            setPositions({
+                arsPositions: res.data.totalPosiciones,
+                usdPositions: res.data.usdPrice
+            })
+            setInfo(res.data)
+        } catch (e) {
+
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const fetchAndOrganizePositions = async () => {
-        const value = JSON.parse(await AsyncStorage.getItem('positions'))
-        if (value && value.posiciones) {
+        // const value = JSON.parse(await AsyncStorage.getItem('positions'))
+        // if (value && value.posiciones) {
+        if (info && info.posiciones) {
             const assetsInfo = Object.keys(financial).reduce((acc, key) => {
                 const tipoTitulo = financial[key as keyof typeof financial];
-                acc[key] = value.posiciones.filter(position =>
+                acc[key] = info.posiciones.filter(position =>
                     position.tipoTitulo === tipoTitulo && position.monedaCotizacion.includes(currency)
                 );
                 return acc;
@@ -59,6 +77,10 @@ const Finance = () => {
             setAssetsInfo(assetsInfo);
         }
     }
+
+    useEffect(() => {
+        fetchAndOrganizePositions()
+    }, [info])
 
     const renderFolderCard = ({ item, index }) => (
         <FolderCard title={item.title} data={item.data} selectAsset={selectAsset} key={index} />
@@ -139,7 +161,7 @@ const Finance = () => {
                             horizontal
                             justify="space-between"
                         >
-                            <Text style={themedStyles.textColor}>Total general</Text>
+                            <Text style={themedStyles.textColor}>{`Total general`}</Text>
                             <Text style={themedStyles.textColor}>{currencyFormat(currency === 'ARS' ? positions.arsPositions : positions.usdPositions, currency)}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
@@ -160,23 +182,18 @@ const Finance = () => {
                         </LayoutCustom>
                     </LayoutCustom>
                 </LayoutCustom>
-                <View style={themedStyles.scrollContainer}>
-                    <FlatList
-                        data={folderData}
-                        renderItem={renderFolderCard}
-                        keyExtractor={(item, index) => index.toString()}
-                    />
-                    {/* <ScrollView>
-                        {
-                            Object.keys(assetsInfo).length !== 0 ?
-                                Object.keys(assetsInfo).map((i, index) => {
-                                    return <FolderCard title={i} data={assetsInfo[i]} selectAsset={selectAsset} key={index} />
-                                })
-                                :
-                                null
-                        }
-                    </ScrollView> */}
-                </View>
+                {
+                    loading ?
+                        <Image source={require('../../assets/gif/Statistics.gif')} style={{ width: windowWidth, height: 400 }} />
+                        :
+                        <View style={themedStyles.scrollContainer}>
+                            <FlatList
+                                data={folderData}
+                                renderItem={renderFolderCard}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        </View>
+                }
             </Container>
         </>
     )
