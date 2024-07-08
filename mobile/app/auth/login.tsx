@@ -96,7 +96,7 @@ const Auth = () => {
             <Image style={themedStyles.img} source={logo} />
             <LayoutCustom itemsCenter mt={theme.margins.large}>
               <Text style={themedStyles.title} >¡Bienvenido!</Text>
-              <Text style={themedStyles.subTitle} numberOfLines={2}>Ingrese su nombre de usuario y contraseña</Text>
+              {/* <Text style={themedStyles.subTitle} numberOfLines={2}>Ingrese su nombre de usuario y contraseña</Text> */}
             </LayoutCustom>
           </LayoutCustom>
           <LayoutCustom pv={theme.paddings.large} justify="space-around" style={themedStyles.inputContainer}>
