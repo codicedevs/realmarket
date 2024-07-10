@@ -60,6 +60,7 @@ export class PosicionesService extends RosvalHttpService {
     posiciones.forEach(p => {
       if (p.tipoTitulo === 'Moneda') {
         if (p.monedaCotizacion === 'USD') {
+          console.log('Valor del dolar', usdPrice)
           p.precioUnitario = usdPrice;
           p.simboloLocal = p.nombreEspecie
         } else if (!p.cantidadLiquidada) {
