@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import AppProvider from '../context/AppContext';
 import { SessionProvider } from "../context/AuthProvider";
+import { InfoProvider } from '../context/InfoProvider';
 import { LoadingProvider } from "../context/LoadingProvider";
 
 const RootLayout = () => {
@@ -18,10 +19,12 @@ const RootLayout = () => {
           <AppProvider>
             <SessionProvider>
               <LoadingProvider>
-                <Stack>
-                  <Stack.Screen name='(finance)' options={{ headerShown: false }} />
-                  <Stack.Screen name="auth" options={{ headerShown: false }} />
-                </Stack>
+                <InfoProvider>
+                  <Stack>
+                    <Stack.Screen name='(finance)' options={{ headerShown: false }} />
+                    <Stack.Screen name="auth" options={{ headerShown: false }} />
+                  </Stack>
+                </InfoProvider>
               </LoadingProvider>
             </SessionProvider>
           </AppProvider>
