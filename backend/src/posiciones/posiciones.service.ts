@@ -64,6 +64,9 @@ export class PosicionesService extends RosvalHttpService {
         if (p.monedaCotizacion === 'USD') {
           p.precioUnitario = usdPrice;
           p.simboloLocal = p.nombreEspecie;
+        } else if (p.monedaCotizacion === 'USDB') {
+          p.precioUnitario = usdPriceBcra;
+          p.simboloLocal = p.nombreEspecie;
         } else if (!p.cantidadLiquidada) {
           p.simboloLocal = '$ por liquidar';
         } else {
