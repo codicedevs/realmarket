@@ -1,7 +1,7 @@
 import { StyleService } from "@ui-kitten/components"
 import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import { Dimensions, FlatList, Image, Modal, Pressable, Text, View } from "react-native"
+import { Dimensions, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
 import Header from "../../components/CustomHeader"
@@ -9,7 +9,8 @@ import LayoutCustom from "../../components/LayoutCustom"
 import FolderCard from "../../components/cards/FolderCard"
 import { IPosition } from "../../components/cards/TransactionCards"
 import { AppContext } from "../../context/AppContext"
-import disponibilidadService from "../../service/disponibilidad.service"
+import { useInfo } from "../../context/InfoProvider"
+import { useLoading } from "../../context/LoadingProvider"
 import { financial } from "../../types/financial.types"
 import { currencyFormat } from "../../utils/number"
 import theme from "../../utils/theme"
@@ -28,47 +29,20 @@ const Finance = () => {
     const [info, setInfo] = useState({})
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        fetchPositionsinfo()
-        // async function storage() {
-        //     const storage = await AsyncStorage.getItem('positions')
-        //     const value = JSON.parse(storage)
-        //     setPositions({
-        //         arsPositions: value.totalPosiciones,
-        //         usdPositions: value.usdPrice
-        //     })
-        // }
-        // storage()
-    }, [])
+    const { isLoading } = useLoading()
+    const { currencyPositions } = useInfo()
 
     const selectAsset = (data: IPosition) => {
         setSelectedAsset(data)
         setOpen(true)
     }
 
-    const fetchPositionsinfo = async () => {
-        try {
-            setLoading(true)
-            const res = await disponibilidadService.totalPositions();
-            setPositions({
-                arsPositions: res.data.totalPosiciones,
-                usdPositions: res.data.usdPrice
-            })
-            setInfo(res.data)
-        } catch (e) {
-
-        } finally {
-            setLoading(false)
-        }
-    }
 
     const fetchAndOrganizePositions = async () => {
-        // const value = JSON.parse(await AsyncStorage.getItem('positions'))
-        // if (value && value.posiciones) {
-        if (info && info.posiciones) {
+        if (currencyPositions && currencyPositions.posiciones) {
             const assetsInfo = Object.keys(financial).reduce((acc, key) => {
                 const tipoTitulo = financial[key as keyof typeof financial];
-                acc[key] = info.posiciones.filter(position =>
+                acc[key] = currencyPositions.posiciones.filter(position =>
                     position.tipoTitulo === tipoTitulo && position.monedaCotizacion.includes(currency)
                 );
                 return acc;
@@ -80,7 +54,7 @@ const Finance = () => {
 
     useEffect(() => {
         fetchAndOrganizePositions()
-    }, [info])
+    }, [currencyPositions])
 
     const renderFolderCard = ({ item, index }) => (
         <FolderCard title={item.title} data={item.data} selectAsset={selectAsset} key={index} />
@@ -139,12 +113,12 @@ const Finance = () => {
                                 </>
                             }
                         </LayoutCustom>
-                        <Pressable
+                        <TouchableOpacity
                             style={[themedStyles.button, themedStyles.buttonClose]}
                             onPress={() => setOpen(false)}
                         >
                             <Text style={themedStyles.textStyle}>Volver</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     </LayoutCustom>
                 </LayoutCustom>
             </Modal>
@@ -162,7 +136,7 @@ const Finance = () => {
                             justify="space-between"
                         >
                             <Text style={themedStyles.textColor}>{`Total general`}</Text>
-                            <Text style={themedStyles.textColor}>{currencyFormat(currency === 'ARS' ? positions.arsPositions : positions.usdPositions, currency)}</Text>
+                            <Text style={themedStyles.textColor}>{currencyFormat(currency === 'ARS' ? currencyPositions?.arsPositions : currencyPositions?.usdPositions, currency)}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                     <LayoutCustom ph={theme.paddings.large}>
@@ -183,8 +157,10 @@ const Finance = () => {
                     </LayoutCustom>
                 </LayoutCustom>
                 {
-                    loading ?
-                        <Image source={require('../../assets/gif/Statistics.gif')} style={{ width: windowWidth, height: 400 }} />
+                    isLoading ?
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+                            <Image source={require('../../assets/gif/Statistics.gif')} style={{ width: 250, height: 250, marginTop: 20 }} />
+                        </View>
                         :
                         <View style={themedStyles.scrollContainer}>
                             <FlatList

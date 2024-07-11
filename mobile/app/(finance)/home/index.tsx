@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { StyleService } from '@ui-kitten/components'
 import { router } from 'expo-router'
 import React, { useContext, useEffect, useState } from 'react'
@@ -15,9 +14,8 @@ import TimeCard from '../../../components/cards/TimeCard'
 import OrderModal from '../../../components/orderModal'
 import { AppContext } from '../../../context/AppContext'
 import { useSession } from '../../../context/AuthProvider'
+import { useInfo } from '../../../context/InfoProvider'
 import { useLoading } from '../../../context/LoadingProvider'
-import disponibilidadService from '../../../service/disponibilidad.service'
-import { CifrasDisponibilidad, currencyPositions } from '../../../types/financial.types'
 import { orderOptions } from '../../../types/order.types'
 import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
@@ -25,7 +23,7 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const mockData = {
-  "dispoHoy": 0,
+  "dispoHoy": 3,
   "dispo24": 0,
   "dispo48": 0,
   "dispoHoyUsd": 0,
@@ -36,14 +34,10 @@ const mockData = {
 const Home = () => {
   const { session } = useSession()
   const { currency } = useContext(AppContext)
-  const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
-  const [positions, setPositions] = useState<currencyPositions>({
-    arsPositions: 1000,
-    usdPositions: 1000
-  })
-  const { setIsLoading, isLoading } = useLoading()
+  const { isLoading } = useLoading()
   const [order, setOrder] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
+  const { getUserData, cifrasDisponibilidad, currencyPositions } = useInfo()
 
   const selectOrder = (data: string) => {
     setOrder(data)
@@ -52,7 +46,7 @@ const Home = () => {
   const onRefresh = () => {
     try {
       setRefreshing(true)
-      getCash()
+      getUserData()
     }
     catch (e) { }
     finally {
@@ -71,34 +65,6 @@ const Home = () => {
     router.replace('position')
   }
 
-  const getCash = async () => {
-    try {
-      setIsLoading(true)
-      const [res, resPos] = await Promise.all([
-        disponibilidadService.getCashPositions(),
-        disponibilidadService.totalPositions()
-      ]);
-      setCifrasDisponibilidad(res.data)
-      setPositions({
-        arsPositions: resPos.data.totalPosiciones,
-        usdPositions: resPos.data.usdPrice
-      })
-      if (Object.keys(resPos.data).length !== 0) {
-        const jsonValue = JSON.stringify(resPos.data)
-        await AsyncStorage.setItem('positions', jsonValue)
-      }
-      const jsonTotalPos = JSON.stringify(resPos.data.totalPosiciones)
-      await AsyncStorage.setItem('totalPos', jsonTotalPos)
-    }
-    catch (err) {
-      console.log(err)
-    }
-    finally {
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 1000);
-    }
-  }
 
   const CARDS = [
     { color: "#009F9F", balance: currency === "ARS" ? checkData().dispoHoy : checkData().dispoHoyUsd, card_number: "5282300014453286", icon: require('../../../assets/Icons/todayClock.png') },
@@ -106,8 +72,7 @@ const Home = () => {
   ];
 
   useEffect(() => {
-    getCash()
-
+    getUserData()
   }, [])
 
   const progressValue = useSharedValue<number>(0);
@@ -124,14 +89,16 @@ const Home = () => {
           <LayoutCustom itemsCenter mt={theme.margins.large} mb={theme.margins.medium}>
             <CurrencyToggle />
           </LayoutCustom>
-          <LayoutCustom itemsCenter mb={10} horizontal ph={theme.paddings.medium}>
+          <LayoutCustom style={{ height: windowHeight * 0.03, justifyContent: "space-between" }} itemsCenter mb={10} horizontal ph={theme.paddings.medium}>
+            <Text style={themedStyles.lastUpdateText}>Última actualización: {!isLoading ? new Date().toLocaleDateString() : null}</Text>
             {
               isLoading ?
-                <ActivityIndicator size={'small'} />
+                <ActivityIndicator size={'small'} style={{ marginRight: 10 }} />
                 :
-                null
+                <TouchableWithoutFeedback onPress={() => getUserData()}>
+                  <Image resizeMode='contain' source={require('../../../assets/Icons/reload.png')} style={{ width: 20, height: 25, marginRight: 10 }} />
+                </TouchableWithoutFeedback>
             }
-            <Text style={themedStyles.lastUpdateText}>Última actualización: {!isLoading ? new Date().toLocaleDateString() : null}</Text>
           </LayoutCustom>
           <Carousel
             data={CARDS}
@@ -160,7 +127,7 @@ const Home = () => {
               <Image style={themedStyles.img} source={require("../../../assets/Icons/money.png")} />
               <LayoutCustom ml={theme.margins.small} style={{ alignItems: "flex-start" }}>
                 <Text style={themedStyles.position}>Posiciones</Text>
-                <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator size={'small'} /> : currencyFormat(currency === "ARS" ? positions.arsPositions : positions.usdPositions, currency)}</Text>
+                <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator size={'small'} /> : currencyFormat(currency === "ARS" ? currencyPositions?.arsPositions : currencyPositions?.usdPositions, currency)}</Text>
               </LayoutCustom>
             </LayoutCustom>
           </TouchableWithoutFeedback>
