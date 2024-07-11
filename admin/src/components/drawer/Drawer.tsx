@@ -4,7 +4,6 @@ import { Menu } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import './drawer.css';
 
 const drawerRoutes = [
   {
@@ -44,13 +43,13 @@ const Drawer = () => {
   );
 
   return (
-    <Sider >
+    <Sider style={{ backgroundColor: 'white' }}>
       <Menu
         mode='inline'
         style={{ borderRight: 0 }}
         items={items2}
-        // defaultSelectedKeys={['1']}
-        theme='dark'
+      // defaultSelectedKeys={['1']}
+
       />
     </Sider>
   )

@@ -58,10 +58,16 @@ export class PosicionesService extends RosvalHttpService {
     const usdPriceBcra = pruebaDolar?.usdb;
 
     posiciones.forEach(p => {
-      if (p.tipoTitulo === 'Moneda' && p.monedaCotizacion === 'USD') {
-        console.log(p.tipoTitulo, p.monedaCotizacion, p.precio, usdPrice)
-        p.precioUnitario = usdPrice
-        p.simboloLocal = p.nombreEspecie
+      if (p.tipoTitulo === 'Moneda') {
+        if (p.monedaCotizacion === 'USD') {
+          p.precioUnitario = usdPrice;
+          p.simboloLocal = p.nombreEspecie
+        } else if (!p.cantidadLiquidada) {
+          p.simboloLocal = '$ por liquidar';
+        } else {
+          p.simboloLocal = '$ liquidados'
+        }
+
       }
     })
 
