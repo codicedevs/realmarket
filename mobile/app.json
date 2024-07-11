@@ -7,11 +7,6 @@
     "icon": "./assets/rm-negro.png",
     "scheme": "realmarket",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/rm-negro.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -35,15 +30,20 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/Lato/Lato-Regular.ttf","./assets/fonts/Lato/Lato-Bold.ttf" ]
+          "fonts": [
+            "./assets/fonts/Lato/Lato-Regular.ttf",
+            "./assets/fonts/Lato/Lato-Bold.ttf"
+          ]
         }
-    ]
+      ]
     ],
     "extra": {
       "router": {
         "origin": false
       },
-      "eas": {}
+      "eas": {
+        "projectId": "3e867b21-b50a-42fa-ac1e-d0556c759f8e"
+      }
     }
   }
 }
