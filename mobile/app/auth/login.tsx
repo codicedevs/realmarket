@@ -137,6 +137,7 @@ const Auth = () => {
                         position: 'absolute',
                         top: 10,
                         right: 10,
+                        tintColor: 'white'
                       }}
                     />
                   </TouchableOpacity>
