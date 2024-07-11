@@ -18,14 +18,14 @@ export class PosicionesService extends RosvalHttpService {
   async getDolar(date: string): Promise<Dolar> {
     try {
       const responseUSD = await this.get('unidades/cotizaciones', {
-        params: { fecha: date, unidad: 'USD' },
+        params: { fecha: date, unidad: 'USD', moneda: 'ARS' },
       });
       const responseUSDB = await this.get('unidades/cotizaciones', {
-        params: { fecha: date, unidad: 'USDB' },
+        params: { fecha: date, unidad: 'USDB', moneda: 'ARS' },
       });
 
       return {
-        usd: responseUSD.data[1].cierre,
+        usd: responseUSD.data[0].cierre,
         usdb: responseUSDB.data[0].cierre,
       };
     } catch (err) {
