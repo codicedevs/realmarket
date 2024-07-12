@@ -3,7 +3,7 @@ export function currencyFormat(number: number, currency: string): string {
   const absoluteNumber = Math.abs(number);
 
   // Asigna directamente el símbolo de moneda basado en la moneda proporcionada
-  const currencySymbol = '$'; // Uso directo del símbolo '$'
+  const currencySymbol = currency === "ARS" ? '$' : 'US'; // Uso directo del símbolo '$'
 
   // Formatea el número utilizando Intl.NumberFormat
   const formattedNumber = new Intl.NumberFormat('es-AR', {
