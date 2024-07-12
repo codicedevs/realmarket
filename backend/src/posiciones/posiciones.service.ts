@@ -5,30 +5,31 @@ import { formatRosvalDate } from 'src/utils/date';
 import { Posicion } from './entities/posicion.entity';
 
 export interface Dolar {
-
-  usd: number,
-  usdb: number,
-
+  usd: number;
+  usdb: number;
 }
 
 const logger = new Logger(RosvalHttpService.name);
-
 
 @Injectable()
 export class PosicionesService extends RosvalHttpService {
   private readonly logger = new Logger();
 
   async getDolar(date: string): Promise<Dolar> {
-
     try {
+      const responseUSD = await this.get('unidades/cotizaciones', {
+        params: { fecha: date, unidad: 'USD', moneda: 'ARS' },
+      });
+      const responseUSDB = await this.get('unidades/cotizaciones', {
+        params: { fecha: date, unidad: 'USDB', moneda: 'ARS' },
+      });
 
-      const responseUSD = await this.get('unidades/cotizaciones', { params: { fecha: date, unidad: 'USD' } })
-      const responseUSDB = await this.get('unidades/cotizaciones', { params: { fecha: date, unidad: 'USDB' } })
-
-      return { usd: responseUSD.data[0].cierre, usdb: responseUSDB.data[0].cierre }
-
+      return {
+        usd: responseUSD.data[0].cierre,
+        usdb: responseUSDB.data[0].cierre,
+      };
     } catch (err) {
-      console.log('Error', err.message)
+      console.log('Error', err.message);
     }
   }
 
@@ -53,31 +54,35 @@ export class PosicionesService extends RosvalHttpService {
       formatRosvalDate(dayjs()),
     );
     const fechaDolar = formatRosvalDate(dayjs().subtract(1, 'day'));
-    const pruebaDolar = await this.getDolar(fechaDolar)
+    const pruebaDolar = await this.getDolar(fechaDolar);
     const usdPrice = pruebaDolar?.usd;
     const usdPriceBcra = pruebaDolar?.usdb;
 
-    posiciones.forEach(p => {
+    posiciones.forEach((p) => {
       if (p.tipoTitulo === 'Moneda') {
         if (p.monedaCotizacion === 'USD') {
-          p.precioUnitario = usdPrice;
-          p.simboloLocal = p.nombreEspecie
+          // p.precioUnitario = usdPrice;
+          p.simboloLocal = p.nombreEspecie;
+        } else if (p.monedaCotizacion === 'USDB') {
+          // p.precioUnitario = usdPriceBcra;
+          p.simboloLocal = p.nombreEspecie;
         } else if (!p.cantidadLiquidada) {
           p.simboloLocal = '$ por liquidar';
         } else {
-          p.simboloLocal = '$ liquidados'
+          p.simboloLocal = '$ liquidados';
         }
-
       }
-    })
-
+    });
 
     const totalPosiciones = posiciones.reduce((acum, pos) => {
-      if (pos.monedaCotizacion === 'USD') {
+      if (pos.monedaCotizacion === 'USD' || pos.monedaCotizacion === 'USDC') {
         acum += pos.cantidadLiquidada * pos.precioUnitario * usdPrice;
       } else if (pos.monedaCotizacion === 'USDB') {
         acum += pos.cantidadLiquidada * pos.precioUnitario * usdPriceBcra;
-      } else acum += (pos.cantidadLiquidada * pos.precioUnitario) + (pos.cantidadPendienteLiquidar * pos.precioUnitario);
+      } else
+        acum +=
+          pos.cantidadLiquidada * pos.precioUnitario +
+          pos.cantidadPendienteLiquidar * pos.precioUnitario;
       return acum;
     }, 0);
 
