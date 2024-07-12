@@ -6,7 +6,7 @@ import RoundedButton from './Buttons/RoundedButton';
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 export const headerHeight = windowHeight * 0.1
-const Header = ({ title, refresh }) => {
+const Header = ({ title }) => {
   const isHome = title.includes('Hola')
   const isConfig = title.includes('Configuración')
   const image = require('../assets/Icons/reloadIcon.png')
@@ -15,23 +15,15 @@ const Header = ({ title, refresh }) => {
   }
 
   return (
-    // <View style={{ ...styles.container, justifyContent: 'space-between' }}>
-    //   {!isHome && <RoundedButton icon="arrow-back-outline" onPress={() => router.back()} />}
-    //   {!isHome && <Text style={styles.title}>{title}</Text>}
-    //   {!isConfig && <RoundedButton icon="person-outline" onPress={() => configRoute()} />}
-    //   {(isHome) && <Text style={{ ...styles.title, paddingLeft: 20 }}>{title}</Text>}
-    //   {isHome && <RoundedButton img={image} />}
-    // </View>
     <View style={styles.container}>
       <View style={{ width: windowWidth * 0.3, alignItems: 'center' }}>
-        {!isHome ? <RoundedButton icon="arrow-back-outline" onPress={() => router.back()} /> : <RoundedButton icon="person-outline" onPress={() => configRoute()} />}
+        {!isHome && <RoundedButton icon="arrow-back-outline" onPress={() => router.back()} />}
       </View>
       <View style={{ width: windowWidth * 0.4, alignItems: 'center' }}>
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={{ width: windowWidth * 0.3, alignItems: 'center' }}>
-        {isHome ? <RoundedButton onPress={refresh} img={image} />
-          :
+        {
           !isConfig && <RoundedButton icon="person-outline" onPress={() => configRoute()} />
         }
       </View>

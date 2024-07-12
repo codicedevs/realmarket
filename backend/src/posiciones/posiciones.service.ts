@@ -53,7 +53,6 @@ export class PosicionesService extends RosvalHttpService {
       accountId,
       formatRosvalDate(dayjs()),
     );
-
     const fechaDolar = formatRosvalDate(dayjs().subtract(1, 'day'));
     const pruebaDolar = await this.getDolar(fechaDolar);
     const usdPrice = pruebaDolar?.usd;

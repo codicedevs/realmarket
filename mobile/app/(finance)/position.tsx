@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService } from "@ui-kitten/components"
 import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native"
+import { Dimensions, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
 import Header from "../../components/CustomHeader"
@@ -10,6 +9,8 @@ import LayoutCustom from "../../components/LayoutCustom"
 import FolderCard from "../../components/cards/FolderCard"
 import { IPosition } from "../../components/cards/TransactionCards"
 import { AppContext } from "../../context/AppContext"
+import { useInfo } from "../../context/InfoProvider"
+import { useLoading } from "../../context/LoadingProvider"
 import { financial } from "../../types/financial.types"
 import { currencyFormat } from "../../utils/number"
 import theme from "../../utils/theme"
@@ -25,32 +26,23 @@ const Finance = () => {
         arsPositions: 0,
         usdPositions: 0
     })
+    const [info, setInfo] = useState({})
+    const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-
-        async function storage() {
-            const storage = await AsyncStorage.getItem('positions')
-            const value = JSON.parse(storage)
-            setPositions({
-                arsPositions: value.totalPosiciones,
-                usdPositions: value.usdPrice
-            })
-        }
-        storage()
-    }
-        , [])
+    const { isLoading } = useLoading()
+    const { currencyPositions } = useInfo()
 
     const selectAsset = (data: IPosition) => {
         setSelectedAsset(data)
         setOpen(true)
     }
 
+
     const fetchAndOrganizePositions = async () => {
-        const value = JSON.parse(await AsyncStorage.getItem('positions'))
-        if (value && value.posiciones) {
+        if (currencyPositions && currencyPositions.posiciones) {
             const assetsInfo = Object.keys(financial).reduce((acc, key) => {
                 const tipoTitulo = financial[key as keyof typeof financial];
-                acc[key] = value.posiciones.filter(position =>
+                acc[key] = currencyPositions.posiciones.filter(position =>
                     position.tipoTitulo === tipoTitulo && position.monedaCotizacion.includes(currency)
                 );
                 return acc;
@@ -59,6 +51,19 @@ const Finance = () => {
             setAssetsInfo(assetsInfo);
         }
     }
+
+    useEffect(() => {
+        fetchAndOrganizePositions()
+    }, [currencyPositions])
+
+    const renderFolderCard = ({ item, index }) => (
+        <FolderCard title={item.title} data={item.data} selectAsset={selectAsset} key={index} />
+    );
+
+    const folderData = Object.keys(assetsInfo).map((key) => ({
+        title: key,
+        data: assetsInfo[key]
+    }));
 
     useFocusEffect(
         useCallback(() => {
@@ -108,12 +113,12 @@ const Finance = () => {
                                 </>
                             }
                         </LayoutCustom>
-                        <Pressable
+                        <TouchableOpacity
                             style={[themedStyles.button, themedStyles.buttonClose]}
                             onPress={() => setOpen(false)}
                         >
                             <Text style={themedStyles.textStyle}>Volver</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     </LayoutCustom>
                 </LayoutCustom>
             </Modal>
@@ -130,8 +135,8 @@ const Finance = () => {
                             horizontal
                             justify="space-between"
                         >
-                            <Text style={themedStyles.textColor}>Total general</Text>
-                            <Text style={themedStyles.textColor}>{currencyFormat(currency === 'ARS' ? positions.arsPositions : positions.usdPositions, currency)}</Text>
+                            <Text style={themedStyles.textColor}>{`Total general`}</Text>
+                            <Text style={themedStyles.textColor}>{currencyFormat(currency === 'ARS' ? currencyPositions?.arsPositions : currencyPositions?.usdPositions, currency)}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                     <LayoutCustom ph={theme.paddings.large}>
@@ -151,18 +156,20 @@ const Finance = () => {
                         </LayoutCustom>
                     </LayoutCustom>
                 </LayoutCustom>
-                <View style={themedStyles.scrollContainer}>
-                    <ScrollView>
-                        {
-                            Object.keys(assetsInfo).length !== 0 ?
-                                Object.keys(assetsInfo).map((i, index) => {
-                                    return <FolderCard title={i} data={assetsInfo[i]} selectAsset={selectAsset} key={index} />
-                                })
-                                :
-                                null
-                        }
-                    </ScrollView>
-                </View>
+                {
+                    isLoading ?
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+                            <Image source={require('../../assets/gif/Statistics.gif')} style={{ width: 250, height: 250, marginTop: 20 }} />
+                        </View>
+                        :
+                        <View style={themedStyles.scrollContainer}>
+                            <FlatList
+                                data={folderData}
+                                renderItem={renderFolderCard}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                        </View>
+                }
             </Container>
         </>
     )
