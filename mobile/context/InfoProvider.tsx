@@ -48,7 +48,8 @@ export function InfoProvider(props: React.PropsWithChildren) {
       setCifrasDisponibilidad(res.data)
       setCurrencyPositions({
         arsPositions: resPos.data.totalPosiciones,
-        usdPositions: resPos.data.totalPosiciones,
+        usdPrice: resPos.data.usdPrice,
+        usdPriceBcra: resPos.data.usdPriceBcra,
         posiciones: resPos.data.posiciones
       })
       setMovements({

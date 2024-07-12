@@ -19,7 +19,8 @@ export interface CifrasDisponibilidad {
 
 export interface currencyPositions {
   arsPositions: number;
-  usdPositions: number;
+  usdPrice: number;
+  usdPriceBcra: number;
   posiciones: CurrencyPosition[]
 }
 
