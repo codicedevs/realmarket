@@ -17,7 +17,6 @@ import { useSession } from '../../../context/AuthProvider'
 import { useInfo } from '../../../context/InfoProvider'
 import { useLoading } from '../../../context/LoadingProvider'
 import { orderOptions } from '../../../types/order.types'
-import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -93,7 +92,7 @@ const Home = () => {
             <Text style={themedStyles.lastUpdateText}>Última actualización: {!isLoading ? new Date().toLocaleDateString() : null}</Text>
             {
               isLoading ?
-                <ActivityIndicator size={'small'} style={{ marginRight: 10 }} />
+                <ActivityIndicator color={'#009F9F'} size={'small'} style={{ marginRight: 10 }} />
                 :
                 <TouchableWithoutFeedback onPress={() => getUserData()}>
                   <Image resizeMode='contain' source={require('../../../assets/Icons/reload.png')} style={{ width: 20, height: 25, marginRight: 10 }} />
@@ -116,7 +115,7 @@ const Home = () => {
             }}
             renderItem={({ item, index }) => {
               return (
-                <Touchable activeOpacity={1} key={index} style={{ height: '100%' }} onPress={() => router.navigate('/home/disponibilidad')}>
+                <Touchable activeOpacity={1} key={index} style={{ height: '100%' }} onPress={() => router.navigate('/availability')}>
                   <TimeCard item={item} currency={currency} />
                 </Touchable>
               )
@@ -127,7 +126,7 @@ const Home = () => {
               <Image style={themedStyles.img} source={require("../../../assets/Icons/money.png")} />
               <LayoutCustom ml={theme.margins.small} style={{ alignItems: "flex-start" }}>
                 <Text style={themedStyles.position}>Posiciones</Text>
-                <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator size={'small'} /> : currencyFormat(currency === "ARS" ? currencyPositions?.arsPositions : currencyPositions?.usdPositions, currency)}</Text>
+                <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator color={'#009F9F'} size={'small'} /> : `$ ${currencyPositions?.arsPositions}`}</Text>
               </LayoutCustom>
             </LayoutCustom>
           </TouchableWithoutFeedback>
