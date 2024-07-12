@@ -8,6 +8,7 @@ import {
 // ----------------------------- Lodash -----------------------------------
 import { Text, TouchableOpacity } from "react-native";
 import { AppContext } from "../../context/AppContext";
+import { useInfo } from "../../context/InfoProvider";
 import { currencyFormat } from "../../utils/number";
 import theme from "../../utils/theme";
 import AnimatedAppearance, { Animation_Types_Enum } from "../AnimatedAppearance";
@@ -39,7 +40,19 @@ const TransactionCards = memo(
         const { currency } = useContext(AppContext)
         const styles = useStyleSheet(themedStyles);
         const amount = data.cantidadPendienteLiquidar - data.cantidadLiquidada
-        const total = amount * data.precioUnitario
+        const { currencyPositions } = useInfo()
+
+        const checkValue = () => {
+            var total: number
+            if (data.monedaCotizacion === 'USDB') {
+                total = amount * currencyPositions.usdPriceBcra
+            } else if (data.monedaCotizacion === 'USD' || 'USDC') {
+                total = amount * currencyPositions.usdPrice
+            } else {
+                total = amount * data.precioUnitario
+            }
+            return total
+        }
 
         return (
             <TouchableOpacity onPress={() => selectAsset(data)}>
@@ -59,10 +72,10 @@ const TransactionCards = memo(
                             <Text style={themedStyles.currencyText}>{data.simboloLocal}</Text>
                         </LayoutCustom>
                         <LayoutCustom style={themedStyles.smallerContainer}>
-                            <Text style={themedStyles.normalTextSize}>{currencyFormat(data.precioUnitario, currency)}</Text>
+                            <Text style={themedStyles.normalTextSize}>{currencyFormat(data.precioUnitario, 'ARS')}</Text>
                         </LayoutCustom>
                         <LayoutCustom pr={theme.paddings.small} style={themedStyles.biggerContainer}>
-                            <Text numberOfLines={1} style={themedStyles.normalTextSize}>{currencyFormat(total, currency)}</Text>
+                            <Text numberOfLines={1} style={themedStyles.normalTextSize}>{currencyFormat(checkValue(), 'ARS')}</Text>
                             <Text style={themedStyles.normalTextSize}>{amount}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
