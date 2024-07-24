@@ -1,8 +1,8 @@
 import { StyleService } from "@ui-kitten/components"
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
-import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Modal, ScrollView, Text, TouchableOpacity } from "react-native"
+import React, { useContext, useState } from "react"
+import { ActivityIndicator, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native"
 import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
 import Header from "../../../components/CustomHeader"
@@ -10,8 +10,8 @@ import LayoutCustom from "../../../components/LayoutCustom"
 import TransactionItem, { ITransactionItemProps } from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
 import { AppContext } from "../../../context/AppContext"
+import { useInfo } from "../../../context/InfoProvider"
 import { useLoading } from "../../../context/LoadingProvider"
-import usePromise from "../../../hooks/usePromise"
 import movimientosService from "../../../service/movimientos.service"
 import { currencyFormat } from "../../../utils/number"
 import { saveFilePdf } from "../../../utils/saveFile"
@@ -21,11 +21,11 @@ const Disponibility = () => {
     const { currency } = useContext(AppContext)
     const [open, setOpen] = useState(false)
     const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps>(null)
-    const [movementsArs, setMovementsArs] = useState([])
-    const [movementsUsd, setMovementsUsd] = useState([])
-    const handlePromise = usePromise()
-    const { setLoadingScreen } = useLoading()
-    const [isLoading, setIsLoading] = useState(false)
+    const { isLoading } = useLoading()
+
+
+    const [loading, setLoading] = useState(false)
+    const { movements } = useInfo()
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
@@ -50,7 +50,7 @@ const Disponibility = () => {
     }
 
     const getReceipt = async (id: string) => {
-        setIsLoading(true)
+        setLoading(true)
         try {
             const url = `movimientos/comprobante/${id}`
             const base64Image = await movimientosService.getReceipt(id)
@@ -59,37 +59,32 @@ const Disponibility = () => {
         } catch (e) {
             console.error('error', e);
         } finally {
-            setIsLoading(false)
+            setLoading(false)
         }
-    }
-
-    const promises = async () => {
-        const [res, resUsd] = await Promise.all([
-            movimientosService.getMovementsArs(),
-            movimientosService.getMovementsUsd()
-        ])
-        setMovementsArs(res.data.reverse())
-        setMovementsUsd(resUsd.data.reverse())
-    }
-
-    const getInfo = async () => {
-        await handlePromise(promises())
     }
 
     const checkBalanceCurrency = () => {
-        if (movementsArs.length === 0) return
-        if (movementsUsd.length === 0) return
+        if (!movements) return
         if (currency === 'ARS') {
-            const initialValue = movementsArs.find(transaction => transaction.description === "Saldo Inicial");
-            return movementsArs[0].balance
+            const initialValue = movements.movementsArs.find(transaction => transaction.description === "Saldo Inicial");
+            return movements.movementsArs[0].balance
         }
-        const initialValue = movementsUsd.find(transaction => transaction.description === "Saldo Inicial");
-        return movementsUsd[0].balance
+        const initialValue = movements.movementsUsd.find(transaction => transaction.description === "Saldo Inicial");
+        return movements.movementsUsd[0].balance
     }
 
-    useEffect(() => {
-        getInfo()
-    }, [])
+    const renderItem = ({ item }) => (
+        <TransactionItem data={item} selectTransaction={selectTransaction} currency={currency} />
+    );
+
+    const getData = () => {
+        if (!movements) return
+        if (currency === 'ARS') {
+            return movements.movementsArs?.length !== 0 ? movements.movementsArs : [];
+        } else {
+            return movements.movementsUsd?.length !== 0 ? movements.movementsUsd : [];
+        }
+    };
 
     return (
         <>
@@ -114,19 +109,19 @@ const Disponibility = () => {
                                 <TouchableOpacity
                                     style={[themedStyles.button, themedStyles.buttonConfirm]}
                                     onPress={() => getReceipt(selectedTransaction?.comprobante)}
-                                    disabled={isLoading}
+                                    disabled={loading}
                                 >
                                     {
-                                        isLoading ?
+                                        loading ?
                                             <ActivityIndicator size={"small"} color={"white"} />
                                             :
                                             <Text style={themedStyles.textStyle}>Ver</Text>
                                     }
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    style={{ ...themedStyles.button, backgroundColor: isLoading ? "gray" : "#009F9F" }}
+                                    style={{ ...themedStyles.button, backgroundColor: loading ? "gray" : "#009F9F" }}
                                     onPress={() => setOpen(false)}
-                                    disabled={isLoading}
+                                    disabled={loading}
                                 >
                                     <Text style={themedStyles.textStyle}>Volver</Text>
                                 </TouchableOpacity>
@@ -145,26 +140,21 @@ const Disponibility = () => {
                         <BalanceCard balance={checkBalanceCurrency()} currency={currency} />
                     </LayoutCustom>
                 </LayoutCustom>
-                <LayoutCustom overflow="scroll" gap={15} ph={theme.paddings.medium} >
-                    <ScrollView>
-                        {
-                            currency === 'ARS' ?
-                                movementsArs.length !== 0 ?
-                                    movementsArs.map((t, i) => {
-                                        return <TransactionItem data={t} key={i} selectTransaction={selectTransaction} currency={currency} />
-                                    })
-                                    :
-                                    null
-                                :
-                                movementsUsd.length !== 0 ?
-                                    movementsUsd.map((t, i) => {
-                                        return <TransactionItem data={t} key={i} selectTransaction={selectTransaction} currency={currency} />
-                                    })
-                                    :
-                                    null
-                        }
-                    </ScrollView>
-                </LayoutCustom>
+                {
+                    isLoading ?
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: "center" }}>
+                            <Image source={require('../../../assets/gif/disponibilidad.gif')} style={{ width: 200, height: 200, marginTop: 20 }} />
+                        </View>
+                        :
+                        <LayoutCustom style={{ flex: 1 }} gap={15} ph={theme.paddings.medium} >
+                            <FlatList
+                                data={getData()}
+                                renderItem={renderItem}
+                                keyExtractor={(item, index) => index.toString()}
+                                contentContainerStyle={{ paddingBottom: 20 }}
+                            />
+                        </LayoutCustom>
+                }
             </Container>
         </>
     )
