@@ -104,11 +104,6 @@ export class PosicionesService extends RosvalHttpService {
       formatRosvalDate(dayjs().add(1, 'day')),
       'ARS',
     );
-    const posiciones48 = await this.findByDate(
-      accountId,
-      formatRosvalDate(dayjs().add(2, 'day')),
-      'ARS',
-    );
     const posicionesHoyUsd = await this.findByDate(
       accountId,
       formatRosvalDate(dayjs()),
@@ -119,35 +114,33 @@ export class PosicionesService extends RosvalHttpService {
       formatRosvalDate(dayjs().add(1, 'day')),
       'USD',
     );
-    const posiciones48Usd = await this.findByDate(
-      accountId,
-      formatRosvalDate(dayjs().add(2, 'day')),
-      'USD',
-    );
+
+    const dispoHoy = posicionesHoy.reduce((acum, p) => {
+      acum += p.cantidadLiquidada;
+      return acum;
+    }, 0);
+
+    const dispo24 = posiciones24.reduce((acum, p) => {
+      acum += p.cantidadLiquidada;
+      return acum;
+    }, 0);
+
+    const dispoHoyUsd = posicionesHoyUsd.reduce((acum, p) => {
+      acum += p.cantidadLiquidada;
+      return acum;
+    }, 0);
+
+    const dispo24Usd = posiciones24Usd.reduce((acum, p) => {
+      acum += p.cantidadLiquidada;
+      return acum;
+    }, 0);
 
     return {
-      dispoHoy: posicionesHoy[0].cantidadLiquidada * -1,
+      dispoHoy: dispoHoy,
       dispoHoy2: posicionesHoy[0].cantidadPendienteLiquidar * -1,
-      dispo24:
-        (posiciones24[0].cantidadLiquidada +
-          posiciones24[0].cantidadPendienteLiquidar) *
-        -1,
-      dispo48:
-        (posiciones48[0].cantidadLiquidada +
-          posiciones48[0].cantidadPendienteLiquidar) *
-        -1,
-      dispoHoyUsd:
-        (posicionesHoyUsd[0].cantidadLiquidada +
-          posicionesHoyUsd[0].cantidadPendienteLiquidar) *
-        -1,
-      dispo24Usd:
-        (posiciones24Usd[0].cantidadLiquidada +
-          posiciones24Usd[0].cantidadPendienteLiquidar) *
-        -1,
-      dispo48Usd:
-        (posiciones48Usd[0].cantidadLiquidada +
-          posiciones48Usd[0].cantidadPendienteLiquidar) *
-        -1,
+      dispo24: dispo24,
+      dispoHoyUsd: dispoHoyUsd,
+      dispo24Usd: dispo24Usd,
     };
   }
 }
