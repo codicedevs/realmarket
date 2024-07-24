@@ -80,8 +80,8 @@ const UserManager = () => {
     }
   }
 
-  const errorNotification = () => {
-    toast.error('Ocurrio un problema', {
+  const errorNotification = (text: string) => {
+    toast.error(`${text}`, {
       position: "bottom-center",
       autoClose: 3000,
       hideProgressBar: true,
@@ -118,21 +118,6 @@ const UserManager = () => {
     }
   }
 
-  const createUser = async (data: user) => {
-    try {
-      return await userService.createUser(data)
-    } catch (e) {
-      throw new Error
-    }
-  }
-
-  const editUser = async (data: user) => {
-    if (!id) {
-      throw new Error('No user ID provided for editUser');
-    }
-    return await userService.editUser(id, data);
-  }
-
   const onSubmit = async (data: user) => {
     const formData = {
       ...data,
@@ -142,19 +127,16 @@ const UserManager = () => {
       username: data.username.toLowerCase()
     };
     try {
-
       if (id) {
-        await editUser(formData)
+        await userService.editUser(id, formData)
       } else {
-        await createUser({ ...formData, isActive: true })
+        await userService.createUser({ ...formData, isActive: true })
       }
       successNotification()
-      setTimeout(() => {
-        goBack()
-      }, 500);
+      navigate("/")
     }
     catch (e) {
-      errorNotification()
+      errorNotification(e.response.data.message)
     }
     finally {
     }
