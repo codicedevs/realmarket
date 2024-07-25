@@ -38,7 +38,7 @@ const Finance = () => {
                     position.tipoTitulo === tipoTitulo && position.monedaCotizacion.includes(currency)
                 );
                 return acc;
-            }, {} as Record<keyof typeof financial, any[]>);
+            }, {} as Record<keyof typeof financial, IPosition[]>);
             setAssetsInfo(assetsInfo);
         }
     }
@@ -165,6 +165,15 @@ const Finance = () => {
                                 data={folderData}
                                 renderItem={renderFolderCard}
                                 keyExtractor={(item, index) => index.toString()}
+                                showsVerticalScrollIndicator={false}
+                                initialNumToRender={20}
+                                removeClippedSubviews={true}
+                                windowSize={10}
+                                maxToRenderPerBatch={10}
+                                updateCellsBatchingPeriod={50}
+                                getItemLayout={(data, index) => (
+                                    { length: 60, offset: 60 * index, index }
+                                )}
                             />
                         </View>
                 }
