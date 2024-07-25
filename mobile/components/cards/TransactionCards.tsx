@@ -1,4 +1,4 @@
-import React, { memo, useContext } from "react";
+import React, { memo } from "react";
 // ----------------------------- UI kitten -----------------------------------
 import {
     Avatar,
@@ -7,7 +7,6 @@ import {
 } from "@ui-kitten/components";
 // ----------------------------- Lodash -----------------------------------
 import { Text, TouchableOpacity } from "react-native";
-import { AppContext } from "../../context/AppContext";
 import { useInfo } from "../../context/InfoProvider";
 import { currencyFormat } from "../../utils/number";
 import theme from "../../utils/theme";
@@ -32,12 +31,11 @@ export interface IPosition {
     precioUnitario: number;
     monedaCotizacion: string;
     fechaPrecio: string;
-    parking: any | null; // Utiliza un tipo más específico si es posible
+    parking: any | null;
 }
 
 const TransactionCards = memo(
     ({ data, index, selectAsset }: { data: IPosition; index: number, selectAsset: (data: IPosition) => void }) => {
-        const { currency } = useContext(AppContext)
         const styles = useStyleSheet(themedStyles);
         const amount = data.cantidadPendienteLiquidar - data.cantidadLiquidada
         const { currencyPositions } = useInfo()
@@ -46,12 +44,22 @@ const TransactionCards = memo(
             var total: number
             if (data.monedaCotizacion === 'USDB') {
                 total = amount * currencyPositions.usdPriceBcra
-            } else if (data.monedaCotizacion === 'USD' || 'USDC') {
+            } else if (data.monedaCotizacion === 'USD' || data.monedaCotizacion === 'USDC') {
                 total = amount * currencyPositions.usdPrice
             } else {
                 total = amount * data.precioUnitario
             }
             return total
+        }
+
+        const checkCoin = () => {
+            if (data.monedaCotizacion === 'USDB') {
+                return currencyPositions.usdPriceBcra
+            } else if (data.monedaCotizacion === 'USD' || data.monedaCotizacion === 'USDC') {
+                return currencyPositions.usdPrice
+            } else {
+                return data.precioUnitario
+            }
         }
 
         return (
@@ -72,7 +80,7 @@ const TransactionCards = memo(
                             <Text style={themedStyles.currencyText}>{data.simboloLocal}</Text>
                         </LayoutCustom>
                         <LayoutCustom style={themedStyles.smallerContainer}>
-                            <Text style={themedStyles.normalTextSize}>{currencyFormat(data.precioUnitario, 'ARS')}</Text>
+                            <Text style={themedStyles.normalTextSize}>{currencyFormat(checkCoin(), 'ARS')}</Text>
                         </LayoutCustom>
                         <LayoutCustom pr={theme.paddings.small} style={themedStyles.biggerContainer}>
                             <Text numberOfLines={1} style={themedStyles.normalTextSize}>{currencyFormat(checkValue(), 'ARS')}</Text>
