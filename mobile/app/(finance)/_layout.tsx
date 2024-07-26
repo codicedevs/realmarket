@@ -20,6 +20,8 @@ const TabLayout = () => {
   const positionWhiteIcon = require("../../assets/Tab/walletBlanco.png")
   const actionsIcon = require("../../assets/Tab/actionsIcon.png")
   const actionsWhiteIcon = require("../../assets/Tab/actionsBlanco.png")
+  const ordersIcon = require("../../assets/Tab/orders.png")
+  const ordersWhiteIcon = require("../../assets/Tab/ordersBlanco.png")
 
 
   return (
@@ -47,11 +49,21 @@ const TabLayout = () => {
           </View>
         )
       }} name='position' />
+      <Tabs.Screen
+        options={{
+          title: "Disponibilidad",
+          tabBarIcon: ({ focused }) => (
+            <View style={{ ...themedStyles.singleTabStyle }}>
+              <Image style={themedStyles.imageStyle} source={focused ? actionsWhiteIcon : actionsIcon} />
+            </View>
+          )
+        }} name='availability'
+      />
       <Tabs.Screen options={{
         title: "Órdenes",
         tabBarIcon: ({ focused }) => (
           <View style={{ ...themedStyles.singleTabStyle }}>
-            <Image style={themedStyles.imageStyle} source={focused ? actionsWhiteIcon : actionsIcon} />
+            <Image style={themedStyles.imageStyle} source={focused ? ordersWhiteIcon : ordersIcon} />
           </View>
         )
       }} name='Orders' />

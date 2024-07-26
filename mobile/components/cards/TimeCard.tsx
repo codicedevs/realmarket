@@ -20,7 +20,7 @@ const TimeCard = ({ item, currency }: { item: CreditCardProps, currency: string 
       <ImageBackground style={{ ...themedStyles.imageBack, backgroundColor: item.color }} source={require("../../assets/background/colorful-background.png")}>
         <LayoutCustom alignSelfCenter itemsCenter padding={theme.paddings.medium} style={themedStyles.textContainer}>
           <Image style={themedStyles.image} source={item.icon} />
-          <Text style={{ color: 'white', fontSize: 26, paddingVertical: theme.margins.small, marginBottom: 15, fontFamily: "Lato-Regular" }} >{isLoading ? <ActivityIndicator size={'large'} /> : currencyFormat(item.balance, currency)}</Text>
+          <Text style={{ color: 'white', fontSize: 26, paddingVertical: theme.margins.small, marginBottom: 15, fontFamily: "Lato-Regular" }} >{isLoading ? <ActivityIndicator color={'white'} size={'large'} /> : currencyFormat(item.balance, currency)}</Text>
         </LayoutCustom>
       </ImageBackground>
     </LayoutCustom>
