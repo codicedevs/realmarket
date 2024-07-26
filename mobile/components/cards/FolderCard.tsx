@@ -63,6 +63,10 @@ const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPositi
       {
         open &&
         <>
+          {
+            data.length > 0 &&
+            <TotalCard data={totalAmount()} index={data.length} />
+          }
           <FlatList
             data={data}
             renderItem={renderItem}
@@ -77,10 +81,6 @@ const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPositi
             maxToRenderPerBatch={10}
             updateCellsBatchingPeriod={50}
           />
-          {
-            data.length > 0 &&
-            <TotalCard data={totalAmount()} index={data.length} />
-          }
         </>
       }
     </>

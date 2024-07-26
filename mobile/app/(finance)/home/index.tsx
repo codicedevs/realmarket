@@ -17,6 +17,7 @@ import { useSession } from '../../../context/AuthProvider'
 import { useInfo } from '../../../context/InfoProvider'
 import { useLoading } from '../../../context/LoadingProvider'
 import { orderOptions } from '../../../types/order.types'
+import { currencyFormat } from '../../../utils/number'
 import theme from '../../../utils/theme'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -126,7 +127,7 @@ const Home = () => {
               <Image style={themedStyles.img} source={require("../../../assets/Icons/money.png")} />
               <LayoutCustom ml={theme.margins.small} style={{ alignItems: "flex-start" }}>
                 <Text style={themedStyles.position}>Posiciones</Text>
-                <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator color={'#009F9F'} size={'small'} /> : `$ ${currencyPositions?.arsPositions}`}</Text>
+                <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator color={'#009F9F'} size={'small'} /> : currencyFormat(currencyPositions?.arsPositions, 'ARS')}</Text>
               </LayoutCustom>
             </LayoutCustom>
           </TouchableWithoutFeedback>
