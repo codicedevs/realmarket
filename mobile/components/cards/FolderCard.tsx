@@ -1,13 +1,49 @@
 import { Icon, StyleService } from '@ui-kitten/components'
-import React, { useState } from 'react'
-import { Text } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Dimensions, FlatList, Text, View } from 'react-native'
+import { useInfo } from '../../context/InfoProvider'
 import { financial } from '../../types/financial.types'
 import theme from '../../utils/theme'
 import LayoutCustom from '../LayoutCustom'
+import TotalCard from './TotalCard'
 import TransactionCards, { IPosition } from './TransactionCards'
+const windowHeight = Dimensions.get("window").width;
 
 const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPosition[], selectAsset: (data: IPosition) => void }) => {
   const [open, setOpen] = useState(false)
+  const itemHeight = 60
+  const { currencyPositions } = useInfo()
+
+  const renderItem = ({ item, index }) => (
+    <View style={{ height: itemHeight }}>
+      <TransactionCards data={item} index={index} selectAsset={selectAsset} />
+    </View>
+  );
+
+
+  const totalAmount = () => {
+    const total = data.reduce((acc, cur) => {
+      var suma: number
+      if (cur.monedaCotizacion === 'USDB') {
+        suma = (cur.cantidadPendienteLiquidar - cur.cantidadLiquidada) * currencyPositions.usdPriceBcra
+      } else if (cur.monedaCotizacion === 'USD' || cur.monedaCotizacion === 'USDC') {
+        suma = (cur.cantidadPendienteLiquidar - cur.cantidadLiquidada) * currencyPositions.usdPrice
+      } else {
+        suma = ((cur.cantidadPendienteLiquidar - cur.cantidadLiquidada) * cur.precioUnitario)
+      }
+      return acc + suma;
+    }, 0);
+
+    return ({
+      total: total,
+      simboloLocal: 'TOTAL',
+    });
+
+  };
+
+  useEffect(() => {
+    totalAmount()
+  }, [])
 
   const toggle = () => {
     setOpen(!open)
@@ -26,9 +62,23 @@ const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPositi
       }
       {
         open &&
-        data.map((d, index) => {
-          return <TransactionCards data={d} index={index} selectAsset={selectAsset} key={index} />
-        })
+        <>
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            getItemLayout={(data, index) => (
+              { length: itemHeight, offset: itemHeight * index, index }
+            )}
+            ListHeaderComponent={<TotalCard data={totalAmount()} index={data.length} />}
+            showsVerticalScrollIndicator={false}
+            initialNumToRender={20}
+            removeClippedSubviews={true}
+            windowSize={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={50}
+          />
+        </>
       }
     </>
   )

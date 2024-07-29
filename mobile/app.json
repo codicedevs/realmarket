@@ -1,31 +1,19 @@
 {
   "expo": {
-    "name": "realmarket",
-    "slug": "realmarket",
-    "version": "1.0.0",
+    "name": "Real Market Inversiones",
+    "slug": "real-market-inversiones",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/rm-negro.png",
     "scheme": "realmarket",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/rm-negro.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.codice.real-market-argentina-2024"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.mativant.realmarket",
-      "cleartTextTrafficermitted": true
+      "bundleIdentifier": "com.codice.real-market-inversiones",
+      "buildNumber": "2"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,15 +23,24 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/Lato/Lato-Regular.ttf","./assets/fonts/Lato/Lato-Bold.ttf" ]
+          "fonts": [
+            "./assets/fonts/Lato/Lato-Regular.ttf",
+            "./assets/fonts/Lato/Lato-Bold.ttf"
+          ]
         }
-    ]
+      ]
     ],
     "extra": {
       "router": {
         "origin": false
       },
-      "eas": {}
+      "eas": {
+        "projectId": "c7655900-1729-4406-8096-96427a396e58"
+      }
+    },
+    "owner": "widoski",
+    "android": {
+      "package": "com.widoski.realmarketinversiones"
     }
   }
 }

@@ -10,7 +10,6 @@ import './users.css'
 
 const { confirm } = Modal;
 
-
 const Users = () => {
   const [users, setUsers] = useState([])
   const navigate = useNavigate();
@@ -42,6 +41,7 @@ const Users = () => {
       theme: "light",
       transition: Bounce
     });
+
   }
 
   const sendToCreation = () => {
@@ -53,9 +53,12 @@ const Users = () => {
   }
 
   const bringUsers = async () => {
-    const res = await userService.getAll()
-    console.log(res.data)
-    setUsers(res.data)
+    try {
+      const res = await userService.getAll()
+      setUsers(res.data)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const deleteUser = async (id: number) => {
@@ -92,7 +95,7 @@ const Users = () => {
     <div style={{ width: '100%', height: '100%', padding: 10 }}>
       <Space className="addButtonContainer">
         <Button type="primary" onClick={sendToCreation}>
-          +
+          Crear usuario
         </Button>
       </Space>
       <Table dataSource={users}>
@@ -105,8 +108,8 @@ const Users = () => {
           key="action"
           render={(_: any, record: IUser) => (
             <Space size="small" style={{ display: 'flex', flexDirection: 'column' }}>
-              <a onClick={() => sendToEdition(record._id)}>Update</a>
-              <a onClick={() => deleteModal(record._id)}>Delete</a>
+              <a onClick={() => sendToEdition(record._id)}>Actualizar</a>
+              <a onClick={() => deleteModal(record._id)}>Borrar</a>
             </Space>
           )}
         />

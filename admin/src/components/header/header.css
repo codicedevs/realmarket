@@ -1,14 +1,15 @@
 .header-wrapper {
-  height: 10vh;
+  height: 9%;
   display: flex;
+  width: 100%;
 }
 
 .container {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   width: 100%;
   padding: 0 10px;
+  align-items: center;
 }
 
 .logo {
@@ -16,7 +17,7 @@
   background-size: contain;
   background-position: left;
   height: 80px;
-  width: 100%;
+  width: 10%;
   background-repeat: no-repeat;
 }
 
@@ -24,4 +25,63 @@
   color: white;
   display: flex;
   align-items: center;
+  padding-right: 10px;
+  cursor: pointer;
 }
+
+.modal {
+  background-color: #ffffff;
+  /* Fondo transparente para el modal */
+}
+
+.modalContentWrapper {
+  background-color: #ffffff;
+  /* Fondo blanco para el contenido */
+  padding: 40px;
+  /* Relleno uniforme */
+  border-radius: 12px;
+  /* Esquinas redondeadas */
+  /* Sombra suave */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.modalContentWrapper p {
+
+  margin: 10px 0;
+  padding: 12px 24px;
+  background-color: #0069d9;
+  /* Azul suave */
+  color: white;
+  border-radius: 8px;
+  /* Botones con esquinas redondeadas */
+  cursor: pointer;
+  font-weight: bold;
+  /* Texto en negrita */
+  text-align: center;
+  /* Centrar el texto */
+  width: 35%;
+  /* Ancho del botón */
+  max-width: 300px;
+  /* Ancho máximo del botón */
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.modalContentWrapper p:hover {
+  background-color: #0053b3;
+  /* Azul más oscuro al pasar el cursor */
+  transform: scale(1.05);
+  /* Escalar el botón al pasar el cursor */
+}
+
+:where(.css-dev-only-do-not-override-m4timi).ant-layout-header {
+  /* height: 64px; */
+  padding: 0 0;
+  color: rgba(0, 0, 0, 0.88);
+  line-height: 64px;
+  background: #ebecee
+}
+
+/* todo esto para sacar el padding extra del header */

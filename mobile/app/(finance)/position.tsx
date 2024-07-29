@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { StyleService } from "@ui-kitten/components"
 import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native"
+import { Dimensions, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
 import Header from "../../components/CustomHeader"
@@ -10,6 +9,8 @@ import LayoutCustom from "../../components/LayoutCustom"
 import FolderCard from "../../components/cards/FolderCard"
 import { IPosition } from "../../components/cards/TransactionCards"
 import { AppContext } from "../../context/AppContext"
+import { useInfo } from "../../context/InfoProvider"
+import { useLoading } from "../../context/LoadingProvider"
 import { financial } from "../../types/financial.types"
 import { currencyFormat } from "../../utils/number"
 import theme from "../../utils/theme"
@@ -21,24 +22,8 @@ const Finance = () => {
     const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
     const { currency } = useContext(AppContext)
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
-    const [positions, setPositions] = useState({
-        arsPositions: 0,
-        usdPositions: 0
-    })
-
-    useEffect(() => {
-
-        async function storage() {
-            const storage = await AsyncStorage.getItem('positions')
-            const value = JSON.parse(storage)
-            setPositions({
-                arsPositions: value.totalPosiciones,
-                usdPositions: value.usdPrice
-            })
-        }
-        storage()
-    }
-        , [])
+    const { isLoading } = useLoading()
+    const { currencyPositions } = useInfo()
 
     const selectAsset = (data: IPosition) => {
         setSelectedAsset(data)
@@ -46,19 +31,30 @@ const Finance = () => {
     }
 
     const fetchAndOrganizePositions = async () => {
-        const value = JSON.parse(await AsyncStorage.getItem('positions'))
-        if (value && value.posiciones) {
+        if (currencyPositions && currencyPositions.posiciones) {
             const assetsInfo = Object.keys(financial).reduce((acc, key) => {
                 const tipoTitulo = financial[key as keyof typeof financial];
-                acc[key] = value.posiciones.filter(position =>
+                acc[key] = currencyPositions.posiciones.filter(position =>
                     position.tipoTitulo === tipoTitulo && position.monedaCotizacion.includes(currency)
                 );
                 return acc;
-            }, {} as Record<keyof typeof financial, any[]>);
-
+            }, {} as Record<keyof typeof financial, IPosition[]>);
             setAssetsInfo(assetsInfo);
         }
     }
+
+    useEffect(() => {
+        fetchAndOrganizePositions()
+    }, [currencyPositions])
+
+    const renderFolderCard = ({ item, index }) => (
+        <FolderCard title={item.title} data={item.data} selectAsset={selectAsset} key={index} />
+    );
+
+    const folderData = Object.keys(assetsInfo).map((key) => ({
+        title: key,
+        data: assetsInfo[key]
+    }));
 
     useFocusEffect(
         useCallback(() => {
@@ -105,15 +101,22 @@ const Finance = () => {
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Importe:</Text>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{currencyFormat((selectedAsset.cantidadPendienteLiquidar - selectedAsset.cantidadLiquidada) * selectedAsset.precioUnitario, currency)}</Text>
                                     </View>
+                                    {
+                                        selectedAsset.tipoTitulo === 'Pagarés' &&
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>P.unitario:</Text>
+                                            <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{currencyFormat(selectedAsset.precioUnitario, 'ARS')}</Text>
+                                        </View>
+                                    }
                                 </>
                             }
                         </LayoutCustom>
-                        <Pressable
+                        <TouchableOpacity
                             style={[themedStyles.button, themedStyles.buttonClose]}
                             onPress={() => setOpen(false)}
                         >
                             <Text style={themedStyles.textStyle}>Volver</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     </LayoutCustom>
                 </LayoutCustom>
             </Modal>
@@ -130,8 +133,8 @@ const Finance = () => {
                             horizontal
                             justify="space-between"
                         >
-                            <Text style={themedStyles.textColor}>Total general</Text>
-                            <Text style={themedStyles.textColor}>{currencyFormat(currency === 'ARS' ? positions.arsPositions : positions.usdPositions, currency)}</Text>
+                            <Text style={themedStyles.textColor}>{`Total general`}</Text>
+                            <Text style={themedStyles.textColor}>{currencyFormat(currencyPositions?.arsPositions, 'ARS')}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                     <LayoutCustom ph={theme.paddings.large}>
@@ -151,18 +154,29 @@ const Finance = () => {
                         </LayoutCustom>
                     </LayoutCustom>
                 </LayoutCustom>
-                <View style={themedStyles.scrollContainer}>
-                    <ScrollView>
-                        {
-                            Object.keys(assetsInfo).length !== 0 ?
-                                Object.keys(assetsInfo).map((i, index) => {
-                                    return <FolderCard title={i} data={assetsInfo[i]} selectAsset={selectAsset} key={index} />
-                                })
-                                :
-                                null
-                        }
-                    </ScrollView>
-                </View>
+                {
+                    isLoading ?
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+                            <Image source={require('../../assets/gif/Statistics.gif')} style={{ width: 250, height: 250, marginTop: 20 }} />
+                        </View>
+                        :
+                        <View style={themedStyles.scrollContainer}>
+                            <FlatList
+                                data={folderData}
+                                renderItem={renderFolderCard}
+                                keyExtractor={(item, index) => index.toString()}
+                                showsVerticalScrollIndicator={false}
+                                initialNumToRender={20}
+                                removeClippedSubviews={true}
+                                windowSize={10}
+                                maxToRenderPerBatch={10}
+                                updateCellsBatchingPeriod={50}
+                                getItemLayout={(data, index) => (
+                                    { length: 60, offset: 60 * index, index }
+                                )}
+                            />
+                        </View>
+                }
             </Container>
         </>
     )
