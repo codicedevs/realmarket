@@ -1,10 +1,10 @@
 import { StyleService } from '@ui-kitten/components'
 import React, { useState } from 'react'
 import { Dimensions, TouchableOpacity } from 'react-native'
+import ActionCard from '../../components/cards/ActionsCards'
 import Container from '../../components/Container'
 import Header from '../../components/CustomHeader'
 import LayoutCustom from '../../components/LayoutCustom'
-import ActionCard from '../../components/cards/ActionsCards'
 import OrderModal from '../../components/orderModal'
 import { orderOptions } from '../../types/order.types'
 import theme from '../../utils/theme'
@@ -22,9 +22,6 @@ const Positions = () => {
       {order && <OrderModal order={order} onClose={() => setOrder(null)} />}
       <Container style={themedStyles.container}>
         <Header title={'Órdenes'} />
-        {/* <View style={{ alignItems: 'center' }}>
-          <Image style={{ width: 100, height: 100 }} source={require("../../assets/Icons/trimin.jpg")} />
-        </View> */}
         <LayoutCustom style={themedStyles.content}>
           <LayoutCustom style={themedStyles.cardsContainer} justify="space-evenly">
             <LayoutCustom style={themedStyles.cardSize}>
