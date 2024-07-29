@@ -10,7 +10,6 @@ import { Text, TouchableOpacity } from "react-native";
 import { useInfo } from "../../context/InfoProvider";
 import { currencyFormat } from "../../utils/number";
 import theme from "../../utils/theme";
-import AnimatedAppearance, { Animation_Types_Enum } from "../AnimatedAppearance";
 import LayoutCustom from "../LayoutCustom";
 
 export interface IPosition {
@@ -64,30 +63,30 @@ const TransactionCards = memo(
 
         return (
             <TouchableOpacity onPress={() => selectAsset(data)}>
-                <AnimatedAppearance type={Animation_Types_Enum.SlideInLeft} index={index}>
-                    <LayoutCustom
-                        justify="space-between"
-                        style={styles.item}
-                        horizontal
-                        pv={theme.paddings.xSmall}
-                        itemsCenter
-                        ph={theme.paddings.xSmall}
-                    >
-                        <LayoutCustom style={themedStyles.avatarContainer}>
-                            <Avatar source={{ uri: "https://us.123rf.com/450wm/ahasoft2000/ahasoft20001712/ahasoft2000171204678/92468343-icono-de-moneda-de-plata-d%C3%B3lar-americano-el-estilo-de-trama-es-un-s%C3%ADmbolo-de-moneda-plana-gris.jpg" }} size="tiny" />
-                        </LayoutCustom>
-                        <LayoutCustom style={themedStyles.smallerContainer}>
-                            <Text style={themedStyles.currencyText}>{data.simboloLocal}</Text>
-                        </LayoutCustom>
-                        <LayoutCustom style={themedStyles.smallerContainer}>
-                            <Text style={themedStyles.normalTextSize}>{currencyFormat(checkCoin(), 'ARS')}</Text>
-                        </LayoutCustom>
-                        <LayoutCustom pr={theme.paddings.small} style={themedStyles.biggerContainer}>
-                            <Text numberOfLines={1} style={themedStyles.normalTextSize}>{currencyFormat(checkValue(), 'ARS')}</Text>
-                            <Text style={themedStyles.normalTextSize}>{amount}</Text>
-                        </LayoutCustom>
+                {/* <AnimatedAppearance type={Animation_Types_Enum.SlideInLeft} index={index}> */}
+                <LayoutCustom
+                    justify="space-between"
+                    style={styles.item}
+                    horizontal
+                    pv={theme.paddings.xSmall}
+                    itemsCenter
+                    ph={theme.paddings.xSmall}
+                >
+                    <LayoutCustom style={themedStyles.avatarContainer}>
+                        <Avatar source={{ uri: "https://us.123rf.com/450wm/ahasoft2000/ahasoft20001712/ahasoft2000171204678/92468343-icono-de-moneda-de-plata-d%C3%B3lar-americano-el-estilo-de-trama-es-un-s%C3%ADmbolo-de-moneda-plana-gris.jpg" }} size="tiny" />
                     </LayoutCustom>
-                </AnimatedAppearance>
+                    <LayoutCustom style={themedStyles.smallerContainer}>
+                        <Text style={themedStyles.currencyText}>{data.simboloLocal}</Text>
+                    </LayoutCustom>
+                    <LayoutCustom style={themedStyles.smallerContainer}>
+                        <Text style={themedStyles.normalTextSize}>{currencyFormat(checkCoin(), 'ARS')}</Text>
+                    </LayoutCustom>
+                    <LayoutCustom pr={theme.paddings.small} style={themedStyles.biggerContainer}>
+                        <Text numberOfLines={1} style={themedStyles.normalTextSize}>{currencyFormat(checkValue(), 'ARS')}</Text>
+                        <Text style={themedStyles.normalTextSize}>{amount}</Text>
+                    </LayoutCustom>
+                </LayoutCustom>
+                {/* </AnimatedAppearance> */}
             </TouchableOpacity>
         );
     }

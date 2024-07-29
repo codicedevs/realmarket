@@ -8,7 +8,6 @@ import {
 import { Dimensions, Text, TouchableOpacity } from "react-native";
 import { currencyFormat } from "../../utils/number";
 import theme from "../../utils/theme";
-import AnimatedAppearance, { Animation_Types_Enum } from "../AnimatedAppearance";
 import LayoutCustom from "../LayoutCustom";
 const windowHeight = Dimensions.get("window").height;
 
@@ -19,25 +18,25 @@ const TotalCard = memo(
 
     return (
       <TouchableOpacity >
-        <AnimatedAppearance type={Animation_Types_Enum.SlideInLeft} index={index}>
-          <LayoutCustom
-            justify="space-between"
-            style={styles.item}
-            horizontal
-            pv={theme.paddings.xSmall}
-            itemsCenter
-            ph={theme.paddings.xSmall}
-          >
-            <LayoutCustom style={themedStyles.avatarContainer}>
-            </LayoutCustom>
-            <LayoutCustom style={themedStyles.smallerContainer}>
-              <Text style={themedStyles.currencyText}>Total</Text>
-            </LayoutCustom>
-            <LayoutCustom pr={theme.paddings.small} style={themedStyles.biggerContainer}>
-              <Text numberOfLines={1} style={themedStyles.normalTextSize}>{currencyFormat(data.total, 'ARS')}</Text>
-            </LayoutCustom>
+        {/* <AnimatedAppearance type={Animation_Types_Enum.SlideInLeft} index={index}> */}
+        <LayoutCustom
+          justify="space-between"
+          style={styles.item}
+          horizontal
+          pv={theme.paddings.xSmall}
+          itemsCenter
+          ph={theme.paddings.xSmall}
+        >
+          <LayoutCustom style={themedStyles.avatarContainer}>
           </LayoutCustom>
-        </AnimatedAppearance>
+          <LayoutCustom style={themedStyles.smallerContainer}>
+            <Text style={themedStyles.currencyText}>Total</Text>
+          </LayoutCustom>
+          <LayoutCustom pr={theme.paddings.small} style={themedStyles.biggerContainer}>
+            <Text numberOfLines={1} style={themedStyles.normalTextSize}>{currencyFormat(data.total, 'ARS')}</Text>
+          </LayoutCustom>
+        </LayoutCustom>
+        {/* </AnimatedAppearance> */}
       </TouchableOpacity>
     );
   }
