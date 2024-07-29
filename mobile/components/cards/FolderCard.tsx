@@ -25,11 +25,11 @@ const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPositi
     const total = data.reduce((acc, cur) => {
       var suma: number
       if (cur.monedaCotizacion === 'USDB') {
-        suma = (cur.cantidadPendienteLiquidar + cur.cantidadLiquidada) * currencyPositions.usdPriceBcra
+        suma = (cur.cantidadPendienteLiquidar - cur.cantidadLiquidada) * currencyPositions.usdPriceBcra
       } else if (cur.monedaCotizacion === 'USD' || cur.monedaCotizacion === 'USDC') {
-        suma = (cur.cantidadPendienteLiquidar + cur.cantidadLiquidada) * currencyPositions.usdPrice
+        suma = (cur.cantidadPendienteLiquidar - cur.cantidadLiquidada) * currencyPositions.usdPrice
       } else {
-        suma = ((cur.cantidadPendienteLiquidar + cur.cantidadLiquidada) * cur.precioUnitario)
+        suma = ((cur.cantidadPendienteLiquidar - cur.cantidadLiquidada) * cur.precioUnitario)
       }
       return acc + suma;
     }, 0);
@@ -63,10 +63,6 @@ const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPositi
       {
         open &&
         <>
-          {
-            data.length > 0 &&
-            <TotalCard data={totalAmount()} index={data.length} />
-          }
           <FlatList
             data={data}
             renderItem={renderItem}
@@ -74,6 +70,7 @@ const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPositi
             getItemLayout={(data, index) => (
               { length: itemHeight, offset: itemHeight * index, index }
             )}
+            ListHeaderComponent={<TotalCard data={totalAmount()} index={data.length} />}
             showsVerticalScrollIndicator={false}
             initialNumToRender={20}
             removeClippedSubviews={true}
