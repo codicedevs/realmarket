@@ -7,7 +7,7 @@ import LayoutCustom from './LayoutCustom'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const squareAnimation = require('../assets/animations/animated-loader.json')
+const squareAnimation = require('../assets/animations/animated-loader-circles.json')
 const pageAnimation = require('../assets/animations/page-animation.json')
 const circleTriangle = require('../assets/animations/circles-triangle.json')
 
