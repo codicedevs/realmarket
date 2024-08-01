@@ -31,10 +31,11 @@ export function InfoProvider(props: React.PropsWithChildren) {
   const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
   const [currencyPositions, setCurrencyPositions] = useState<currencyPositions>(null)
   const [movements, setMovements] = useState<currencyMovements>(null)
-  const { setIsLoading } = useLoading()
+  const { setIsLoading, setLoadingScreen } = useLoading()
 
   const getUserData = async () => {
     try {
+      setLoadingScreen(true)
       setIsLoading(true)
       // primera parte donde guardo datos
       const res = await disponibilidadService.getCashPositions() // cifras disponibilidad de home
@@ -60,6 +61,7 @@ export function InfoProvider(props: React.PropsWithChildren) {
     } catch (e) {
 
     } finally {
+      setLoadingScreen(false)
       setIsLoading(false)
     }
   }
