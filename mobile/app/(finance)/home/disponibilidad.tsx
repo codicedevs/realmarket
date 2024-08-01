@@ -13,7 +13,6 @@ import TransactionItem, { ITransactionItemProps } from "../../../components/Tran
 import BalanceCard from "../../../components/cards/BalanceCard"
 import { AppContext } from "../../../context/AppContext"
 import { useLoading } from "../../../context/LoadingProvider"
-import usePromise from "../../../hooks/usePromise"
 import { useSaveFile } from "../../../hooks/useSaveFile"
 import movimientosService from "../../../service/movimientos.service"
 import { currencyFormat } from "../../../utils/number"
@@ -28,7 +27,6 @@ const Disponibility = () => {
     const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps>(null)
     const [movementsArs, setMovementsArs] = useState([])
     const [movementsUsd, setMovementsUsd] = useState([])
-    const handlePromise = usePromise()
     const { saveFile } = useSaveFile()
     const { setIsLoading } = useLoading()
 
@@ -74,15 +72,6 @@ const Disponibility = () => {
         } finally {
             setIsLoading(false)
         }
-    }
-
-    const promises = async () => {
-        const [res, resUsd] = await Promise.all([
-            movimientosService.getMovementsArs(),
-            movimientosService.getMovementsUsd()
-        ])
-        setMovementsArs(res.data.reverse())
-        setMovementsUsd(resUsd.data.reverse())
     }
 
     const checkMovements = () => {

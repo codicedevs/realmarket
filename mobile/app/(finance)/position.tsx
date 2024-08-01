@@ -3,7 +3,7 @@ import { useQuery } from "@realm/react"
 import { StyleService } from "@ui-kitten/components"
 import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useState } from "react"
-import { Dimensions, Modal, Pressable, ScrollView, Text, View } from "react-native"
+import { Dimensions, FlatList, Modal, Pressable, Text, View } from "react-native"
 import { Position } from "../../Realm/Schemas"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
@@ -162,16 +162,19 @@ const Finance = () => {
                     </LayoutCustom>
                 </LayoutCustom>
                 <View style={themedStyles.scrollContainer}>
-                    <ScrollView>
-                        {
-                            Object.keys(assetsInfo).length !== 0 ?
-                                Object.keys(assetsInfo).map((i, index) => {
-                                    return <FolderCard title={i} data={assetsInfo[i]} selectAsset={selectAsset} key={index} />
-                                })
-                                :
-                                null
-                        }
-                    </ScrollView>
+                    {/* <ScrollView> */}
+                    {
+                        Object.keys(assetsInfo).length !== 0 &&
+                        <FlatList
+                            data={Object.keys(assetsInfo)}
+                            renderItem={({ item, index }) => <FolderCard title={item} data={assetsInfo[item]} selectAsset={selectAsset} key={index} />}
+                        />
+                        // Object.keys(assetsInfo).map((i, index) => {
+                        //     return <FolderCard title={i} data={assetsInfo[i]} selectAsset={selectAsset} key={index} />
+                        // })
+
+                    }
+                    {/* </ScrollView> */}
                 </View>
             </Container>
         </>

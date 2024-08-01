@@ -1,6 +1,6 @@
 import { Icon, StyleService } from '@ui-kitten/components'
 import React, { useState } from 'react'
-import { Text } from 'react-native'
+import { FlatList, Text } from 'react-native'
 import { financial } from '../../types/financial.types'
 import theme from '../../utils/theme'
 import LayoutCustom from '../LayoutCustom'
@@ -26,9 +26,13 @@ const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPositi
       }
       {
         open ?
-          data.map((d, index) => {
-            return <TransactionCards data={d} index={index} selectAsset={selectAsset} key={index} />
-          })
+          <FlatList
+            data={data}
+            renderItem={({ item, index }) => <TransactionCards data={item} index={index} selectAsset={selectAsset} key={index} />}
+          />
+          // data.map((d, index) => {
+          //   return <TransactionCards data={d} index={index} selectAsset={selectAsset} key={index} />
+          // })
           :
           null
       }
