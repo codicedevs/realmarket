@@ -1,9 +1,10 @@
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
-  MinLength,
+  MinLength
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -28,6 +29,8 @@ export class CreateUserDto {
   email: string;
   @IsString()
   telefono: string;
+  @IsBoolean()
+  isActive: boolean;
 }
 
 export class UpdateUserDto {
@@ -40,12 +43,20 @@ export class UpdateUserDto {
   nombre?: string;
   @IsOptional()
   @IsString()
-  accountId: string;
+  accountId?: string;
+  @IsOptional()
   @IsString()
   @IsEmail()
-  email: string;
+  email?: string;
   @IsString()
-  telefono: string;
+  @IsOptional()
+  telefono?: string;
+  @IsString()
+  @IsOptional()
+  username?: string;
+  @IsString()
+  @IsOptional()
+  pass?: string
 }
 
 export class ChangeUserPassDto {

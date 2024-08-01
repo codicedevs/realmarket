@@ -1,22 +1,50 @@
-import { Injectable } from '@nestjs/common';
-
+import { Injectable, Logger } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import { RosvalHttpService } from 'src/rosval-http/rosval-http.service';
 import { formatRosvalDate } from 'src/utils/date';
-import { getDolar, getDolarBcra } from 'src/utils/dolar';
 import { Posicion } from './entities/posicion.entity';
+
+export interface Dolar {
+  usd: number;
+  usdb: number;
+}
+
+const logger = new Logger(RosvalHttpService.name);
 
 @Injectable()
 export class PosicionesService extends RosvalHttpService {
+  private readonly logger = new Logger();
+
+  async getDolar(date: string): Promise<Dolar> {
+    try {
+      const responseUSD = await this.get('unidades/cotizaciones', {
+        params: { fecha: date, unidad: 'USD', moneda: 'ARS' },
+      });
+      const responseUSDB = await this.get('unidades/cotizaciones', {
+        params: { fecha: date, unidad: 'USDB', moneda: 'ARS' },
+      });
+
+      return {
+        usd: responseUSD.data[0].cierre,
+        usdb: responseUSDB.data[0].cierre,
+      };
+    } catch (err) {
+      console.log('Error', err.message);
+    }
+  }
+
   async findByDate(
     accountId: string,
     from: string,
     especie?: string,
   ): Promise<Posicion[]> {
+    const timeLabel = Date.now().toString();
+    this.logger.log('arranco el logger a las ' + timeLabel);
     const response = await this.get<Posicion[]>(
       `cuentas/${accountId}/posiciones`,
       { params: { from, especie } },
     );
+    this.logger.log('Aca termino de llamar posiciones ' + new Date());
     return response.data;
   }
 
@@ -25,23 +53,41 @@ export class PosicionesService extends RosvalHttpService {
       accountId,
       formatRosvalDate(dayjs()),
     );
+    const fechaDolar = formatRosvalDate(dayjs().subtract(1, 'day'));
+    const pruebaDolar = await this.getDolar(fechaDolar);
+    const usdPrice = pruebaDolar?.usd;
+    const usdPriceBcra = pruebaDolar?.usdb;
 
-    const pruebaDolar = await getDolar();
-    const pruebaDolarBcra = await getDolarBcra();
-
-    const usdPrice = pruebaDolar.venta;
-    const usdPriceBcra = pruebaDolarBcra.v;
+    posiciones.forEach((p) => {
+      if (p.tipoTitulo === 'Moneda') {
+        if (p.monedaCotizacion === 'USD' || 'USDB' || 'USDC') {
+          p.simboloLocal = p.nombreEspecie;
+        } else if (!p.cantidadLiquidada) {
+          p.simboloLocal = '$ por liquidar';
+        } else {
+          p.simboloLocal = '$ liquidados';
+        }
+      }
+    });
 
     const totalPosiciones = posiciones.reduce((acum, pos) => {
-      if (pos.monedaCotizacion === 'USD') {
+      if (pos.monedaCotizacion === 'USD' || pos.monedaCotizacion === 'USDC') {
         acum += pos.cantidadLiquidada * pos.precioUnitario * usdPrice;
       } else if (pos.monedaCotizacion === 'USDB') {
         acum += pos.cantidadLiquidada * pos.precioUnitario * usdPriceBcra;
-      } else acum += pos.cantidadLiquidada * pos.precioUnitario;
+      } else
+        acum +=
+          pos.cantidadLiquidada * pos.precioUnitario +
+          pos.cantidadPendienteLiquidar * pos.precioUnitario;
       return acum;
     }, 0);
 
-    return { totalPosiciones, usdPrice, usdPriceBcra, posiciones };
+    return {
+      totalPosiciones,
+      usdPrice,
+      usdPriceBcra,
+      posiciones,
+    };
   }
 
   async getCashPositionByDates(accountId: string) {
@@ -57,11 +103,6 @@ export class PosicionesService extends RosvalHttpService {
       formatRosvalDate(dayjs().add(1, 'day')),
       'ARS',
     );
-    const posiciones48 = await this.findByDate(
-      accountId,
-      formatRosvalDate(dayjs().add(2, 'day')),
-      'ARS',
-    );
     const posicionesHoyUsd = await this.findByDate(
       accountId,
       formatRosvalDate(dayjs()),
@@ -72,37 +113,33 @@ export class PosicionesService extends RosvalHttpService {
       formatRosvalDate(dayjs().add(1, 'day')),
       'USD',
     );
-    const posiciones48Usd = await this.findByDate(
-      accountId,
-      formatRosvalDate(dayjs().add(2, 'day')),
-      'USD',
-    );
+
+    const dispoHoy = posicionesHoy.reduce((acum, p) => {
+      acum += p.cantidadLiquidada;
+      return acum;
+    }, 0);
+
+    const dispo24 = posiciones24.reduce((acum, p) => {
+      acum += p.cantidadLiquidada;
+      return acum;
+    }, 0);
+
+    const dispoHoyUsd = posicionesHoyUsd.reduce((acum, p) => {
+      acum += p.cantidadLiquidada;
+      return acum;
+    }, 0);
+
+    const dispo24Usd = posiciones24Usd.reduce((acum, p) => {
+      acum += p.cantidadLiquidada;
+      return acum;
+    }, 0);
 
     return {
-      dispoHoy:
-        (posicionesHoy[0].cantidadLiquidada -
-          posicionesHoy[0].cantidadPendienteLiquidar) *
-        -1,
-      dispo24:
-        (posiciones24[0].cantidadLiquidada -
-          posiciones24[0].cantidadPendienteLiquidar) *
-        -1,
-      dispo48:
-        (posiciones48[0].cantidadLiquidada -
-          posiciones48[0].cantidadPendienteLiquidar) *
-        -1,
-      dispoHoyUsd:
-        (posicionesHoyUsd[0].cantidadLiquidada -
-          posicionesHoyUsd[0].cantidadPendienteLiquidar) *
-        -1,
-      dispo24Usd:
-        (posiciones24Usd[0].cantidadLiquidada -
-          posiciones24Usd[0].cantidadPendienteLiquidar) *
-        -1,
-      dispo48Usd:
-        (posiciones48Usd[0].cantidadLiquidada -
-          posiciones48Usd[0].cantidadPendienteLiquidar) *
-        -1,
+      dispoHoy: dispoHoy,
+      dispoHoy2: posicionesHoy[0].cantidadPendienteLiquidar * -1,
+      dispo24: dispo24,
+      dispoHoyUsd: dispoHoyUsd,
+      dispo24Usd: dispo24Usd,
     };
   }
 }

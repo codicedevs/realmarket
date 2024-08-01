@@ -1,6 +1,6 @@
+import { Avatar, Icon, StyleService, useTheme } from '@ui-kitten/components';
 import * as React from 'react';
-import {TouchableOpacity} from 'react-native';
-import {StyleService, useTheme, Icon, Avatar} from '@ui-kitten/components';
+import { Image, TouchableOpacity } from 'react-native';
 import { IRoundedButtonProps } from '../../types/component-types';
 
 
@@ -14,6 +14,7 @@ const RoundedButton = React.memo(
     activeOpacity = 0.7,
     style,
     children,
+    img
   }: IRoundedButtonProps) => {
     const theme = useTheme();
 
@@ -56,7 +57,7 @@ const RoundedButton = React.memo(
         ]}>
         <Avatar
           shape="rounded"
-           source={require('../../assets/img_rounded.png')}
+          source={require('../../assets/img_rounded.png')}
           style={{
             width: size,
             height: size,
@@ -87,7 +88,7 @@ const RoundedButton = React.memo(
         )}
         {icon && (
           <Icon
-            pack="eva" 
+            pack="eva"
             name={icon}
             style={{
               width: 20,
@@ -97,6 +98,17 @@ const RoundedButton = React.memo(
             }}
           />
         )}
+        {
+          img && (
+            <Image
+              source={img}
+              style={{
+                width: 20,
+                height: 20
+              }}
+            />
+          )
+        }
         {children && children}
       </TouchableOpacity>
     );

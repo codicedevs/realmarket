@@ -2,14 +2,13 @@ import { useLoading } from '../context/LoadingProvider';
 
 
 const usePromise = () => {
-    const { setIsLoading } = useLoading()
+    const { setLoadingScreen } = useLoading()
 
-    const handlePromise= async <T=any> (promise:Promise<T>, time = 0) => {
+    const handlePromise = async <T = any>(promise: Promise<T>, time = 0) => {
         let res = null;
         try {
-            setIsLoading(true)
+            setLoadingScreen(true)
             res = await promise
-            console.log('try')
         }
         catch (err) {
             console.error('Error:', err)
@@ -17,7 +16,7 @@ const usePromise = () => {
         }
         finally {
             setTimeout(() => {
-                setIsLoading(false)
+                setLoadingScreen(false)
             }, time);
 
             return res;

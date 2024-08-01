@@ -14,25 +14,15 @@ export class User {
   pass: string;
   @Column()
   accountId: string;
-  @Column()
+  @Column({ unique: true })
   email: string;
   @Column()
   telefono: string;
   @Column()
-  resetKey: string;
+  resetKey: number;
   @Column()
-  restKeyTimeStamp: string;
+  resetKeyTimeStamp: string;
+  @Column({ default: true })
+  isActive: boolean = true;
 
-  //   tipoDocumento: string;
-  // cuit?: string;
-  //   tipoPersona: 'FISICA';
-  //   relacion: string;
-  //   residencia: {
-  //     codigoPais: string;
-  //     autorizadoOperar: string;
-  //     motivo: string;
-  //   };
-  //   sectorEconomia: string;
-  //   esGobierno: string;
-  //   inversorCalificado: string;
 }

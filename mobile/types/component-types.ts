@@ -1,17 +1,17 @@
 import {
-    DividerProps,
-    LayoutProps,
-    TextElement,
-    TextProps,
-  } from "@ui-kitten/components";
-  import * as React from "react";
-  import {
-    GestureResponderEvent,
-    ScrollViewProps,
-    StyleProp,
-    TextStyle,
-    ViewStyle,
-  } from "react-native/types";
+  DividerProps,
+  LayoutProps,
+  TextElement,
+  TextProps,
+} from "@ui-kitten/components";
+import * as React from "react";
+import {
+  GestureResponderEvent,
+  ScrollViewProps,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from "react-native/types";
   
   // -------------------------------- Container --------------------------------
   export interface ContainerProps extends LayoutProps {
@@ -189,6 +189,7 @@ import {
     activeOpacity?: number;
     style?: StyleProp<ViewStyle>;
     children?: React.ReactNode;
+    img?: string
   }
   // -------------------------------- LinearGradientText --------------------------------
   export type ILinearGradientTextProps = {

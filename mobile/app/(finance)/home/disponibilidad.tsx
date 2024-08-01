@@ -2,8 +2,8 @@ import { useQuery } from "@realm/react"
 import { StyleService } from "@ui-kitten/components"
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
-import React, { useContext, useEffect, useState } from "react"
-import { Dimensions, FlatList, Modal, Pressable, Text } from "react-native"
+import React, { useContext, useState } from "react"
+import { ActivityIndicator, Dimensions, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native"
 import { ContainerArs, ContainerUsd } from "../../../Realm/Schemas"
 import Container from "../../../components/Container"
 import CurrencyToggle from "../../../components/CurrencyToggle"
@@ -12,10 +12,11 @@ import LayoutCustom from "../../../components/LayoutCustom"
 import TransactionItem, { ITransactionItemProps } from "../../../components/TransactionItem"
 import BalanceCard from "../../../components/cards/BalanceCard"
 import { AppContext } from "../../../context/AppContext"
+import { useInfo } from "../../../context/InfoProvider"
 import { useLoading } from "../../../context/LoadingProvider"
-import { useSaveFile } from "../../../hooks/useSaveFile"
 import movimientosService from "../../../service/movimientos.service"
 import { currencyFormat } from "../../../utils/number"
+import { saveFilePdf } from "../../../utils/saveFile"
 import theme from "../../../utils/theme"
 const windowWidth = Dimensions.get("window").width;
 
@@ -27,8 +28,12 @@ const Disponibility = () => {
     const [selectedTransaction, setSelectedTransaction] = useState<ITransactionItemProps>(null)
     const [movementsArs, setMovementsArs] = useState([])
     const [movementsUsd, setMovementsUsd] = useState([])
-    const { saveFile } = useSaveFile()
     const { setIsLoading } = useLoading()
+    const { isLoading } = useLoading()
+
+
+    const [loading, setLoading] = useState(false)
+    const { movements } = useInfo()
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
@@ -53,27 +58,20 @@ const Disponibility = () => {
     }
 
     const getReceipt = async (id: string) => {
-        setIsLoading(true)
+        setLoading(true)
         try {
             const url = `movimientos/comprobante/${id}`
             const base64Image = await movimientosService.getReceipt(id)
-            const filename = `comprobante_${id}.jpg`;
-            saveFile(base64Image, filename, url)
-            //  saveFile(base64Image, filename)
-            // Notifications.scheduleNotificationAsync({
-            //     content: {
-            //         title: "Descarga Completa 📥",
-            //         body: `${filename} ha sido guardado exitosamente.`,
-            //     },
-            //     trigger: null,
-            // });
+            const filename = `comprobante_${id}.pdf`;
+            await saveFilePdf(base64Image, filename, url)
         } catch (e) {
             console.error('error', e);
         } finally {
-            setIsLoading(false)
+            setLoading(false)
         }
     }
 
+    //ACA HACIA EL TEMA DE REALM   
     const checkMovements = () => {
         setMovementsArs(info2[0].movimientos)
         setMovementsUsd(info3[0].movimientos)
@@ -83,18 +81,29 @@ const Disponibility = () => {
         // await handlePromise(promises())
         checkMovements()
     }
-
+    //
     const checkBalanceCurrency = () => {
-        if (movementsArs.length === 0 || movementsUsd.length === 0) return
+        if (!movements) return
         if (currency === 'ARS') {
-            return movementsArs[0].balance
+            const initialValue = movements.movementsArs.find(transaction => transaction.description === "Saldo Inicial");
+            return movements.movementsArs[0].balance
         }
-        return movementsUsd[0].balance
+        const initialValue = movements.movementsUsd.find(transaction => transaction.description === "Saldo Inicial");
+        return movements.movementsUsd[0].balance
     }
 
-    useEffect(() => {
-        getInfo()
-    }, [])
+    const renderItem = ({ item }) => (
+        <TransactionItem data={item} selectTransaction={selectTransaction} currency={currency} />
+    );
+
+    const getData = () => {
+        if (!movements) return
+        if (currency === 'ARS') {
+            return movements.movementsArs?.length !== 0 ? movements.movementsArs : [];
+        } else {
+            return movements.movementsUsd?.length !== 0 ? movements.movementsUsd : [];
+        }
+    };
 
     return (
         <>
@@ -110,9 +119,9 @@ const Disponibility = () => {
                         <LayoutCustom style={themedStyles.modalView}>
                             <LayoutCustom mb={theme.margins.large}>
                                 <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalle del movimiento</Text>
-                                <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 23, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
                                 <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date.toString()}</Text>
-                                <Text style={{ ...themedStyles.modalText, fontSize: 26, marginBottom: theme.margins.small }}>Importe:</Text>
+                                <Text style={{ ...themedStyles.modalText, fontSize: 23, marginBottom: theme.margins.small }}>Importe:</Text>
                                 <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
                                 <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small, fontWeight: '400' }}>Descripcion:</Text>
                                 <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.description.slice(0, 20)}</Text>
@@ -120,18 +129,25 @@ const Disponibility = () => {
                                 <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.comprobante}</Text>
                             </LayoutCustom>
                             <LayoutCustom>
-                                <Pressable
+                                <TouchableOpacity
                                     style={[themedStyles.button, themedStyles.buttonConfirm]}
                                     onPress={() => getReceipt(selectedTransaction?.comprobante)}
+                                    disabled={loading}
                                 >
-                                    <Text style={themedStyles.textStyle}>Ver</Text>
-                                </Pressable>
-                                <Pressable
-                                    style={[themedStyles.button, themedStyles.buttonClose]}
+                                    {
+                                        loading ?
+                                            <ActivityIndicator size={"small"} color={"white"} />
+                                            :
+                                            <Text style={themedStyles.textStyle}>Ver</Text>
+                                    }
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{ ...themedStyles.button, backgroundColor: loading ? "gray" : "#009F9F" }}
                                     onPress={() => setOpen(false)}
+                                    disabled={loading}
                                 >
                                     <Text style={themedStyles.textStyle}>Volver</Text>
-                                </Pressable>
+                                </TouchableOpacity>
                             </LayoutCustom>
                         </LayoutCustom>
                     </LayoutCustom>
@@ -147,13 +163,21 @@ const Disponibility = () => {
                         <BalanceCard balance={checkBalanceCurrency()} currency={currency} />
                     </LayoutCustom>
                 </LayoutCustom>
-                <LayoutCustom overflow="scroll" gap={15} ph={theme.paddings.medium} >
-                    <FlatList
-                        data={currency === 'ARS' ? movementsArs : movementsUsd}
-                        renderItem={({ item }) => <TransactionItem data={item} selectTransaction={selectTransaction} currency={currency} />}
-                        keyExtractor={(item, index) => index.toString()}
-                    />
-                </LayoutCustom>
+                {
+                    isLoading ?
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: "center" }}>
+                            <Image source={require('../../../assets/gif/disponibilidad.gif')} style={{ width: 200, height: 200, marginTop: 20 }} />
+                        </View>
+                        :
+                        <LayoutCustom style={{ flex: 1 }} gap={15} ph={theme.paddings.medium} >
+                            <FlatList
+                                data={getData()}
+                                renderItem={renderItem}
+                                keyExtractor={(item, index) => index.toString()}
+                                contentContainerStyle={{ paddingBottom: 20 }}
+                            />
+                        </LayoutCustom>
+                }
             </Container>
         </>
     )
@@ -211,14 +235,16 @@ const themedStyles = StyleService.create({
     },
     textStyle: {
         color: 'white',
-        fontWeight: 'bold',
+        fontFamily: 'Lato-Bold',
         textAlign: 'center',
     },
     modalText: {
         textAlign: 'center',
-        color: 'black'
+        color: 'black',
+        fontFamily: 'Lato-Regular'
     },
     amountText: {
-        textAlign: "center"
+        textAlign: "center",
+        fontFamily: 'Lato-Regular'
     }
 });

@@ -1,6 +1,7 @@
 import { StyleService } from '@ui-kitten/components';
 import React from 'react';
-import { Image, ImageBackground, ImageSourcePropType, Text } from 'react-native';
+import { ActivityIndicator, Image, ImageBackground, ImageSourcePropType, Text } from 'react-native';
+import { useLoading } from '../../context/LoadingProvider';
 import { currencyFormat } from '../../utils/number';
 import theme from '../../utils/theme';
 import LayoutCustom from '../LayoutCustom';
@@ -13,12 +14,13 @@ interface CreditCardProps {
 }
 
 const TimeCard = ({ item, currency }: { item: CreditCardProps, currency: string }) => {
+  const { isLoading } = useLoading()
   return (
     <LayoutCustom style={themedStyles.card}>
       <ImageBackground style={{ ...themedStyles.imageBack, backgroundColor: item.color }} source={require("../../assets/background/colorful-background.png")}>
         <LayoutCustom alignSelfCenter itemsCenter padding={theme.paddings.medium} style={themedStyles.textContainer}>
           <Image style={themedStyles.image} source={item.icon} />
-          <Text style={{ color: 'white', fontSize: 30, paddingVertical: theme.margins.small, marginBottom: 15 }} >{currencyFormat(item.balance, currency)}</Text>
+          <Text style={{ color: 'white', fontSize: 26, paddingVertical: theme.margins.small, marginBottom: 15, fontFamily: "Lato-Regular" }} >{isLoading ? <ActivityIndicator color={'white'} size={'large'} /> : currencyFormat(item.balance, currency)}</Text>
         </LayoutCustom>
       </ImageBackground>
     </LayoutCustom>

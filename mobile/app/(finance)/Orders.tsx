@@ -56,11 +56,6 @@ const Positions = () => {
                 <ActionCard color="#D0682E" title='Solicitar transferencia' />
               </TouchableOpacity>
             </LayoutCustom>
-            <LayoutCustom style={themedStyles.cardSize}>
-              <TouchableOpacity>
-                <ActionCard color="#701BC4" title="Informar transferencia" />
-              </TouchableOpacity>
-            </LayoutCustom>
           </LayoutCustom>
         </LayoutCustom>
       </Container>

@@ -1,7 +1,6 @@
 import { HttpBase } from "@codice-arg/http-service/dist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { Alert } from "react-native";
 import { BASE_URL } from "../config";
 
 export class HttpService extends HttpBase {
@@ -40,12 +39,12 @@ export class HttpService extends HttpBase {
         }
     }
 
-    protected onUnauthorized(err: any): void | Promise<void> {
+    // protected onUnauthorized(err: any): void | Promise<void> {
 
-        if(err.response.data.url === 'auth/login') Alert.alert(err.response.data.message)
-        // this.refreshAccessToken()
-        Alert.alert("Se cerro sesion")
-    }
+    //     if(err.response.data.url === 'auth/login') Alert.alert(err.response.data.message)
+    //     // this.refreshAccessToken()
+    //     Alert.alert("Se cerro sesion")
+    // }
 
     //REVISAR ERROR DE 401
 

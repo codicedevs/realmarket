@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { EmailService } from './email/email.service';
 import { MovimientosModule } from './movimientos/movimientos.module';
 import { PosicionesModule } from './posiciones/posiciones.module';
 import { dbSettings } from './settings';
@@ -19,6 +20,7 @@ import { UsersController } from './users/users.controller';
       type: 'mongodb',
       url: dbSettings.DB_URL,
       database: dbSettings.DB_NAME,
+      synchronize: true,
       useNewUrlParser: true,
       autoLoadEntities: true,
       useUnifiedTopology: true,
@@ -35,7 +37,7 @@ import { UsersController } from './users/users.controller';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
-    },
+    }, EmailService
   ],
 })
-export class AppModule {}
+export class AppModule { }

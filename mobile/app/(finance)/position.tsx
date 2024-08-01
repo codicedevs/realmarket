@@ -1,10 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useQuery } from "@realm/react"
+// import { useQuery } from "@realm/react"
+// import { Position } from "../../Realm/Schemas"
 import { StyleService } from "@ui-kitten/components"
 import { useFocusEffect } from "expo-router"
-import React, { useCallback, useContext, useState } from "react"
-import { Dimensions, FlatList, Modal, Pressable, Text, View } from "react-native"
-import { Position } from "../../Realm/Schemas"
+import React, { useCallback, useContext, useEffect, useState } from "react"
+import { Dimensions, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
 import Header from "../../components/CustomHeader"
@@ -12,6 +12,9 @@ import LayoutCustom from "../../components/LayoutCustom"
 import FolderCard from "../../components/cards/FolderCard"
 import { IPosition } from "../../components/cards/TransactionCards"
 import { AppContext } from "../../context/AppContext"
+import { useInfo } from "../../context/InfoProvider"
+import { useLoading } from "../../context/LoadingProvider"
+import { financial } from "../../types/financial.types"
 import { currencyFormat } from "../../utils/number"
 import theme from "../../utils/theme"
 const windowWidth = Dimensions.get("window").width;
@@ -22,17 +25,10 @@ const Finance = () => {
     const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
     const [totalPosition, setTotalPosition] = useState(0)
     const { currency } = useContext(AppContext)
-    const info1 = useQuery(Position)
+    // const info1 = useQuery(Position) DE ACA TRAIA LA INFO DE POSICIONES Y EN UN FUTURO TENDRE Q USAR ESTO
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
-
-    const formatPublicTitles = (data: IPosition[]) => {
-        const newData = data.map((d) => ({
-            ...d,
-            simboloLocal: d.simboloLocal.concat(d.lugar)
-        }))
-        //ACA FIJARTE SI SE VA A USAR O BORRARs
-        return newData
-    }
+    const { isLoading } = useLoading()
+    const { currencyPositions } = useInfo()
 
     const settingData = async () => {
         const totalPositions = await AsyncStorage.getItem('totalPositions')
@@ -47,27 +43,30 @@ const Finance = () => {
     }
 
     const fetchAndOrganizePositions = async () => {
-        if (info1 !== undefined) {
-            const positions = info1[0].posiciones
-            //const positions = JSON.parse(value);
-            const echeqs = positions.filter((position) => position.tipoTitulo === "ECHEQ" && position.monedaCotizacion.includes(currency))
-            const acciones = positions.filter((position) => position.tipoTitulo === "Acciones" && position.monedaCotizacion.includes(currency))
-            const cedears = positions.filter((position) => position.tipoTitulo === "Cedears" && position.monedaCotizacion.includes(currency))
-            const obligaciones = positions.filter((position) => position.tipoTitulo === "Obligaciones Negociables" && position.monedaCotizacion.includes(currency))
-            const titulos = positions.filter((position) => position.tipoTitulo === "Títulos Públicos" && position.monedaCotizacion.includes(currency))
-            const pagare = positions.filter((position) => position.tipoTitulo === "Pagarés" && position.monedaCotizacion.includes(currency))
-            const monedas = positions.filter((position) => position.tipoTitulo === "Moneda" && position.monedaCotizacion.includes(currency))
-            setAssetsInfo({
-                ACC: acciones,
-                CED: cedears,
-                OBG: obligaciones,
-                TIT: titulos,
-                PAG: pagare,
-                MON: monedas,
-                ECH: echeqs
-            })
+        if (currencyPositions && currencyPositions.posiciones) {
+            const assetsInfo = Object.keys(financial).reduce((acc, key) => {
+                const tipoTitulo = financial[key as keyof typeof financial];
+                acc[key] = currencyPositions.posiciones.filter(position =>
+                    position.tipoTitulo === tipoTitulo && position.monedaCotizacion.includes(currency)
+                );
+                return acc;
+            }, {} as Record<keyof typeof financial, IPosition[]>);
+            setAssetsInfo(assetsInfo);
         }
     }
+
+    useEffect(() => {
+        fetchAndOrganizePositions()
+    }, [currencyPositions])
+
+    const renderFolderCard = ({ item, index }) => (
+        <FolderCard title={item.title} data={item.data} selectAsset={selectAsset} key={index} />
+    );
+
+    const folderData = Object.keys(assetsInfo).map((key) => ({
+        title: key,
+        data: assetsInfo[key]
+    }));
 
     useFocusEffect(
         useCallback(() => {
@@ -115,15 +114,22 @@ const Finance = () => {
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Importe:</Text>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{currencyFormat((selectedAsset.cantidadPendienteLiquidar - selectedAsset.cantidadLiquidada) * selectedAsset.precioUnitario, currency)}</Text>
                                     </View>
+                                    {
+                                        selectedAsset.tipoTitulo === 'Pagarés' &&
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>P.unitario:</Text>
+                                            <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{currencyFormat(selectedAsset.precioUnitario, 'ARS')}</Text>
+                                        </View>
+                                    }
                                 </>
                             }
                         </LayoutCustom>
-                        <Pressable
+                        <TouchableOpacity
                             style={[themedStyles.button, themedStyles.buttonClose]}
                             onPress={() => setOpen(false)}
                         >
                             <Text style={themedStyles.textStyle}>Volver</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     </LayoutCustom>
                 </LayoutCustom>
             </Modal>
@@ -140,8 +146,8 @@ const Finance = () => {
                             horizontal
                             justify="space-between"
                         >
-                            <Text style={themedStyles.textColor}>Total general</Text>
-                            <Text style={themedStyles.textColor}>{currencyFormat(totalPosition, currency)}</Text>
+                            <Text style={themedStyles.textColor}>{`Total general`}</Text>
+                            <Text style={themedStyles.textColor}>{currencyFormat(currencyPositions?.arsPositions, 'ARS')}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                     <LayoutCustom ph={theme.paddings.large}>
@@ -161,21 +167,29 @@ const Finance = () => {
                         </LayoutCustom>
                     </LayoutCustom>
                 </LayoutCustom>
-                <View style={themedStyles.scrollContainer}>
-                    {/* <ScrollView> */}
-                    {
-                        Object.keys(assetsInfo).length !== 0 &&
-                        <FlatList
-                            data={Object.keys(assetsInfo)}
-                            renderItem={({ item, index }) => <FolderCard title={item} data={assetsInfo[item]} selectAsset={selectAsset} key={index} />}
-                        />
-                        // Object.keys(assetsInfo).map((i, index) => {
-                        //     return <FolderCard title={i} data={assetsInfo[i]} selectAsset={selectAsset} key={index} />
-                        // })
-
-                    }
-                    {/* </ScrollView> */}
-                </View>
+                {
+                    isLoading ?
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+                            <Image source={require('../../assets/gif/Statistics.gif')} style={{ width: 250, height: 250, marginTop: 20 }} />
+                        </View>
+                        :
+                        <View style={themedStyles.scrollContainer}>
+                            <FlatList
+                                data={folderData}
+                                renderItem={renderFolderCard}
+                                keyExtractor={(item, index) => index.toString()}
+                                showsVerticalScrollIndicator={false}
+                                initialNumToRender={20}
+                                removeClippedSubviews={true}
+                                windowSize={10}
+                                maxToRenderPerBatch={10}
+                                updateCellsBatchingPeriod={50}
+                                getItemLayout={(data, index) => (
+                                    { length: 60, offset: 60 * index, index }
+                                )}
+                            />
+                        </View>
+                }
             </Container>
         </>
     )
@@ -206,11 +220,12 @@ const themedStyles = StyleService.create({
         alignItems: "flex-end"
     },
     textColor: {
-        color: "white"
+        color: "white",
+        fontFamily: 'Lato-Regular'
     },
     titleTable: {
         color: 'white',
-        fontWeight: 'bold'
+        fontFamily: 'Lato-Bold'
     },
     scrollContainer: {
         flex: 1,
@@ -254,23 +269,24 @@ const themedStyles = StyleService.create({
     modalTextTitle: {
         fontSize: 22,
         marginBottom: theme.margins.medium,
-        fontWeight: 'bold'
+        fontFamily: 'Lato-Bold'
     },
     modalTextSubTitle: {
         fontSize: 16,
         marginBottom: theme.margins.xSmall,
-        fontWeight: '500'
+        fontFamily: 'Lato-Bold'
     },
     modalTextInfo: {
-        fontSize: 16,
-        marginBottom: theme.margins.xSmall
+        fontSize: 14,
+        marginBottom: theme.margins.xSmall,
+        fontFamily: 'Lato-Regular'
     },
     withMargin: {
         marginLeft: theme.margins.xSmall
     },
     textStyle: {
         color: 'white',
-        fontWeight: 'bold',
         textAlign: 'center',
+        fontFamily: 'Lato-Bold'
     }
 });

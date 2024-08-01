@@ -10,3 +10,8 @@ interface IUser {
   resetKey:string,
   resetKeyTimeStamp:string
 }
+
+interface EditUserParams {
+  id: number;
+  body: Partial<IUser>
+}

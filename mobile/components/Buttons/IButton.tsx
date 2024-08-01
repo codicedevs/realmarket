@@ -58,7 +58,8 @@ const themedStyles = StyleService.create({
   buttonText: {
     color: 'white',
     fontSize: 12,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Lato-Regular'
   }
 
 });
