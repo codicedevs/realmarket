@@ -8,6 +8,8 @@ import { useSharedValue } from 'react-native-reanimated'
 import Carousel from 'react-native-reanimated-carousel'
 // import { BSON } from 'realm'
 // import { ContainerArs, ContainerUsd, Position } from '../../../Realm/Schemas'
+import { useQuery } from '@realm/react'
+import { ContainerArs, ContainerUsd, Position } from '../../../Realm/Schemas'
 import IButton from '../../../components/Buttons/IButton'
 import Container from '../../../components/Container'
 import CurrencyToggle from '../../../components/CurrencyToggle'
@@ -39,20 +41,21 @@ const Home = () => {
   const { currency } = useContext(AppContext)
   // aca hago todo lo de realm  
   // const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
-  //   const [positions, setPositions] = useState(1000)
   //   const [loading, setLoading] = useState(false)
   //   const realm = useRealm();
-  //   const info3 = useQuery(ContainerUsd)
-  //   const info2 = useQuery(ContainerArs)
-  //   const info1 = useQuery(Position)
+  const info3 = useQuery(ContainerUsd)
+  const info2 = useQuery(ContainerArs)
+  const info1 = useQuery(Position)
   //   let Usd = info3 ? useObject(ContainerUsd, info3[0].id) : undefined;
   //   let Ars = info2 ? useObject(ContainerArs, info2[0].id) : undefined;
   //   let position = info1 ? useObject(Position, info1[0]._id) : undefined;
-  //
+
   const { isLoading } = useLoading()
   const [order, setOrder] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
-  const { getUserData, cifrasDisponibilidad, currencyPositions } = useInfo()
+  const { getUserData, cifrasDisponibilidad, currencyPositions, getAllData } = useInfo()
+  console.log(info1, 'chaaaraaan')
+
 
   const selectOrder = (data: string) => {
     setOrder(data)
@@ -181,7 +184,7 @@ const Home = () => {
   ];
 
   useEffect(() => {
-    // getAllData()
+    getAllData()
     // settingData()
     getUserData()
   }, [])
