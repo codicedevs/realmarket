@@ -9,7 +9,7 @@ import Carousel from 'react-native-reanimated-carousel'
 // import { BSON } from 'realm'
 // import { ContainerArs, ContainerUsd, Position } from '../../../Realm/Schemas'
 import { useQuery } from '@realm/react'
-import { ContainerArs, ContainerUsd, Position } from '../../../Realm/Schemas'
+import { Position } from '../../../Realm/Schemas'
 import IButton from '../../../components/Buttons/IButton'
 import Container from '../../../components/Container'
 import CurrencyToggle from '../../../components/CurrencyToggle'
@@ -39,23 +39,14 @@ const mockData = {
 const Home = () => {
   const { session } = useSession()
   const { currency } = useContext(AppContext)
-  // aca hago todo lo de realm  
-  // const [cifrasDisponibilidad, setCifrasDisponibilidad] = useState<CifrasDisponibilidad>(null)
-  //   const [loading, setLoading] = useState(false)
-  //   const realm = useRealm();
-  const info3 = useQuery(ContainerUsd)
-  const info2 = useQuery(ContainerArs)
-  const info1 = useQuery(Position)
-  //   let Usd = info3 ? useObject(ContainerUsd, info3[0].id) : undefined;
-  //   let Ars = info2 ? useObject(ContainerArs, info2[0].id) : undefined;
-  //   let position = info1 ? useObject(Position, info1[0]._id) : undefined;
+
+  const positions = useQuery(Position)
+  const currencyPositions = positions && positions[0]
 
   const { isLoading } = useLoading()
   const [order, setOrder] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
-  const { getUserData, cifrasDisponibilidad, currencyPositions, getAllData } = useInfo()
-  console.log(info1, 'chaaaraaan')
-
+  const { getUserData, cifrasDisponibilidad, getAllData } = useInfo()
 
   const selectOrder = (data: string) => {
     setOrder(data)
@@ -76,7 +67,7 @@ const Home = () => {
     if (cifrasDisponibilidad) {
       return cifrasDisponibilidad
     }
-    return mockData
+    return 'unavailable'
   }
 
   const positionRoute = () => {
@@ -186,7 +177,7 @@ const Home = () => {
   useEffect(() => {
     getAllData()
     // settingData()
-    getUserData()
+    // getUserData()
   }, [])
 
   const progressValue = useSharedValue<number>(0);
@@ -243,7 +234,7 @@ const Home = () => {
                 <Image style={themedStyles.img} source={require("../../../assets/Icons/money.png")} />
                 <LayoutCustom ml={theme.margins.small} style={{ alignItems: "flex-start" }}>
                   <Text style={themedStyles.position}>Posiciones</Text>
-                  <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator color={'#009F9F'} size={'small'} /> : currencyFormat(currencyPositions?.arsPositions, 'ARS')}</Text>
+                  <Text style={themedStyles.moneyText}>{isLoading ? <ActivityIndicator color={'#009F9F'} size={'small'} /> : currencyFormat(currencyPositions?.totalPosiciones, 'ARS')}</Text>
                 </LayoutCustom>
               </LayoutCustom>
             </TouchableWithoutFeedback>
