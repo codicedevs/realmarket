@@ -1,10 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 // import { useQuery } from "@realm/react"
 // import { Position } from "../../Realm/Schemas"
+import { useQuery } from "@realm/react"
 import { StyleService } from "@ui-kitten/components"
 import { useFocusEffect } from "expo-router"
 import React, { useCallback, useContext, useEffect, useState } from "react"
 import { Dimensions, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native"
+import { Position } from "../../Realm/Schemas"
 import Container from "../../components/Container"
 import CurrencyToggle from "../../components/CurrencyToggle"
 import Header from "../../components/CustomHeader"
@@ -12,7 +14,6 @@ import LayoutCustom from "../../components/LayoutCustom"
 import FolderCard from "../../components/cards/FolderCard"
 import { IPosition } from "../../components/cards/TransactionCards"
 import { AppContext } from "../../context/AppContext"
-import { useInfo } from "../../context/InfoProvider"
 import { useLoading } from "../../context/LoadingProvider"
 import { financial } from "../../types/financial.types"
 import { currencyFormat } from "../../utils/number"
@@ -20,15 +21,15 @@ import theme from "../../utils/theme"
 const windowWidth = Dimensions.get("window").width;
 
 const Finance = () => {
+    const positions = useQuery(Position)
+    const currencyPositions = positions && positions[0]
     const [assetsInfo, setAssetsInfo] = useState({})
     const [open, setOpen] = useState(false)
     const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
     const [totalPosition, setTotalPosition] = useState(0)
     const { currency } = useContext(AppContext)
-    // const info1 = useQuery(Position) DE ACA TRAIA LA INFO DE POSICIONES Y EN UN FUTURO TENDRE Q USAR ESTO
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
     const { isLoading } = useLoading()
-    const { currencyPositions } = useInfo()
 
     const settingData = async () => {
         const totalPositions = await AsyncStorage.getItem('totalPositions')
@@ -147,7 +148,7 @@ const Finance = () => {
                             justify="space-between"
                         >
                             <Text style={themedStyles.textColor}>{`Total general`}</Text>
-                            <Text style={themedStyles.textColor}>{currencyFormat(currencyPositions?.arsPositions, 'ARS')}</Text>
+                            <Text style={themedStyles.textColor}>{currencyFormat(currencyPositions?.totalPosiciones, 'ARS')}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                     <LayoutCustom ph={theme.paddings.large}>
