@@ -83,8 +83,8 @@ export function InfoProvider(props: React.PropsWithChildren) {
         movimientosService.getMovementsUsd()
       ]);
       await handlePositionsData(res, resPos);
-      await handleMovementsData(resArs, 'ContainerArs');
-      await handleMovementsData(resUsd, 'ContainerUsd');
+      await handleMovementsData(resArs.data.reverse(), 'ContainerArs');
+      await handleMovementsData(resUsd.data.reverse(), 'ContainerUsd');
     } catch (err) {
       console.error('Error fetching data:', err);
     } finally {
@@ -95,17 +95,17 @@ export function InfoProvider(props: React.PropsWithChildren) {
   const handleMovementsData = async (res, containerType) => {
     const Container = containerType === 'ContainerUsd' ? Usd : Ars;
 
-    if (Container && res.data.length) {
+    if (Container && res.length) {
       console.log(`Updating existing ${containerType} records...`);
       await safeRealmWrite(() => {
-        Container.movimientos = res.data;
+        Container.movimientos = res;
       });
-    } else if (res.data.length) {
+    } else if (res.length) {
       console.log(`Starting transaction in Realm for ${containerType}...`);
       await safeRealmWrite(() => {
         realm.create(containerType, {
           id: new BSON.UUID(),
-          movimientos: res.data
+          movimientos: res
         }, Realm.UpdateMode.All);
         console.log(`Data for ${containerType} loaded successfully.`);
       });
