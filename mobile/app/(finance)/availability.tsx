@@ -74,11 +74,6 @@ const Disponibility = () => {
     // setMovementsUsd(info3[0].movimientos)
   }
 
-  const getInfo = async () => {
-    // await handlePromise(promises())
-    checkMovements()
-  }
-  //
   const checkBalanceCurrency = () => {
     if (!movementArs || !movementUsd) return
     if (currency === 'ARS') {
@@ -96,7 +91,7 @@ const Disponibility = () => {
     const arrArs = movementArs[0].movimientos
     const arrUsd = movementUsd[0].movimientos
     if (currency === 'ARS') {
-      return arrArs.length !== 0 ? arrArs.reverse() : [];
+      return arrArs.length !== 0 ? arrArs : [];
     } else {
       return movementUsd[0].length !== 0 ? movementUsd[0].movimientos : [];
     }
