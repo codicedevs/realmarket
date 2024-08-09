@@ -63,6 +63,7 @@ input.input::placeholder {
 .input:hover,
 .input:focus {
   border-bottom-color: #007bff;
+  background-color: transparent;
 }
 
 .button {

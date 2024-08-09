@@ -10,7 +10,6 @@ import './users.css'
 
 const { confirm } = Modal;
 
-
 const Users = () => {
   const [users, setUsers] = useState([])
   const navigate = useNavigate();
@@ -54,9 +53,12 @@ const Users = () => {
   }
 
   const bringUsers = async () => {
-    const res = await userService.getAll()
-    console.log(res.data)
-    setUsers(res.data)
+    try {
+      const res = await userService.getAll()
+      setUsers(res.data)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const deleteUser = async (id: number) => {
@@ -91,7 +93,11 @@ const Users = () => {
 
   return (
     <div style={{ width: '100%', height: '100%', padding: 10 }}>
-
+      <Space className="addButtonContainer">
+        <Button type="primary" onClick={sendToCreation}>
+          Crear usuario
+        </Button>
+      </Space>
       <Table dataSource={users}>
         <Column title='Nombre de usuario' dataIndex='username' />
         <Column title='Nombre' dataIndex='nombre' />
@@ -108,11 +114,6 @@ const Users = () => {
           )}
         />
       </Table>
-      <Space className="addButtonContainer">
-        <Button type="primary" onClick={sendToCreation}>
-          Crear usuario
-        </Button>
-      </Space>
     </div>
   )
 }

@@ -22,13 +22,6 @@ const Finance = () => {
     const [selectedAsset, setSelectedAsset] = useState<IPosition>(null)
     const { currency } = useContext(AppContext)
     const amount = selectedAsset?.cantidadPendienteLiquidar - selectedAsset?.cantidadLiquidada
-    const [positions, setPositions] = useState({
-        arsPositions: 0,
-        usdPositions: 0
-    })
-    const [info, setInfo] = useState({})
-    const [loading, setLoading] = useState(false)
-
     const { isLoading } = useLoading()
     const { currencyPositions } = useInfo()
 
@@ -36,7 +29,6 @@ const Finance = () => {
         setSelectedAsset(data)
         setOpen(true)
     }
-
 
     const fetchAndOrganizePositions = async () => {
         if (currencyPositions && currencyPositions.posiciones) {
@@ -46,8 +38,7 @@ const Finance = () => {
                     position.tipoTitulo === tipoTitulo && position.monedaCotizacion.includes(currency)
                 );
                 return acc;
-            }, {} as Record<keyof typeof financial, any[]>);
-
+            }, {} as Record<keyof typeof financial, IPosition[]>);
             setAssetsInfo(assetsInfo);
         }
     }
@@ -110,6 +101,13 @@ const Finance = () => {
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Importe:</Text>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{currencyFormat((selectedAsset.cantidadPendienteLiquidar - selectedAsset.cantidadLiquidada) * selectedAsset.precioUnitario, currency)}</Text>
                                     </View>
+                                    {
+                                        selectedAsset.tipoTitulo === 'Pagarés' &&
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>P.unitario:</Text>
+                                            <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{currencyFormat(selectedAsset.precioUnitario, 'ARS')}</Text>
+                                        </View>
+                                    }
                                 </>
                             }
                         </LayoutCustom>
@@ -136,7 +134,7 @@ const Finance = () => {
                             justify="space-between"
                         >
                             <Text style={themedStyles.textColor}>{`Total general`}</Text>
-                            <Text style={themedStyles.textColor}>{currencyFormat(currency === 'ARS' ? currencyPositions?.arsPositions : currencyPositions?.usdPositions, currency)}</Text>
+                            <Text style={themedStyles.textColor}>{currencyFormat(currencyPositions?.arsPositions, 'ARS')}</Text>
                         </LayoutCustom>
                     </LayoutCustom>
                     <LayoutCustom ph={theme.paddings.large}>
@@ -167,6 +165,15 @@ const Finance = () => {
                                 data={folderData}
                                 renderItem={renderFolderCard}
                                 keyExtractor={(item, index) => index.toString()}
+                                showsVerticalScrollIndicator={false}
+                                initialNumToRender={20}
+                                removeClippedSubviews={true}
+                                windowSize={10}
+                                maxToRenderPerBatch={10}
+                                updateCellsBatchingPeriod={50}
+                                getItemLayout={(data, index) => (
+                                    { length: 60, offset: 60 * index, index }
+                                )}
                             />
                         </View>
                 }
