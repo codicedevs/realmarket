@@ -14,7 +14,7 @@ export const CustomLayout = () => {
     } = theme.useToken();
 
     return (
-        <Layout style={{ height: '100vh' }}>
+        <Layout style={{ height: '100vh', width: '-webkit-fill-available' }}>
             {
                 user &&
                 <MyHeader />
