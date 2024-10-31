@@ -17,7 +17,7 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     const users: User[] = await this.userRepository.find({
-      select: ['_id', 'accountId', 'documento', 'email', 'isActive', 'nombre', 'telefono', 'username']
+      select: ['_id', 'accountId', 'documento', 'email', 'isActive', 'nombre', 'telefono', 'username', 'roles']
     });
     return users;
   }
@@ -143,5 +143,16 @@ export class UsersService {
     const result = await this.userRepository.delete(id);
     if (!result.affected) throw new NotFoundException('Usuario no encontrado');
     return result;
+  }
+
+
+  async updateUserAdmin(id: ObjectId, updateUser: UpdateUserDto) {
+    await this.userRepository.findOneByOrFail({ _id: new ObjectId(id) });
+
+    await this.userRepository.update(id, updateUser);
+    const user = await this.userRepository.findOneBy({ _id: new ObjectId(id) });
+    const { pass, resetKey, resetKeyTimeStamp, ...showUser } = user;
+    return showUser;
+
   }
 }

@@ -1,8 +1,11 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as morgan from 'morgan';
 import { AppModule } from './app.module';
+import { AuthGuard } from './auth/guards/auth.guard';
+import { RolesGuard } from './authentication/role.guard';
 import { CORS } from './constants';
 import { GlobalExceptionFilter } from './exception-filters/global.exception.filter';
 import { serverSettings } from './settings';
@@ -37,6 +40,10 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
     }),
+  );
+  app.useGlobalGuards(
+    new AuthGuard(new JwtService(), new Reflector()),
+    new RolesGuard(new Reflector())
   );
 
   // logger.log(morgan);

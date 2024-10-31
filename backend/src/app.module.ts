@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { AuthGuard } from './auth/guards/auth.guard';
 import { EmailService } from './email/email.service';
 import { MovimientosModule } from './movimientos/movimientos.module';
 import { PosicionesModule } from './posiciones/posiciones.module';
@@ -34,10 +32,7 @@ import { UsersController } from './users/users.controller';
   controllers: [AppController, UsersController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    }, EmailService
+    EmailService,
   ],
 })
 export class AppModule { }
