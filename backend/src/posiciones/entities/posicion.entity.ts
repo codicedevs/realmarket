@@ -17,4 +17,7 @@ export class Posicion {
   monedaCotizacion: string;
   fechaPrecio: string;
   parking: null | object; // El tipo 'any' puede ser reemplazado con un tipo más específico si es necesario
+  informacion?: string;
+  vencimiento?: string;
+  de?: string;
 }

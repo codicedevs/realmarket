@@ -17,16 +17,21 @@ export class PosicionesService extends RosvalHttpService {
 
   async getDolar(date: string): Promise<Dolar> {
     try {
-      const responseUSD = await this.get('unidades/cotizaciones', {
-        params: { fecha: date, unidad: 'USD', moneda: 'ARS' },
-      });
-      const responseUSDB = await this.get('unidades/cotizaciones', {
-        params: { fecha: date, unidad: 'USDB', moneda: 'ARS' },
+      const { data: apiDolar } = await this.get('unidades/cotizaciones', {
+        params: { fecha: date, moneda: 'ARS' },
       });
 
       return {
-        usd: responseUSD.data[0].cierre,
-        usdb: responseUSDB.data[0].cierre,
+        usd: apiDolar
+          .filter(
+            (resp) => resp.moneda === 'ARS' && resp.codigoUnidad === 'USD',
+          )
+          .map((e) => e.cierre),
+        usdb: apiDolar
+          .filter(
+            (resp) => resp.moneda === 'ARS' && resp.codigoUnidad === 'USDB',
+          )
+          .map((e) => e.cierre),
       };
     } catch (err) {
       console.log('Error', err.message);
@@ -42,7 +47,7 @@ export class PosicionesService extends RosvalHttpService {
     this.logger.log('arranco el logger a las ' + timeLabel);
     const response = await this.get<Posicion[]>(
       `cuentas/${accountId}/posiciones`,
-      { params: { from, especie } },
+      { params: { fecha: from, especie } },
     );
     this.logger.log('Aca termino de llamar posiciones ' + new Date());
     return response.data;
@@ -59,6 +64,12 @@ export class PosicionesService extends RosvalHttpService {
     const usdPriceBcra = pruebaDolar?.usdb;
 
     posiciones.forEach((p) => {
+      if (p.tipoTitulo == "ECHEQ" && p.informacion) {
+        const match = p.informacion.match(/Liq\.\s(\d{2}\/\d{2}\/\d{4})/);
+        p.vencimiento = match ? match[1] : 'unknown'
+        const matchde = p.informacion.match(/\]\s.*\s\[/);
+        p.de = matchde ? matchde[0].slice(2, -2) : "unknown";
+      }
       if (p.tipoTitulo === 'Moneda') {
         if (p.monedaCotizacion === 'USD' || 'USDB' || 'USDC') {
           p.simboloLocal = p.nombreEspecie;
