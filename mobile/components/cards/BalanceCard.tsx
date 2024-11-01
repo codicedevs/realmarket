@@ -16,7 +16,6 @@ interface IBalanceCardProps {
 
 const BalanceCard = React.memo(({ balance, currency }: IBalanceCardProps) => {
     const styles = useStyleSheet(themedStyles);
-
     return (
         <LayoutCustom alignSelfCenter style={styles.container}>
             <ImageBackground style={styles.imageCard} source={require("../../assets/background/illustration.png")}>

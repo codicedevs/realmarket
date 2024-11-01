@@ -10,16 +10,12 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.codice.real-market-inversiones",
-      "buildNumber": "2"
-    },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router",
+      "expo-dev-launcher",
       [
         "expo-font",
         {
@@ -41,6 +37,11 @@
     "owner": "widoski",
     "android": {
       "package": "com.widoski.realmarketinversiones"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.codice.real-market-inversiones",
+      "buildNumber": "2"
     }
   }
 }

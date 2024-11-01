@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { Dimensions, Image } from "react-native";
 import Container from "../../components/Container";
 import { useSession } from "../../context/AuthProvider";
-import { useLoading } from "../../context/LoadingProvider";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -14,13 +13,11 @@ const Auth = () => {
     const [isAllowed, setIsAllowed] = useState()
     const { signIn, session, checkSession } = useSession()
     const [visibility, setVisibility] = useState(true)
-    const { setLoadingScreen } = useLoading()
 
 
     const checkingAll = async () => {
         const what = await checkSession()
         // setIsAllowed(what)
-        console.log(what)
         if (what) {
             router.navigate('/(finance)')
         } else {

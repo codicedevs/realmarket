@@ -10,6 +10,7 @@ import Container from '../../../components/Container';
 import Header from '../../../components/CustomHeader';
 import LayoutCustom from '../../../components/LayoutCustom';
 import { useSession } from '../../../context/AuthProvider';
+import { useInfo } from '../../../context/InfoProvider';
 import { useLoading } from '../../../context/LoadingProvider';
 import useNotification from '../../../hooks/useNotification';
 import userService from '../../../service/user.service';
@@ -64,6 +65,7 @@ const ConfigScreen = () => {
   const backgroundModal = require('../../../assets/background/backgroundIlustration.png')
   const [open, setOpen] = useState(false)
   const { signOut, session, checkSession } = useSession()
+  const { clearAllDataFromRealm } = useInfo()
   const name = session.nombre.split(' ')[0]
   const lastName = session.nombre.split(' ')[1]
   const emailInputRef = useRef(null);
@@ -75,18 +77,21 @@ const ConfigScreen = () => {
     formState: { errors },
   } = useForm({ resolver })
 
-  const [changePasswordInfo, setChangePasswordInfo] = useState({
-    newPass: '',
-    currentPass: ''
-  })
   const [userInfo, setUserInfo] = useState({
     email: session.email,
     telefono: session.telefono
   })
+
+  const closeSession = () => {
+    clearAllDataFromRealm()
+    signOut()
+  }
+
   const [editInfo, setEditInfo] = useState({
     email: false,
     telefono: false
   })
+
   const { notification } = useNotification()
   const { setLoadingScreen } = useLoading()
 
@@ -107,18 +112,6 @@ const ConfigScreen = () => {
 
   const sendEmail = () => {
     Linking.openURL('mailto:info@realmarket.com.ar')
-  }
-
-  const changePassword = async () => {
-    try {
-      await userService.ChangePassword(changePasswordInfo)
-      notification('Contraseña cambiada con exito')
-    } catch (e) {
-      console.error(e)
-      notification('Hubo un problema')
-    } finally {
-      toggleModal()
-    }
   }
 
   const editUserInfo = async (field: keyof IUser) => {
@@ -273,8 +266,8 @@ const ConfigScreen = () => {
       <Container style={{ flex: 1 }}>
         <Header title={'Configuración'} />
         <ImageBackground style={themedStyles.initialsContainer} source={iniciales}>
-          <Text style={themedStyles.initials}>{name[0]}</Text>
-          <Text style={themedStyles.initials}>{lastName[0]}</Text>
+          <Text style={themedStyles.initials}>{name && name[0]}</Text>
+          <Text style={themedStyles.initials}>{lastName && lastName[0]}</Text>
         </ImageBackground>
         <LayoutCustom pt={5} itemsCenter style={themedStyles.infoContainer}>
           <Text style={themedStyles.nameText}>{name} {lastName}</Text>
@@ -370,7 +363,7 @@ const ConfigScreen = () => {
             <ConfigButton onPress={toggleModal} title={"Cambiar contraseña"} icon={password} />
             <ConfigButton onPress={sendWhatsapp} title={"Enviar whatsapp"} icon={whatsapp} />
             <ConfigButton onPress={sendEmail} title={"Enviar email"} icon={mail} />
-            <ConfigButton onPress={signOut} title={"Logout"} icon={logOut} />
+            <ConfigButton onPress={closeSession} title={"Logout"} icon={logOut} />
           </LayoutCustom>
         </LayoutCustom>
       </Container>
