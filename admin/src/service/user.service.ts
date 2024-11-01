@@ -1,7 +1,9 @@
 // import HttpService from "./http.service";
 import { user } from "../types/user.type";
 import { HttpService } from "./http.service";
-
+interface Pass {
+  pass: string,
+}
 export class UserService extends HttpService {
   constructor() {
     super("users")
@@ -19,8 +21,8 @@ export class UserService extends HttpService {
     return this.post(`/register`, body)
   }
 
-  async editUser(id: string, body: user) {
-    return this.put(`/edit/${id}`, body)
+  async editUser(id: string, body: user | Pass) {
+    return this.put(`/admin/${id}`, body)
   }
 
   async ChangePassword({ currentPass, newPass }: { currentPass: string, newPass: string }) {

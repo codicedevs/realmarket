@@ -17,7 +17,7 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     const users: User[] = await this.userRepository.find({
-      select: ['_id', 'accountId', 'documento', 'email', 'isActive', 'nombre', 'telefono', 'username']
+      select: ['_id', 'accountId', 'documento', 'email', 'isActive', 'nombre', 'telefono', 'username', 'roles']
     });
     return users;
   }
@@ -48,20 +48,6 @@ export class UsersService {
       throw new HttpException("El mail ya existe", 401)
     }
 
-  }
-
-  async updateById(
-    id: ObjectId,
-    body: UpdateUserDto,
-  ): Promise<User | undefined> {
-    const hashedPass = await hash(body?.pass, 10);
-    body.pass = hashedPass;
-    const result: UpdateResult = await this.userRepository.update(
-      new ObjectId(id),
-      body,
-    );
-    if (!result.affected) throw new NotFoundException('Usuario no encontrado');
-    return this.findById(new ObjectId(id));
   }
 
   async changePass(
@@ -143,5 +129,34 @@ export class UsersService {
     const result = await this.userRepository.delete(id);
     if (!result.affected) throw new NotFoundException('Usuario no encontrado');
     return result;
+  }
+
+  async updateById(
+    id: ObjectId,
+    body: UpdateUserDto,
+  ): Promise<User | undefined> {
+    const hashedPass = await hash(body?.pass, 10);
+    body.pass = hashedPass;
+    const result: UpdateResult = await this.userRepository.update(
+      new ObjectId(id),
+      body,
+    );
+    if (!result.affected) throw new NotFoundException('Usuario no encontrado');
+    return this.findById(new ObjectId(id));
+  }
+
+
+  async updateUserAdmin(id: ObjectId, updateUser: UpdateUserDto) {
+    await this.userRepository.findOneByOrFail({ _id: new ObjectId(id) });
+    if (updateUser.pass) {
+      const hashedPass = await hash(updateUser?.pass, 10);
+      updateUser.pass = hashedPass;
+    }
+
+    await this.userRepository.update(id, updateUser);
+    const user = await this.userRepository.findOneBy({ _id: new ObjectId(id) });
+    const { pass, resetKey, resetKeyTimeStamp, ...showUser } = user;
+    return showUser;
+
   }
 }

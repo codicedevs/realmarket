@@ -73,6 +73,10 @@ const Users = () => {
     }
   }
 
+  const sendToChangePass = (id: number) => {
+    navigate(`/user/changepass/${id}`)
+  }
+
   const deleteModal = (id: number) => {
     confirm({
       title: 'Esta seguro que desea borrar este usuario?',
@@ -109,6 +113,7 @@ const Users = () => {
           render={(_: any, record: IUser) => (
             <Space size="small" style={{ display: 'flex', flexDirection: 'column' }}>
               <a onClick={() => sendToEdition(record._id)}>Actualizar</a>
+              <a onClick={() => sendToChangePass(record._id)}>Cambiar Contraseña</a>
               <a onClick={() => deleteModal(record._id)}>Borrar</a>
             </Space>
           )}

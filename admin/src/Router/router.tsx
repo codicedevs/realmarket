@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import { CustomLayout } from '../components/layout/Layout';
 import Login from '../Views/Login/Login';
+import ChangePass from '../Views/users/ChangePass';
 import UserManager from '../Views/users/UserManager';
 import Users from '../Views/users/Users';
 import { AuthenticationGuard } from './AuthenticationGuard';
@@ -19,6 +20,8 @@ const routes = createRoutesFromElements(
             <Route index path="/" element={<Users />} />
             <Route path='/user/creation' element={<UserManager />} />
             <Route path='/user/edition/:id' element={<UserManager />} />
+            <Route path='/user/changepass/:id' element={<ChangePass />} />
+
         </Route>
         {/* Login page in case unauthenticated */}
         <Route element={<AuthenticationGuard guardType="unauthenticated" redirectPath="/" />}>

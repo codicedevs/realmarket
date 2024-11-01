@@ -12,6 +12,8 @@ import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { Public } from 'src/auth/skip-auth';
 import { getJwtPayload } from 'src/auth/utils/jwt.utils';
+import { Roles } from 'src/authentication/role.decorator';
+import { Role } from 'src/authentication/role.enum';
 import { ObjectId } from 'typeorm';
 import { RecoverPasswordDto } from './dto/recover.pass.dto';
 import { ResetPassDto } from './dto/reset.pass.dto';
@@ -87,5 +89,16 @@ export class UsersController {
       message: "Usted ha recuperado su contraseña exitosamente",
       data: result
     };
+  }
+
+  @Roles(Role.Admin)
+  @Put("/admin/:id")
+  @ApiParam({ name: 'id' })
+  async adminUpdate(
+    @Param('id') id: ObjectId,
+    @Body() updateUser: UpdateUserDto
+  ) {
+    const updatedUser = await this.usersService.updateUserAdmin(id, updateUser);
+    return { message: "User updated", user: updatedUser };
   }
 }

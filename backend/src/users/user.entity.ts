@@ -1,3 +1,4 @@
+import { Role } from 'src/authentication/role.enum';
 import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
@@ -24,5 +25,11 @@ export class User {
   resetKeyTimeStamp: string;
   @Column({ default: true })
   isActive: boolean = true;
-
+  @Column({
+    type: "enum",
+    array: true,
+    enum: Role,
+    default: [Role.User],
+  })
+  roles: Role[];
 }

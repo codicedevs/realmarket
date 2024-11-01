@@ -16,7 +16,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
   //Declaracion de la instancia del Logger dentro de cada servicio
 
   private readonly logger = new Logger(AuthService.name);
@@ -46,6 +46,7 @@ export class AuthService {
       sub: user._id,
       username: user.username,
       accountId: user.accountId,
+      roles: user.roles ? user.roles : undefined
     };
     const accessToken = await this.jwtService.signAsync(payload);
     const refreshToken = await this.jwtService.signAsync(payload, {
