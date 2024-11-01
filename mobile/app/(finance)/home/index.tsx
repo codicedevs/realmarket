@@ -46,7 +46,7 @@ const Home = () => {
   const { isLoading } = useLoading()
   const [order, setOrder] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
-  const { getUserData, cifrasDisponibilidad, getAllData } = useInfo()
+  const { cifrasDisponibilidad, getAllData } = useInfo()
 
   const selectOrder = (data: string) => {
     setOrder(data)
@@ -55,7 +55,8 @@ const Home = () => {
   const onRefresh = () => {
     try {
       setRefreshing(true)
-      getUserData()
+      getAllData(true)
+      // getUserData()
     }
     catch (e) { }
     finally {
@@ -202,7 +203,7 @@ const Home = () => {
                 isLoading ?
                   <ActivityIndicator color={'#009F9F'} size={'small'} style={{ marginRight: 10 }} />
                   :
-                  <TouchableWithoutFeedback onPress={() => getUserData()}>
+                  <TouchableWithoutFeedback onPress={() => getAllData(true)}>
                     <Image resizeMode='contain' source={require('../../../assets/Icons/reload.png')} style={{ width: 20, height: 25, marginRight: 10 }} />
                   </TouchableWithoutFeedback>
               }

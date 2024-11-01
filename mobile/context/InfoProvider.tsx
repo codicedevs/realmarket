@@ -73,7 +73,8 @@ export function InfoProvider(props: React.PropsWithChildren) {
     }
   };
 
-  const getAllData = async () => {
+  const getAllData = async (mustLoad = false) => {
+    setIsLoading(mustLoad)
     if (!info1[0] || !info2[0] || !info3[0]) setLoadingModal(true);
     try {
       const [res, resPos, resArs, resUsd] = await Promise.all([
@@ -89,6 +90,7 @@ export function InfoProvider(props: React.PropsWithChildren) {
       console.error('Error fetching data:', err);
     } finally {
       setLoadingModal(false);
+      setIsLoading(false)
     }
   };
 

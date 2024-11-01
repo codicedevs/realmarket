@@ -45,7 +45,7 @@ const Positions = () => {
       <Container style={themedStyles.container}>
         <Header title={'Órdenes'} />
         <LayoutCustom style={themedStyles.content}>
-          <LayoutCustom style={themedStyles.cardsContainer} justify="space-between">
+          <LayoutCustom style={themedStyles.cardsContainer} justify="space-evenly">
             <LayoutCustom style={themedStyles.cardSize}>
               <TouchableOpacity onPress={() => selectOrder(orderOptions.EMIT)}>
                 <ActionCard color="#009F9F" title="Emitir orden" />

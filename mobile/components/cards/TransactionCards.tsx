@@ -6,8 +6,9 @@ import {
     useStyleSheet
 } from "@ui-kitten/components";
 // ----------------------------- Lodash -----------------------------------
+import { useQuery } from "@realm/react";
 import { Text, TouchableOpacity } from "react-native";
-import { useInfo } from "../../context/InfoProvider";
+import { Position } from "../../Realm/Schemas";
 import { currencyFormat } from "../../utils/number";
 import theme from "../../utils/theme";
 import LayoutCustom from "../LayoutCustom";
@@ -37,7 +38,8 @@ const TransactionCards = memo(
     ({ data, index, selectAsset }: { data: IPosition; index: number, selectAsset: (data: IPosition) => void }) => {
         const styles = useStyleSheet(themedStyles);
         const amount = data.cantidadPendienteLiquidar - data.cantidadLiquidada
-        const { currencyPositions } = useInfo()
+        const positions = useQuery(Position)
+        const currencyPositions = positions && positions[0]
 
         const checkValue = () => {
             var total: number
