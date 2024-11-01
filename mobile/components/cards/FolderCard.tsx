@@ -1,7 +1,8 @@
+import { useQuery } from '@realm/react'
 import { Icon, StyleService } from '@ui-kitten/components'
 import React, { useEffect, useState } from 'react'
 import { Dimensions, FlatList, Text, View } from 'react-native'
-import { useInfo } from '../../context/InfoProvider'
+import { Position } from '../../Realm/Schemas'
 import { financial } from '../../types/financial.types'
 import theme from '../../utils/theme'
 import LayoutCustom from '../LayoutCustom'
@@ -12,7 +13,8 @@ const windowHeight = Dimensions.get("window").width;
 const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPosition[], selectAsset: (data: IPosition) => void }) => {
   const [open, setOpen] = useState(false)
   const itemHeight = 60
-  const { currencyPositions } = useInfo()
+  const positions = useQuery(Position)
+  const currencyPositions = positions && positions[0]
 
   const renderItem = ({ item, index }) => (
     <View style={{ height: itemHeight }}>
@@ -70,7 +72,7 @@ const FolderCard = ({ title, data, selectAsset }: { title: string, data: IPositi
             getItemLayout={(data, index) => (
               { length: itemHeight, offset: itemHeight * index, index }
             )}
-            ListHeaderComponent={<TotalCard data={totalAmount()} index={data.length} />}
+            ListHeaderComponent={data.length !== 0 && <TotalCard data={totalAmount()} index={data.length} />}
             showsVerticalScrollIndicator={false}
             initialNumToRender={20}
             removeClippedSubviews={true}

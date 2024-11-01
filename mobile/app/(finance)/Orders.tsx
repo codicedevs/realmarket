@@ -1,25 +1,47 @@
 import { StyleService } from '@ui-kitten/components'
 import React, { useState } from 'react'
-import { Dimensions, TouchableOpacity } from 'react-native'
-import ActionCard from '../../components/cards/ActionsCards'
+import { Dimensions, Modal, TouchableOpacity } from 'react-native'
+import WebView from 'react-native-webview'
 import Container from '../../components/Container'
 import Header from '../../components/CustomHeader'
 import LayoutCustom from '../../components/LayoutCustom'
-import OrderModal from '../../components/orderModal'
+import ActionCard from '../../components/cards/ActionsCards'
 import { orderOptions } from '../../types/order.types'
 import theme from '../../utils/theme'
+const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
+const iframeUrls = {
+  [orderOptions.EMIT]: "https://docs.google.com/forms/d/e/1FAIpQLSe6k-AKFxILjPhl7SQSnunBJvDsXOTw2OgMfEkTEb5jkBR7lw/viewform?embedded=true",
+  [orderOptions.REQUEST]: "https://docs.google.com/forms/d/e/1FAIpQLSdg8sWJJj9TJ8W_fO-l6bKrd1jighfdkG1uqd5tZFFfLIdcBQ/viewform?embedded=true"
+};
+
 const Positions = () => {
-  const [order, setOrder] = useState(null)
+  const [open, setOpen] = useState(false)
+  const [order, setOrder] = useState('')
 
   const selectOrder = (data: string) => {
     setOrder(data)
+    setOpen(true)
   }
+
 
   return (
     <>
-      {order && <OrderModal order={order} onClose={() => setOrder(null)} />}
+      <Modal
+        animationType="fade"
+        visible={open}
+        transparent={true}
+        onRequestClose={() => setOpen(false)}
+      >
+        {order in iframeUrls && (
+          <WebView style={{
+            height: 400,
+            width: '95%',
+            alignSelf: 'center'
+          }} source={{ uri: iframeUrls[order] }} />
+        )}
+      </Modal>
       <Container style={themedStyles.container}>
         <Header title={'Órdenes'} />
         <LayoutCustom style={themedStyles.content}>

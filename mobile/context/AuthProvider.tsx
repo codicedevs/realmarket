@@ -2,6 +2,7 @@ import React from 'react';
 import { useStorageState } from '../hooks/useStorageState';
 import authService from '../service/auth.service';
 import { notification } from '../utils/notification';
+import { useInfo } from './InfoProvider';
 
 const AuthContext = React.createContext<{
   signIn: (username: string, password: string) => void;
@@ -33,6 +34,7 @@ export function useSession() {
 
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[loadingScreen, session], setSession] = useStorageState('session');
+  const { clearAllDataFromRealm } = useInfo()
 
   return (
     <AuthContext.Provider
@@ -48,6 +50,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
         },
         signOut: async () => {
           setSession(null);
+          clearAllDataFromRealm()
           await authService.signOut()
           notification('Se cerro sesion')
         },

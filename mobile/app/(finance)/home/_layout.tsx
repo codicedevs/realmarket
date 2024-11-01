@@ -5,8 +5,7 @@ import React from "react";
 const HomeLayout = () => {
     return (
         <Stack>
-            <Stack.Screen name='disponibilidad' options={{headerShown:false}}/>
-            <Stack.Screen name="index" options={{headerShown:false}}/>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>
     )
 };

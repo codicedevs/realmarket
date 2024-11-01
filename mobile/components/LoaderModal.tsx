@@ -26,7 +26,9 @@ const textos = [
 
 const duracionDeText = 8000
 
-const LoaderModal = () => {
+const LoaderModal = ({ show }) => {
+  if (!show) return null
+
   const animation = useRef(null);
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(0)
@@ -73,7 +75,6 @@ const LoaderModal = () => {
         setCurrentTextIndex(prevIndex => (prevIndex + 1) % textos.length);
       }, duracionDeText);
       animationInterval = setInterval(() => {
-        console.log(currentImageIndex)
         startAnimationChange();
         setTimeout(() => {
           setCurrentImageIndex(prevIndex => (prevIndex + 1) % animations.length);

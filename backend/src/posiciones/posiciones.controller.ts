@@ -1,5 +1,5 @@
 import { Controller, Get, Query, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { getJwtPayload } from 'src/auth/utils/jwt.utils';
 import { Posicion } from './entities/posicion.entity';
@@ -12,6 +12,8 @@ export class PosicionesController {
   constructor(private readonly posicionesService: PosicionesService) { }
 
   @Get('')
+  @ApiQuery({ name: 'from', required: true, type: String })
+  @ApiQuery({ name: 'especie', required: false, type: String })
   public async getPosiciones(
     @Query('from') from: string,
     @Query('especie') especie: string,
