@@ -50,20 +50,6 @@ export class UsersService {
 
   }
 
-  async updateById(
-    id: ObjectId,
-    body: UpdateUserDto,
-  ): Promise<User | undefined> {
-    const hashedPass = await hash(body?.pass, 10);
-    body.pass = hashedPass;
-    const result: UpdateResult = await this.userRepository.update(
-      new ObjectId(id),
-      body,
-    );
-    if (!result.affected) throw new NotFoundException('Usuario no encontrado');
-    return this.findById(new ObjectId(id));
-  }
-
   async changePass(
     username: string,
     currentPass: string,
@@ -145,9 +131,27 @@ export class UsersService {
     return result;
   }
 
+  async updateById(
+    id: ObjectId,
+    body: UpdateUserDto,
+  ): Promise<User | undefined> {
+    const hashedPass = await hash(body?.pass, 10);
+    body.pass = hashedPass;
+    const result: UpdateResult = await this.userRepository.update(
+      new ObjectId(id),
+      body,
+    );
+    if (!result.affected) throw new NotFoundException('Usuario no encontrado');
+    return this.findById(new ObjectId(id));
+  }
+
 
   async updateUserAdmin(id: ObjectId, updateUser: UpdateUserDto) {
     await this.userRepository.findOneByOrFail({ _id: new ObjectId(id) });
+    if (updateUser.pass) {
+      const hashedPass = await hash(updateUser?.pass, 10);
+      updateUser.pass = hashedPass;
+    }
 
     await this.userRepository.update(id, updateUser);
     const user = await this.userRepository.findOneBy({ _id: new ObjectId(id) });
