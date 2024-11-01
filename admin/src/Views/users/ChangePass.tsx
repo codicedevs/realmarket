@@ -1,8 +1,9 @@
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Form, Input } from "antd";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
 import * as yup from 'yup';
 import userService from "../../service/user.service";
@@ -15,8 +16,14 @@ const schema = yup.object({
 
 
 const ChangePass = ({ userData, onPasswordChanged }: any) => {
+  const navigate = useNavigate();
   const id = useParams().id
   const [user, setUser] = useState<user>()
+
+
+  const goBack = () => {
+    navigate("/");
+  };
 
   const bringUser = async () => {
     if (id) {
@@ -57,10 +64,14 @@ const ChangePass = ({ userData, onPasswordChanged }: any) => {
     }
   }, [userData, reset]);
 
+
   return (
     <div className="form-container">
       <div className="title-container">
-        <span className="title">{`${user?.username}`}</span>
+        <ArrowLeftOutlined className="back-icon" onClick={goBack} />
+        <span className="title">
+          Usuario: <span style={{ fontWeight: 300 }}>{user?.username}</span>
+        </span>
       </div>
       <Form
         layout="vertical"

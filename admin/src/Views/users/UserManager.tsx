@@ -10,7 +10,6 @@ const UserManager = () => {
   const { id } = useParams();
   const [userData, setUserData] = useState(null);
 
-  console.log("AAAAAAAAAABBBBCCCCCcc", id)
   const goBack = () => {
     navigate("/");
   };
