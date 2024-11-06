@@ -1,4 +1,4 @@
-rootProject.name = 'Real Market Inversiones'
+rootProject.name = 'realmarket'
 
 dependencyResolutionManagement {
   versionCatalogs {

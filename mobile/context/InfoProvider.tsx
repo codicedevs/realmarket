@@ -121,19 +121,18 @@ export function InfoProvider(props: React.PropsWithChildren) {
       const positionByDate = JSON.stringify(res.data);
       await AsyncStorage.setItem('positionsByDate', positionByDate);
       await AsyncStorage.setItem('totalPositions', positionsData);
-      console.log('1', resPos.data.usdPrice, resPos.data.usdPriceBcra);
       await safeRealmWrite(() => {
         if (position) {
           position.totalPosiciones = resPos.data.totalPosiciones;
-          position.usdPrice = +resPos.data.usdPrice;
-          position.usdPriceBcra = +resPos.data.usdPriceBcra;
+          position.usdPrice = resPos.data.usdPrice;
+          position.usdPriceBcra = resPos.data.usdPriceBcra;
           position.posiciones = resPos.data.posiciones;
         } else {
           realm.create('Position', {
             _id: new BSON.UUID(),
-            totalPosiciones: String(resPos.data.totalPosiciones),
-            usdPrice: String(resPos.data.usdPrice),
-            usdPriceBcra: String(resPos.data.usdPriceBcra),
+            totalPosiciones: resPos.data.totalPosiciones,
+            usdPrice: resPos.data.usdPrice,
+            usdPriceBcra: resPos.data.usdPriceBcra,
             posiciones: resPos.data.posiciones
           }, Realm.UpdateMode.Modified);
         }

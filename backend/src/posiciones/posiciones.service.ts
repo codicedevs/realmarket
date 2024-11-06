@@ -93,6 +93,7 @@ export class PosicionesService extends RosvalHttpService {
       return acum;
     }, 0);
 
+    console.log(totalPosiciones, usdPrice, usdPriceBcra, posiciones)
 
     return {
       totalPosiciones,

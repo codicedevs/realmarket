@@ -38,7 +38,3 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
-
-// dexOptions {
-//     javaMaxHeapSize "4g" // Aumenta la memoria del heap de Java
-// }
