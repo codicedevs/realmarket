@@ -5,8 +5,8 @@ import { formatRosvalDate } from 'src/utils/date';
 import { Posicion } from './entities/posicion.entity';
 
 export interface Dolar {
-  usd: number;
-  usdb: number;
+  usd: number[];
+  usdb: number[];
 }
 
 const logger = new Logger(RosvalHttpService.name);
@@ -60,8 +60,8 @@ export class PosicionesService extends RosvalHttpService {
     );
     const fechaDolar = formatRosvalDate(dayjs().subtract(1, 'day'));
     const pruebaDolar = await this.getDolar(fechaDolar);
-    const usdPrice = pruebaDolar?.usd;
-    const usdPriceBcra = pruebaDolar?.usdb;
+    const usdPrice = pruebaDolar?.usd[0];
+    const usdPriceBcra = pruebaDolar?.usdb[0];
 
     posiciones.forEach((p) => {
       if (p.tipoTitulo == "ECHEQ" && p.informacion) {
@@ -92,6 +92,8 @@ export class PosicionesService extends RosvalHttpService {
           pos.cantidadPendienteLiquidar * pos.precioUnitario;
       return acum;
     }, 0);
+
+    console.log(totalPosiciones, usdPrice, usdPriceBcra, posiciones)
 
     return {
       totalPosiciones,
