@@ -1,4 +1,4 @@
-package com.mativant.realmarket
+package com.widoski.realmarketinversiones
 
 import android.os.Build
 import android.os.Bundle

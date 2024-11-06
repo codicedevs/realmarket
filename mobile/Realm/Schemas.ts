@@ -19,7 +19,7 @@ export class ContainerUsd extends Realm.Object {
     name: "ContainerUsd",
     primaryKey: "id",
     properties: {
-      id:"uuid",
+      id: "uuid",
       movimientos: "Movimiento[]", // Lista de movimientos
     },
   };
@@ -30,7 +30,7 @@ export class ContainerArs extends Realm.Object {
     name: "ContainerArs",
     primaryKey: "id",
     properties: {
-      id:"uuid",
+      id: "uuid",
       movimientos: "Movimiento[]", // Lista de movimientos
     },
   };
@@ -48,9 +48,9 @@ export class Position extends Realm.Object {
     primaryKey: "_id",
     properties: {
       _id: 'uuid',
-      totalPosiciones: "float",
-      usdPrice: "float",
-      usdPriceBcra: "float",
+      totalPosiciones: "string",
+      usdPrice: "string",
+      usdPriceBcra: "string",
       posiciones: 'PositionDetail[]',
     },
   };
