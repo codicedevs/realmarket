@@ -67,6 +67,7 @@ export function InfoProvider(props: React.PropsWithChildren) {
   };
 
   const settingData = async () => {
+
     const positionsByDate = await AsyncStorage.getItem('positionsByDate');
     if (positionsByDate) {
       setCifrasDisponibilidad(JSON.parse(positionsByDate));
@@ -77,6 +78,7 @@ export function InfoProvider(props: React.PropsWithChildren) {
     setIsLoading(mustLoad)
     if (!info1[0] || !info2[0] || !info3[0]) setLoadingModal(true);
     try {
+
       const [res, resPos, resArs, resUsd] = await Promise.all([
         disponibilidadService.getCashPositions(),
         disponibilidadService.totalPositions(),
@@ -87,7 +89,7 @@ export function InfoProvider(props: React.PropsWithChildren) {
       await handleMovementsData(resArs.data.reverse(), 'ContainerArs');
       await handleMovementsData(resUsd.data.reverse(), 'ContainerUsd');
     } catch (err) {
-      console.error('Error fetching data:', err);
+      console.error('Error fetching all data:', err);
     } finally {
       setLoadingModal(false);
       setIsLoading(false)
@@ -115,28 +117,41 @@ export function InfoProvider(props: React.PropsWithChildren) {
   };
 
   const handlePositionsData = async (res, resPos) => {
-    if (Object.keys(res.data).length && Object.keys(resPos.data).length) {
-      setCifrasDisponibilidad(res.data);
-      const positionsData = JSON.stringify(resPos.data.totalPosiciones);
-      const positionByDate = JSON.stringify(res.data);
-      await AsyncStorage.setItem('positionsByDate', positionByDate);
-      await AsyncStorage.setItem('totalPositions', positionsData);
-      await safeRealmWrite(() => {
-        if (position) {
-          position.totalPosiciones = resPos.data.totalPosiciones;
-          position.usdPrice = resPos.data.usdPrice;
-          position.usdPriceBcra = resPos.data.usdPriceBcra;
-          position.posiciones = resPos.data.posiciones;
-        } else {
-          realm.create('Position', {
-            _id: new BSON.UUID(),
-            totalPosiciones: resPos.data.totalPosiciones,
-            usdPrice: resPos.data.usdPrice,
-            usdPriceBcra: resPos.data.usdPriceBcra,
-            posiciones: resPos.data.posiciones
-          }, Realm.UpdateMode.Modified);
-        }
-      });
+    try {
+
+      if (Object.keys(res.data).length && Object.keys(resPos.data).length) {
+        console.log(resPos.data.totalPosiciones, 'en el handle');
+        setCifrasDisponibilidad(res.data);
+        const positionsData = JSON.stringify(resPos.data.totalPosiciones);
+        const positionByDate = JSON.stringify(res.data);
+        await AsyncStorage.setItem('positionsByDate', positionByDate);
+        await AsyncStorage.setItem('totalPositions', positionsData);
+
+        await safeRealmWrite(() => {
+
+          let existingPosition = realm.objectForPrimaryKey('Position', position);
+          if (existingPosition) {
+            console.log('Updating existing Position record...', resPos.data.totalPosiciones);
+            existingPosition.totalPosiciones = resPos.data.totalPosiciones;
+            existingPosition.usdPrice = resPos.data.usdPrice;
+            existingPosition.usdPriceBcra = resPos.data.usdPriceBcra;
+            existingPosition.posiciones = resPos.data.posiciones;
+          } else {
+            console.log('Starting transaction in Realm for Position...');
+            console.log('opstiion', resPos.data.posiciones)
+            realm.create('Position', {
+              _id: new BSON.UUID(),
+              totalPosiciones: resPos.data.totalPosiciones,
+              usdPrice: resPos.data.usdPrice,
+              usdPriceBcra: resPos.data.usdPriceBcra,
+              posiciones: resPos.data.posiciones
+            }, Realm.UpdateMode.Modified);
+          }
+          console.log('asi queda', existingPosition.totalPosiciones)
+        });
+      }
+    } catch (error) {
+      console.error('Error handling positionsssss data:', error);
     }
   };
 

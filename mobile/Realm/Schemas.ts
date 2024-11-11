@@ -19,7 +19,7 @@ export class ContainerUsd extends Realm.Object {
     name: "ContainerUsd",
     primaryKey: "id",
     properties: {
-      id:"uuid",
+      id: "uuid",
       movimientos: "Movimiento[]", // Lista de movimientos
     },
   };
@@ -30,18 +30,14 @@ export class ContainerArs extends Realm.Object {
     name: "ContainerArs",
     primaryKey: "id",
     properties: {
-      id:"uuid",
+      id: "uuid",
       movimientos: "Movimiento[]", // Lista de movimientos
     },
   };
 }
 
 export class Position extends Realm.Object {
-  _id;
-  totalPosiciones;
-  usdPrice;
-  usdPriceBcra;
-  posiciones;
+
   static primaryKey = "_id";
   static schema = {
     name: "Position",
@@ -79,7 +75,7 @@ export class PositionDetail extends Realm.Object {
     name: "PositionDetail",
     properties: {
       cuenta: "string?",
-      fecha: "date?",
+      fecha: "string",
       tipoTitulo: "string?",
       tipoTituloAgente: "string?",
       codigoISIN: "string?",
@@ -89,10 +85,10 @@ export class PositionDetail extends Realm.Object {
       lugar: "string?",
       subCuenta: "string?",
       estado: "string?",
-      cantidadLiquidada: "float?",
-      cantidadPendienteLiquidar: "float?",
-      precio: "float?",
-      precioUnitario: "float?",
+      cantidadLiquidada: "float",
+      cantidadPendienteLiquidar: "float",
+      precio: "float",
+      precioUnitario: "float",
       monedaCotizacion: "string?",
       fechaPrecio: "string?",
       parking: "string?",

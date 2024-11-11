@@ -29,7 +29,7 @@ export class PosicionesController {
     return this.posicionesService.getCashPositionByDates(accountId);
   }
 
-  @Get('total-position')
+  @Get('total-positions')
   public async totalPosition(@Req() request: Request) {
     const { accountId } = getJwtPayload(request);
     return this.posicionesService.getTotalPosition(accountId);

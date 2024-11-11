@@ -122,7 +122,7 @@ export class PosicionesService extends RosvalHttpService {
     );
     const posiciones24Usd = await this.findByDate(
       accountId,
-      formatRosvalDate(dayjs().add(1, 'day')),
+      formatRosvalDate(dayjs()),
       'USD',
     );
 

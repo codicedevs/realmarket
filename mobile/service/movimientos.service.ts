@@ -8,7 +8,13 @@ export class MovimientosService extends HttpService {
     }
 
     async getMovementsArs() {
-        return this.get(`/pesos`)
+        try {
+
+            const res = await this.get(`/pesos`)
+            return res
+        } catch (err) {
+            console.error('Error, que mal 2', err.message)
+        }
     }
 
     async getMovementsUsd() {
@@ -20,10 +26,12 @@ export class MovimientosService extends HttpService {
      * @param id de tipo string, es la id del receipt 
      * @returns devuelve el archivo jpg/pdf en una cadena de texto en forma base64
      */
-    async getReceipt(id: string) {{
-        const res = await this.get(`comprobante/${id}`, {responseType: 'arraybuffer'})
-        return arrayBufferToBase64(res.data)
-    }}
+    async getReceipt(id: string) {
+        {
+            const res = await this.get(`comprobante/${id}`, { responseType: 'arraybuffer' })
+            return arrayBufferToBase64(res.data)
+        }
+    }
 }
 
 export default new MovimientosService()
