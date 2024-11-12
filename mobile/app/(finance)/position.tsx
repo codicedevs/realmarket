@@ -85,12 +85,25 @@ const Finance = () => {
                 onRequestClose={() => setOpen(false)}
             >
                 <LayoutCustom style={themedStyles.centeredView}>
-                    <LayoutCustom style={themedStyles.modalView}>
+                    <LayoutCustom style={[themedStyles.modalView]}>
                         <LayoutCustom mb={theme.margins.large}>
                             {
                                 selectedAsset &&
                                 <>
                                     <Text style={[themedStyles.modalText, themedStyles.modalTextTitle]}>Detalles</Text>
+                                    <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle, { marginBottom: 20 }]}>{selectedAsset.tipoTitulo}</Text>
+                                    {selectedAsset.vencimiento &&
+                                        <LayoutCustom>
+                                            <LayoutCustom horizontal itemsCenter style={{ alignItems: "flex-start" }}>
+                                                <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle, { alignItems: "flex-start", padding: 0, margin: 0 }]}>De:</Text>
+                                                <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin, { alignItems: "flex-start" }]}>{selectedAsset.de}</Text>
+                                            </LayoutCustom>
+                                            <LayoutCustom horizontal itemsCenter style={{ alignItems: "flex-start" }}>
+                                                <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle, { alignItems: "flex-start", padding: 0, margin: 0 }]}>Vencimiento:</Text>
+                                                <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin, { alignItems: "flex-start" }]}>{selectedAsset.vencimiento}</Text>
+                                            </LayoutCustom>
+                                        </LayoutCustom>
+                                    }
                                     <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Nombre:</Text>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{selectedAsset.nombreEspecie.slice(0, 20)}</Text>
@@ -109,7 +122,10 @@ const Finance = () => {
                                     </LayoutCustom>
                                     <LayoutCustom horizontal itemsCenter>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Cantidad:</Text>
-                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{amount}</Text>
+                                        <Text style={[themedStyles.modalText, themedStyles.modalTextInfo, themedStyles.withMargin]}>{amount.toLocaleString('de-DE', {
+                                            minimumFractionDigits: 0,
+                                            maximumFractionDigits: 2,
+                                        })}</Text>
                                     </LayoutCustom>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <Text style={[themedStyles.modalText, themedStyles.modalTextSubTitle]}>Importe:</Text>
@@ -252,8 +268,7 @@ const themedStyles = StyleService.create({
         margin: 20,
         backgroundColor: 'white',
         borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
+        padding: 25,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -269,7 +284,7 @@ const themedStyles = StyleService.create({
     },
     modalTextTitle: {
         fontSize: 22,
-        marginBottom: theme.margins.medium,
+        marginBottom: theme.margins.small,
         fontFamily: 'Lato-Bold'
     },
     modalTextSubTitle: {

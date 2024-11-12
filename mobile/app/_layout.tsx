@@ -16,7 +16,7 @@ const RootLayout = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ApplicationProvider {...eva} theme={eva.dark}>
-        <RealmProvider schema={[Movimiento, ContainerUsd, ContainerArs, Position, PositionDetail]} schemaVersion={34}>
+        <RealmProvider schema={[Movimiento, ContainerUsd, ContainerArs, Position, PositionDetail]} schemaVersion={35}>
           {/* tengo que ir subiendo la version por cada cambio de esquema */}
           <RootSiblingParent>
             <IconRegistry icons={EvaIconsPack} />

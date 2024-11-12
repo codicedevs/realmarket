@@ -32,6 +32,8 @@ export interface IPosition {
     monedaCotizacion: string;
     fechaPrecio: string;
     parking: any | null;
+    vencimiento: string | null;
+    de: string | null;
 }
 
 const TransactionCards = memo(

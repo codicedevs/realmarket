@@ -66,9 +66,9 @@ export class PosicionesService extends RosvalHttpService {
     posiciones.forEach((p) => {
       if (p.tipoTitulo == "ECHEQ" && p.informacion) {
         const match = p.informacion.match(/Liq\.\s(\d{2}\/\d{2}\/\d{4})/);
-        p.vencimiento = match ? match[1] : 'unknown'
+        p.vencimiento = match ? match[1] : 'Desconocido'
         const matchde = p.informacion.match(/\]\s.*\s\[/);
-        p.de = matchde ? matchde[0].slice(2, -2) : "unknown";
+        p.de = matchde ? matchde[0].slice(2, -2) : "Desconocido";
       }
       if (p.tipoTitulo === 'Moneda') {
         if (p.monedaCotizacion === 'USD' || 'USDB' || 'USDC') {
