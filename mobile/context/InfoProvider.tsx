@@ -78,7 +78,6 @@ export function InfoProvider(props: React.PropsWithChildren) {
     setIsLoading(mustLoad)
     if (!info1[0] || !info2[0] || !info3[0]) setLoadingModal(true);
     try {
-
       const [res, resPos, resArs, resUsd] = await Promise.all([
         disponibilidadService.getCashPositions(),
         disponibilidadService.totalPositions(),
@@ -98,7 +97,6 @@ export function InfoProvider(props: React.PropsWithChildren) {
 
   const handleMovementsData = async (res, containerType) => {
     const Container = containerType === 'ContainerUsd' ? Usd : Ars;
-
     if (Container && res.length) {
       console.log(`Updating existing ${containerType} records...`);
       await safeRealmWrite(() => {
@@ -106,9 +104,10 @@ export function InfoProvider(props: React.PropsWithChildren) {
       });
     } else if (res.length) {
       console.log(`Starting transaction in Realm for ${containerType}...`);
+      const nuevaId = new BSON.UUID()
       await safeRealmWrite(() => {
         realm.create(containerType, {
-          id: new BSON.UUID(),
+          id: nuevaId,
           movimientos: res
         }, Realm.UpdateMode.All);
         console.log(`Data for ${containerType} loaded successfully.`);
@@ -118,36 +117,33 @@ export function InfoProvider(props: React.PropsWithChildren) {
 
   const handlePositionsData = async (res, resPos) => {
     try {
-
       if (Object.keys(res.data).length && Object.keys(resPos.data).length) {
+        console.log(1)
         console.log(resPos.data.totalPosiciones, 'en el handle');
         setCifrasDisponibilidad(res.data);
         const positionsData = JSON.stringify(resPos.data.totalPosiciones);
         const positionByDate = JSON.stringify(res.data);
         await AsyncStorage.setItem('positionsByDate', positionByDate);
         await AsyncStorage.setItem('totalPositions', positionsData);
-
+        const nuevaId = new BSON.UUID()
         await safeRealmWrite(() => {
-
-          let existingPosition = realm.objectForPrimaryKey('Position', position);
-          if (existingPosition) {
+          if (!!position) {
             console.log('Updating existing Position record...', resPos.data.totalPosiciones);
-            existingPosition.totalPosiciones = resPos.data.totalPosiciones;
-            existingPosition.usdPrice = resPos.data.usdPrice;
-            existingPosition.usdPriceBcra = resPos.data.usdPriceBcra;
-            existingPosition.posiciones = resPos.data.posiciones;
+            position.totalPosiciones = resPos.data.totalPosiciones;
+            position.usdPrice = resPos.data.usdPrice;
+            position.usdPriceBcra = resPos.data.usdPriceBcra;
+            position.posiciones = resPos.data.posiciones;
           } else {
             console.log('Starting transaction in Realm for Position...');
             console.log('opstiion', resPos.data.posiciones)
             realm.create('Position', {
-              _id: new BSON.UUID(),
+              _id: nuevaId,
               totalPosiciones: resPos.data.totalPosiciones,
               usdPrice: resPos.data.usdPrice,
               usdPriceBcra: resPos.data.usdPriceBcra,
               posiciones: resPos.data.posiciones
             }, Realm.UpdateMode.Modified);
           }
-          console.log('asi queda', existingPosition.totalPosiciones)
         });
       }
     } catch (error) {
