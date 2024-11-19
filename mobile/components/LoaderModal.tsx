@@ -1,20 +1,17 @@
 import { StyleService } from '@ui-kitten/components'
-import LottieView from 'lottie-react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { Dimensions, Modal, Text, View } from 'react-native'
+import { Dimensions, Image, Modal, Text, View } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withDelay, withSequence, withSpring, withTiming } from 'react-native-reanimated'
 import LayoutCustom from './LayoutCustom'
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const squareAnimation = require('../assets/animations/animated-loader-circles.json')
-const pageAnimation = require('../assets/animations/page-animation.json')
-const circleTriangle = require('../assets/animations/circles-triangle.json')
+const disponibilidadGif = require('../assets/gif/disponibilidad.gif')
+const estadisticasGif = require('../assets/gif/Statistics.gif')
 
 const animations = [
-  squareAnimation,
-  pageAnimation,
-  circleTriangle
+  disponibilidadGif,
+  estadisticasGif
 ]
 
 const textos = [
@@ -104,22 +101,13 @@ const LoaderModal = ({ show }) => {
         <View style={themedStyles.modalView}>
           <View style={themedStyles.titleContainer}>
             <Text style={themedStyles.titleText}>Cargando datos</Text>
-            <Text style={themedStyles.titleText}>Esto podria demorar unos momentos</Text>
+            <Text style={themedStyles.subtitleText}>Esto podria demorar unos momentos</Text>
           </View>
           <Animated.View style={[animateAnimation]}>
-            <LottieView
-              autoPlay
-              ref={animation}
-              style={{
-                width: 200,
-                height: 200,
-                backgroundColor: '#fff',
-              }}
-              source={animations[currentImageIndex]}
-            />
+            <Image source={animations[currentImageIndex]} style={{ width: 200, height: 200, marginTop: 20 }} />
           </Animated.View>
           <Animated.View style={[animatedStyles, themedStyles.animatedText]}>
-            <Text style={{ fontSize: 17, textAlign: "center" }}>{textos[currentTextIndex]}</Text>
+            <Text style={{ fontSize: 22, textAlign: "center" }}>{textos[currentTextIndex]}</Text>
           </Animated.View>
           {/* <Button title='hola' onPress={handlePress} /> */}
         </View>
@@ -148,7 +136,7 @@ const themedStyles = StyleService.create({
   titleContainer: {
     width: windowWidth * 0.9,
     height: windowHeight * 0.2,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center'
   },
   animatedText: {
@@ -161,6 +149,11 @@ const themedStyles = StyleService.create({
   },
   titleText: {
     fontFamily: 'Lato-Bold',
-    fontSize: 17
+    fontSize: 23
+  },
+  subtitleText: {
+    fontFamily: 'Lato-Regular',
+    fontSize: 17,
+    marginBottom: 15
   }
 });
