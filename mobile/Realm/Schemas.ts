@@ -71,6 +71,8 @@ export class PositionDetail extends Realm.Object {
   monedaCotizacion;
   fechaPrecio;
   parking;
+  vencimiento;
+  de;
   static schema = {
     name: "PositionDetail",
     properties: {
@@ -92,6 +94,8 @@ export class PositionDetail extends Realm.Object {
       monedaCotizacion: "string?",
       fechaPrecio: "string?",
       parking: "string?",
+      vencimiento: "string?",
+      de: "string?"
     },
   };
 }
