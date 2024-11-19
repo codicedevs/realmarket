@@ -5,18 +5,20 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { Stack } from "expo-router";
 import React from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import 'react-native-get-random-values';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { ContainerArs, ContainerUsd, Movimiento, Position, PositionDetail } from '../Realm/Schemas';
 import AppProvider from '../context/AppContext';
 import { SessionProvider } from "../context/AuthProvider";
 import { InfoProvider } from '../context/InfoProvider';
 import { LoadingProvider } from "../context/LoadingProvider";
+import theme from '../utils/theme';
 
 const RootLayout = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ApplicationProvider {...eva} theme={eva.dark}>
-        <RealmProvider schema={[Movimiento, ContainerUsd, ContainerArs, Position, PositionDetail]} schemaVersion={34}>
+        <RealmProvider schema={[Movimiento, ContainerUsd, ContainerArs, Position, PositionDetail]} schemaVersion={36}>
           {/* tengo que ir subiendo la version por cada cambio de esquema */}
           <RootSiblingParent>
             <IconRegistry icons={EvaIconsPack} />
@@ -25,8 +27,8 @@ const RootLayout = () => {
                 <LoadingProvider>
                   <InfoProvider>
                     <Stack>
-                      <Stack.Screen name='(finance)' options={{ headerShown: false }} />
-                      <Stack.Screen name="auth" options={{ headerShown: false }} />
+                      <Stack.Screen name='(finance)' options={{ headerShown: false, contentStyle: { backgroundColor: theme.colors.background } }} />
+                      <Stack.Screen name="auth" options={{ headerShown: false, contentStyle: { backgroundColor: theme.colors.background } }} />
                     </Stack>
                   </InfoProvider>
                 </LoadingProvider>
