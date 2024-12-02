@@ -110,15 +110,29 @@ const Disponibility = () => {
           <LayoutCustom style={themedStyles.centeredView}>
             <LayoutCustom style={themedStyles.modalView}>
               <LayoutCustom mb={theme.margins.large}>
-                <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalle del movimiento</Text>
-                <Text style={{ ...themedStyles.modalText, fontSize: 23, marginBottom: theme.margins.xSmall }}> Fecha:</Text>
-                <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.date.toString()}</Text>
-                <Text style={{ ...themedStyles.modalText, fontSize: 23, marginBottom: theme.margins.small }}>Importe:</Text>
-                <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 18, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
-                <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small, fontWeight: '400' }}>Descripcion:</Text>
-                <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.description.slice(0, 20)}</Text>
-                <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.small, fontWeight: '400' }}>Comprobante:</Text>
-                <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 18 }}>{selectedTransaction?.comprobante}</Text>
+                <Text style={{ ...themedStyles.modalText, fontSize: 20, marginBottom: theme.margins.medium }}>Detalles</Text>
+                <LayoutCustom style={themedStyles.leftedView} >
+
+                  <LayoutCustom horizontal itemsCenter style={{ width: "100%", justifyContent: "space-between", gap: 20 }}>
+                    <Text style={{ ...themedStyles.modalText, fontSize: 16, marginBottom: theme.margins.xSmall }}>Fecha:</Text>
+                    <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 13, textAlign: "right" }}>{selectedTransaction?.date.toString()}</Text>
+                  </LayoutCustom>
+
+                  <LayoutCustom horizontal itemsCenter style={{ width: "100%", justifyContent: "space-between", gap: 20 }}>
+                    <Text style={{ ...themedStyles.modalText, fontSize: 16, marginBottom: theme.margins.xSmall }}>Importe:</Text>
+                    <Text style={{ ...themedStyles.amountText, marginBottom: theme.margins.xSmall, fontSize: 13, color: String(selectedTransaction?.amount)[0] !== "-" ? "green" : "red" }}>{currencyFormat(selectedTransaction?.amount, currency)}</Text>
+                  </LayoutCustom>
+                  <LayoutCustom horizontal itemsCenter style={{ width: "100%", justifyContent: "space-between", gap: 20 }}>
+                    <Text style={{ ...themedStyles.modalText, fontSize: 16, marginBottom: theme.margins.xSmall }}>Descripcion:</Text>
+                    <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 13 }}>{selectedTransaction?.description.slice(0, 20)}</Text>
+                  </LayoutCustom>
+                  <LayoutCustom horizontal itemsCenter style={{ width: "100%", justifyContent: "space-between", gap: 20 }}>
+
+                    <Text style={{ ...themedStyles.modalText, fontSize: 16, marginBottom: theme.margins.xSmall }}>Comprobante:</Text>
+                    <Text style={{ ...themedStyles.modalText, marginBottom: theme.margins.xSmall, fontSize: 13 }}>{selectedTransaction?.comprobante}</Text>
+                  </LayoutCustom>
+
+                </LayoutCustom>
               </LayoutCustom>
               <LayoutCustom>
                 <TouchableOpacity
@@ -195,6 +209,9 @@ const themedStyles = StyleService.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  leftedView: {
+    alignItems: 'flex-start',
   },
   modalView: {
     margin: 20,
