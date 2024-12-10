@@ -47,8 +47,12 @@ export class PosicionesService extends RosvalHttpService {
     this.logger.log('arranco el logger a las ' + timeLabel);
     const response = await this.get<Posicion[]>(
       `cuentas/${accountId}/posiciones`,
-      { params: { fecha: from, especie } },
+      { params: { fecha: from } },
     );
+    if (especie) {
+      const res = response.data.filter((pos) => pos.especie === especie)
+      return res
+    }
     this.logger.log('Aca termino de llamar posiciones ' + new Date());
     return response.data;
   }
