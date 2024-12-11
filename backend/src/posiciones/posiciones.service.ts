@@ -47,8 +47,12 @@ export class PosicionesService extends RosvalHttpService {
     this.logger.log('arranco el logger a las ' + timeLabel);
     const response = await this.get<Posicion[]>(
       `cuentas/${accountId}/posiciones`,
-      { params: { fecha: from, especie } },
+      { params: { fecha: from } },
     );
+    if (especie) {
+      const res = response.data.filter((pos) => pos.especie === especie)
+      return res
+    }
     this.logger.log('Aca termino de llamar posiciones ' + new Date());
     return response.data;
   }
@@ -103,45 +107,28 @@ export class PosicionesService extends RosvalHttpService {
   }
 
   async getCashPositionByDates(accountId: string) {
-    /**Esta pantalla muestra el SALDO en Efvo PESOS de la cuenta HOY/24Hs/48Hs */
+    /**Esta pantalla muestra el SALDO en Efvo PESOS de la cuenta HOY/24Hs */
 
-    const posicionesHoy = await this.findByDate(
-      accountId,
-      formatRosvalDate(dayjs()),
-      'ARS',
-    );
-    const posiciones24 = await this.findByDate(
-      accountId,
-      formatRosvalDate(dayjs().add(1, 'day')),
-      'ARS',
-    );
-    const posicionesHoyUsd = await this.findByDate(
-      accountId,
-      formatRosvalDate(dayjs()),
-      'USD',
-    );
-    const posiciones24Usd = await this.findByDate(
-      accountId,
-      formatRosvalDate(dayjs()),
-      'USD',
-    );
+    const posicionesHoy = await this.findByDate(accountId, formatRosvalDate(dayjs()))
 
-    const dispoHoy = posicionesHoy.reduce((acum, p) => {
+    const posiciones24 = await this.findByDate(accountId, formatRosvalDate(dayjs().add(1, 'day')))
+
+    const dispoHoy = posicionesHoy.filter(p => p.especie === 'ARS').reduce((acum, p) => {
       acum += p.cantidadLiquidada;
       return acum;
     }, 0);
 
-    const dispo24 = posiciones24.reduce((acum, p) => {
+    const dispoHoyUsd = posicionesHoy.filter(p => p.especie === 'USD').reduce((acum, p) => {
       acum += p.cantidadLiquidada;
       return acum;
     }, 0);
 
-    const dispoHoyUsd = posicionesHoyUsd.reduce((acum, p) => {
+    const dispo24 = posiciones24.filter(p => p.especie === 'ARS').reduce((acum, p) => {
       acum += p.cantidadLiquidada;
       return acum;
     }, 0);
 
-    const dispo24Usd = posiciones24Usd.reduce((acum, p) => {
+    const dispo24Usd = posiciones24.filter(p => p.especie === 'ARS').reduce((acum, p) => {
       acum += p.cantidadLiquidada;
       return acum;
     }, 0);

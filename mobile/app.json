@@ -2,7 +2,7 @@
   "expo": {
     "name": "Real Market Inversiones",
     "slug": "real-market-inversiones",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/rm-negro.png",
     "scheme": "realmarket",
@@ -31,17 +31,17 @@
         "origin": false
       },
       "eas": {
-        "projectId": "c7655900-1729-4406-8096-96427a396e58"
+        "projectId": "108d5efb-9ab3-4bac-a0a9-68fa8c720046"
       }
     },
-    "owner": "widoski",
+    "owner": "mativant",
     "android": {
-      "package": "com.widoski.realmarketinversiones"
+      "package": "com.mativant.realmarket"
     },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.codice.real-market-inversiones",
-      "buildNumber": "2"
+      "buildNumber": "3"
     }
   }
 }
