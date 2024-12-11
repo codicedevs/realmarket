@@ -18,7 +18,7 @@ const textos = [
   "Sus datos estan siendo cargados",
   "Recuerde no compartir sus datos personales",
   "Buenas noches",
-  "Buenas tardes"
+  "Buenas tardes "
 ]
 
 const duracionDeText = 8000
@@ -107,7 +107,9 @@ const LoaderModal = ({ show }) => {
             <Image source={animations[currentImageIndex]} style={{ width: 200, height: 200, marginTop: 20 }} />
           </Animated.View>
           <Animated.View style={[animatedStyles, themedStyles.animatedText]}>
-            <Text style={{ fontSize: 22, textAlign: "center" }}>{textos[currentTextIndex]}</Text>
+            <View style={{ width: "100%", alignItems: "center" }}>
+              <Text style={{ fontSize: 22, textAlign: "center" }}>{textos[currentTextIndex]}</Text>
+            </View>
           </Animated.View>
           {/* <Button title='hola' onPress={handlePress} /> */}
         </View>
@@ -142,7 +144,7 @@ const themedStyles = StyleService.create({
   animatedText: {
     position: 'absolute',
     top: '80%',
-    left: -200,
+    left: "-75%",
     width: windowWidth * 0.8,
     alignItems: 'center',
     height: 'auto'
